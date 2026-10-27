@@ -844,7 +844,7 @@ const DRULE = {
   25: 'Hoá đơn tại quầy không khớp dữ liệu đơn vị gửi về: điểm chờ đối soát đến hôm sau; lệch số tiền thì lấy số của đơn vị, sửa điểm trước khi điểm dùng được và báo khách kèm lý do.',
   26: 'Tích điểm theo mô hình quỹ chung: khách nhận số điểm bằng ' + EARN_TXT + ' số tiền trả bằng tiền (1 điểm = 1đ). Hạng xét theo điểm trong năm: Silver dưới 50.000, Gold 50.000–199.999, Platinum từ 200.000.',
   27: 'Chỉ Membership xét hạng; CRM Hub chỉ hiện hạng.',
-  28: 'Điểm hết hạn sau 12 tháng, tự gia hạn mỗi khi có điểm mới: mỗi lần được cộng điểm, hạn của toàn bộ điểm lùi tới 12 tháng sau ngày đó. Tiền của điểm hết hạn ở lại Quỹ điểm thưởng VNGroup.',
+  28: 'Điểm hết hạn theo từng đợt tích: điểm tích ngày nào hết hạn sau 12 tháng kể từ ngày đó; đổi ưu đãi hoặc dùng điểm tại quầy thì trừ đợt sắp hết hạn trước. Trang chủ luôn báo đợt hết hạn gần nhất, chuyển sang dải cam khi còn từ 30 ngày trở xuống (đổi ngày 27/10/2026 theo góp ý, trước đó chốt tự gia hạn). Tiền của điểm hết hạn ở lại Quỹ điểm thưởng VNGroup.',
   29: 'Quyền lợi theo hạng: Gold giảm thêm 5% hoá đơn tại cả ba đơn vị; Platinum có quyền lợi của Gold và được nâng hạng phòng tại Resort. Đúng ngày sinh nhật điểm nhân đôi.',
   30: 'Giữ tên hạng Silver, Gold, Platinum.',
   31: 'Trả hàng hoặc huỷ một phần: thu lại điểm theo tỉ lệ tiền hoàn và xét lại hạng ngay; thưởng gắn với giao dịch (sinh nhật, lần đầu, giới thiệu) chỉ thu lại khi hoàn cả hoá đơn.',
@@ -944,7 +944,7 @@ function seedState() {
     profile: 'gold', tier: 'gold',
     user: { name: 'Phạm Thu Trang', initials: 'TT', phone: '0912 345 678', code: 'VNG 2048 1357', birthday: '12/03/1992', email: 'trang.pham@example.com', phoneOk: true },
     points: 245000, tierPts: 168000, todayEarn: 1200, pending: 1200, held: 0,
-    expiring: null,   /* điểm tự gia hạn khi có điểm mới (câu 28): KH mẫu đang tích điểm nên không có điểm sắp hết hạn */
+    exp: seedExp(245000),   /* các đợt điểm theo hạn (câu 28): đợt sớm nhất nằm đầu */
     blPts: { kite: 182000, tiktak: 0, resort: 63000 }, lastEarn: null, khOffline: false,
     pin: { set: true, fails: 0, lockUntil: 0, buf: '', err: '', stage: 'enter', first: '', after: null },
     links: { kite: 'linked', tiktak: 'none', resort: 'linked' },
@@ -977,7 +977,7 @@ function toNewMember(fromReg) {
   st = seedState();
   Object.assign(st, keep);
   st.profile = 'new'; st.tier = 'silver';
-  st.points = 0; st.tierPts = 0; st.todayEarn = 0; st.pending = 0; st.expiring = null;
+  st.points = 0; st.tierPts = 0; st.todayEarn = 0; st.pending = 0; st.exp = [];
   st.pin.set = false;
   st.links = { kite: 'linked', tiktak: 'none', resort: 'none' }; st.blPts = { kite: 0, tiktak: 0, resort: 0 };
   st.vouchers = [WELCOME_V()]; st.history = []; st.redeemed = [];
@@ -994,6 +994,19 @@ const tierOf = p => p >= 200000 ? 'plat' : p >= 50000 ? 'gold' : 'silver';
 const tierN = t => TIERS[t].n;
 const nextTier = t => TIER_ORDER[TIER_ORDER.indexOf(t) + 1] || null;
 const avail = () => st.points - st.held;
+/* Điểm hết hạn theo từng đợt tích (câu 28): đợt tích ngày nào hết hạn sau 12 tháng kể từ ngày đó; dùng điểm thì trừ đợt sắp hết hạn trước.
+   Hạn tính lùi từ hôm nay để số ngày còn lại luôn đúng khi mở bản xem thử */
+function daysOn(n) { return Date.now() + n * 864e5; }
+function seedExp(total) {   /* KH mẫu: 1.300 điểm hết hạn sau 19 ngày, 12.000 sau 42 ngày, phần còn lại sau gần một năm */
+  const out = []; let left = total;
+  [[1300, 19], [12000, 42]].forEach(([p, d]) => { const v = Math.min(p, left); if (v > 0) { out.push({ pts: v, at: daysOn(d) }); left -= v; } });
+  if (left > 0) out.push({ pts: left, at: daysOn(364) });
+  return out;
+}
+function addPts(n) { st.points += n; st.exp.push({ pts: n, at: daysOn(365) }); st.exp.sort((a, b) => a.at - b.at); }
+function usePts(n) { st.points -= n; let left = n; st.exp.forEach(b => { const d = Math.min(b.pts, left); b.pts -= d; left -= d; }); st.exp = st.exp.filter(b => b.pts > 0); }
+const soonExp = () => st.exp.filter(b => b.at - Date.now() <= 30 * 864e5).reduce((t, b) => t + b.pts, 0);
+const dmy = t => { const d = new Date(t); return dm(d) + '/' + d.getFullYear(); };
 const activeV = () => st.vouchers.filter(v => v.status === 'active');
 const vById = id => st.vouchers.find(v => v.id === id);
 const offerById = id => st.offers.find(o => o.id === id);
@@ -1056,6 +1069,13 @@ function tierProgress() {
   if (!n) return '<div class="card"><div class="b" style="font-size:17px">Bạn đang ở hạng cao nhất</div><div class="sm mut" style="margin-top:4px">Hạng Platinum có hiệu lực đến 31/12/2027 · ' + fmtN(st.tierPts) + ' điểm xét hạng năm 2026</div></div>';
   const need = TIERS[n].min - st.tierPts, pct = Math.min(100, Math.round(st.tierPts / TIERS[n].min * 100));
   return '<button class="card" style="text-align:left;width:100%" data-go="M19"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><span class="b" style="font-size:15px;white-space:nowrap">Còn ' + fmtN(need) + ' điểm lên ' + tierN(n) + '</span><span class="mut" style="white-space:nowrap;font-size:11.5px">xét đến 31/12</span></div><div class="prog" style="margin:12px 0 8px"><i style="width:' + pct + '%"></i></div><div class="mut" style="display:flex;justify-content:space-between;gap:6px;font-size:11.5px;white-space:nowrap"><span>' + fmtN(st.tierPts) + ' điểm xét hạng năm 2026</span><span style="white-space:nowrap">' + tierN(n) + ' từ ' + fmtN(TIERS[n].min) + '</span></div></button>';
+}
+/* Đợt điểm hết hạn gần nhất (câu 28). Từ 30 ngày trở xuống: dải cam theo Figma; xa hơn: thẻ thường */
+function expiryCard() {
+  const b = st.exp[0]; if (!b || avail() <= 0) return '';
+  const days = Math.max(0, Math.ceil((b.at - Date.now()) / 864e5)), t = fmtN(b.pts) + ' điểm sẽ hết hạn ngày ' + dmy(b.at);
+  if (days <= 30) return '<button class="band warn" style="align-items:center;text-align:left" data-go="M5">' + ic('hour', 22, 'ic') + '<span style="flex:1"><span style="display:block;font-weight:600">' + t + '</span><span class="sm">Còn ' + days + ' ngày · đổi ưu đãi để không mất điểm</span></span><span style="font-weight:600;white-space:nowrap;display:inline-flex;align-items:center">Đổi điểm ' + ic('chev', 18) + '</span></button>';
+  return '<button class="card" style="display:flex;gap:12px;align-items:center;text-align:left;width:100%" data-go="M4"><span class="ico-c" style="width:40px;height:40px">' + ic('cal', 20) + '</span><span style="flex:1"><span class="b" style="display:block">' + t + '</span><span class="sm mut">Điểm tích ngày nào hết hạn sau 12 tháng kể từ ngày đó</span></span>' + ic('chev', 18) + '</button>';
 }
 function art(bl, h = 104, iconS = 44) {
   const a = bl === 'bf' ? 'bf' : bl;
@@ -1857,8 +1877,7 @@ function homeGoldBody(s, o = {}) {
   let h = '<div class="pad" style="display:flex;align-items:center;gap:12px;padding-top:6px;padding-bottom:14px"><button class="ico-c p" style="width:48px;height:48px;font-weight:600;font-size:16px" data-go="M21" aria-label="Tài khoản">' + esc(s.user.initials) + '</button><div style="flex:1"><div class="mut">' + greet + '</div><div class="b" style="font-size:20px">' + esc(s.user.name) + '</div></div><button class="ib w" style="position:relative;width:46px;height:46px" data-go="M32" aria-label="Thông báo">' + ic('bell', 22) + (s.unread ? '<i style="position:absolute;top:10px;right:11px;width:8px;height:8px;border-radius:50%;background:var(--m-urgent)"></i>' : '') + '</button></div>';
   h += '<div class="pad stack">';
   if (o.giftCard) h += '<button class="card" style="display:flex;gap:12px;align-items:center;text-align:left" data-go="PA-A2"><span class="ico-c" style="border-radius:14px;width:44px;height:60px">' + ic('gift', 22) + '</span><div style="flex:1"><div class="xs lnk" style="letter-spacing:.04em">MỚI · TIKTAK</div><div class="b" style="font-size:17px">' + BF.title + '</div><div class="sm mut">' + BF.deal + ' · dùng đến ' + BF.until + '</div><div class="sm lnk-a">Đã thêm vào Ví của bạn</div></div>' + ic('chev', 20) + '</button>';
-  h += tierCard() + tierProgress();
-  if (s.expiring) h += '<button class="band warn" style="align-items:center;text-align:left" data-go="M5">' + ic('hour', 22, 'ic') + '<span style="flex:1;font-weight:600">' + fmtN(s.expiring.pts) + ' điểm sẽ hết hạn ngày ' + s.expiring.date + '.</span><span style="font-weight:600;white-space:nowrap;display:inline-flex;align-items:center">Đổi điểm ' + ic('chev', 18) + '</span></button>';
+  h += tierCard() + expiryCard();   /* góp ý 27/10/2026: chưa tính hạng, chỗ thanh lên hạng báo điểm sắp hết hạn */
   h += '</div><div class="sec-t"><span class="h3">Tích điểm ở</span><button class="lnk sm" data-go="M19">Sinh nhật x2 điểm</button></div>';
   h += '<div class="pad" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">' + linkCard('kite') + linkCard('tiktak') + linkCard('resort') + '</div>';
   if (pick.length) h += '<div class="sec-t"><span class="h3">Đổi được ngay</span><button class="lnk sm" data-go="M5">Xem tất cả</button></div><div class="pad" style="display:flex;gap:12px">' + pick.map(offerMini).join('') + '</div>';
@@ -1866,12 +1885,12 @@ function homeGoldBody(s, o = {}) {
   h += '<div class="sec-t"><span class="h3">Giao dịch gần đây</span><button class="lnk sm" data-go="M4">Xem lịch sử</button></div><div class="pad"><div class="list">' + (s.history.slice(0, 3).map(x => hRow(x, { short: true })).join('') || '<div class="row"><div class="tx t2">Chưa có giao dịch.</div></div>') + '</div></div>';
   return h;
 }
-A['demo-expire'] = (a, dev) => { const d = new Date(Date.now() + 20 * 864e5); st.expiring = { pts: avail(), date: dm(d) + '/' + d.getFullYear() }; st.pending = 0; st.todayEarn = 0; st.history = st.history.filter(x => !x.pend); rr(dev); toast('Giả lập: 11 tháng không có điểm mới', dev, { icon: 'info' }); };
+A['demo-expire'] = (a, dev) => { st.exp = [{ pts: avail(), at: daysOn(20) }]; st.pending = 0; st.todayEarn = 0; st.history = st.history.filter(x => !x.pend); rr(dev); toast('Giả lập: 11 tháng không có điểm mới', dev, { icon: 'info' }); };
 const M1_NOTES = {
-  rules: ['Thẻ hạng tách điểm khả dụng và điểm đang chờ; điểm đang chờ dùng được từ 12 giờ trưa hôm sau. Câu chữ: "+{N} điểm tại {Biz Line}. Điểm dùng được từ 12 giờ trưa mai." (biên bản 21/10: chờ đối soát T+1).', 'Tiến độ lên hạng theo điểm xét hạng trong năm; lên hạng ngay khi đủ, giữ đến 31/12 năm kế tiếp.', 'Dải cam chỉ hiện khi có điểm hết hạn trong 30 ngày (URD UN-007: được nhắc kịp để dùng). Câu chữ: "{N} điểm sẽ hết hạn ngày {ngày}."', 'Ô "Tích điểm ở": số điểm đã tích ở từng đơn vị; Kite, Resort đã tự liên kết (hành trình 1 của URD: đăng ký và thấy ngay dịch vụ đã dùng). Ô "Liên kết ngay" mở màn nối lịch sử (M23).', 'Sinh nhật x2 điểm. Nút "Mã thành viên" trên thẻ và tab Mã QR mở M3.', '"Đổi được ngay" chỉ hiện ưu đãi đủ điểm; không hiện ưu đãi riêng Platinum cho KH Gold. "Sắp đủ điểm" hiện ưu đãi chưa đủ (kể cả điểm đang chờ) kèm số còn thiếu: "Bạn còn thiếu {N} điểm để đổi ưu đãi này."', '3 giao dịch gần nhất: điểm cộng màu ngọc, điểm trừ màu chữ; điểm đang chờ có chip viền đứt (URD UN-005, UN-006).', dr(26), dr(27), dr(28), dr(29), dr(13), dr(14), dr(15), dr(35)],
+  rules: ['Thẻ hạng tách điểm khả dụng và điểm đang chờ; điểm đang chờ dùng được từ 12 giờ trưa hôm sau. Câu chữ: "+{N} điểm tại {Biz Line}. Điểm dùng được từ 12 giờ trưa mai." (biên bản 21/10: chờ đối soát T+1).', 'Dưới thẻ thành viên: đợt điểm hết hạn gần nhất, "{N} điểm sẽ hết hạn ngày {ngày}" (góp ý 27/10/2026: chưa chốt cách xét hạng nên tạm bỏ thanh lên hạng). Còn từ 30 ngày trở xuống thì là dải cam kèm nút Đổi điểm (URD UN-007: được nhắc kịp để dùng); xa hơn là thẻ thường, bấm mở Lịch sử điểm.', 'Ô "Tích điểm ở": số điểm đã tích ở từng đơn vị; Kite, Resort đã tự liên kết (hành trình 1 của URD: đăng ký và thấy ngay dịch vụ đã dùng). Ô "Liên kết ngay" mở màn nối lịch sử (M23).', 'Sinh nhật x2 điểm. Nút "Mã thành viên" trên thẻ và tab Mã QR mở M3.', '"Đổi được ngay" chỉ hiện ưu đãi đủ điểm; không hiện ưu đãi riêng Platinum cho KH Gold. "Sắp đủ điểm" hiện ưu đãi chưa đủ (kể cả điểm đang chờ) kèm số còn thiếu: "Bạn còn thiếu {N} điểm để đổi ưu đãi này."', '3 giao dịch gần nhất: điểm cộng màu ngọc, điểm trừ màu chữ; điểm đang chờ có chip viền đứt (URD UN-005, UN-006).', dr(26), dr(27), dr(28), dr(29), dr(13), dr(14), dr(15), dr(35)],
   motion: ['Mở app: số điểm đếm lên 600ms; thẻ Gold nghiêng nhẹ theo con quay, ánh kim chạy chéo. Reduce Motion: chỉ mờ dần, không nghiêng, không đếm.', 'Thẻ ưu đãi hiện lần lượt khi cuộn (mờ + trượt 8px, 150ms); Reduce Motion: chỉ mờ dần.'],
   demo: ['Chế độ Hai máy: ở máy iPOS quét mã thành viên rồi thanh toán; máy khách mở M17 (vừa tích điểm).', { t: 'Giả lập 11 tháng không có điểm mới (dải cam)', act: 'demo-expire' }],
-  diff: ['Gộp hai khung M1 và M1 (cuộn xuống) thành một màn cuộn.', 'Dải cam: theo câu 28 đã chốt (điểm tự gia hạn khi có điểm mới), KH mẫu vừa tích điểm nên không có điểm sắp hết hạn; Figma vẽ dải "12.000 điểm sẽ hết hạn ngày 08/11/2026". Bấm nút giả lập để xem dải cam.', 'Thẻ ghi chú M1 trên Figma còn theo thang điểm cũ (Platinum từ 2.001 điểm, Kite 5.000đ = 1 điểm); màn Figma và bản HTML dùng thang 1 điểm = 1đ (câu 26).', 'Ảnh ưu đãi trên Figma là ảnh chụp; bản HTML thay bằng khối màu kèm biểu tượng đơn vị.']
+  diff: ['Gộp hai khung M1 và M1 (cuộn xuống) thành một màn cuộn.', 'Bỏ thanh "Còn 32.000 điểm lên Platinum" của Figma (góp ý 27/10/2026, chưa tính hạng); dải cam điểm sắp hết hạn theo Figma, số mẫu là 1.300 điểm còn 19 ngày (Figma: 12.000 điểm, 08/11/2026). Đổi ưu đãi sẽ trừ đợt này trước, thẻ chuyển sang đợt kế tiếp.', 'Thẻ ghi chú M1 trên Figma còn theo thang điểm cũ (Platinum từ 2.001 điểm, Kite 5.000đ = 1 điểm); màn Figma và bản HTML dùng thang 1 điểm = 1đ (câu 26).', 'Ảnh ưu đãi trên Figma là ảnh chụp; bản HTML thay bằng khối màu kèm biểu tượng đơn vị.']
 };
 /* Mở M1, M2 từ danh sách màn thì đổi sang đúng hồ sơ mẫu của màn đó */
 function toGold() { const keep = { mode: st.mode, giftOpt: st.giftOpt, showNotes: st.showNotes, pos: st.pos }, nv = st.cur.nv; st = seedState(); Object.assign(st, keep); st.cur = { kh: 'M1', nv }; }
@@ -1934,7 +1953,7 @@ A.hfilter = (k, dev) => { st.sel.hfilter = k; rr(dev); };
 def('M4', {
   dev: 'kh', flow: 'home', fig: '79:19333', name: 'Lịch sử điểm',
   render: s => {
-    const f = s.sel.hfilter, exp = s.expiring ? s.expiring.pts : 0;
+    const f = s.sel.hfilter, exp = soonExp();
     const list = s.history.filter(h => f === 'all' || h.bl === f || h.kind === f);
     const chip = (k, t) => '<button class="chip' + (f === k ? ' on' : '') + '" data-act="hfilter" data-arg="' + k + '">' + (f === k ? ic('check', 15) : '') + t + '</button>';
     return hd('Lịch sử điểm', { close: false }) + '<div class="pad"><div class="card" style="display:grid;grid-template-columns:repeat(3,1fr);text-align:center;padding:14px 6px">' +
@@ -1949,7 +1968,7 @@ def('M4', {
     rules: ['3 con số: Khả dụng / Đang chờ / Sắp hết hạn (URD UN-006).', 'Lọc theo đơn vị và theo loại (Đổi điểm, Hết hạn); chip chọn có dấu tích.', 'Nhóm theo tháng; cột số căn phải. "+" màu ngọc, "−" màu chữ thường.', 'Đang chờ: chip viền đứt + "dùng được từ 12:00, {ngày mai}".', 'Thu hồi: câu chữ chốt trong brainstorm "{N} điểm đã được trừ do giao dịch ngày {ngày} bị hoàn." (URD UN-014: hiểu vì sao điểm thay đổi).', 'Sinh nhật x2 điểm.', dr(28), dr(31), dr(32), dr(24)],
     motion: ['Đổi chip lọc: danh sách mờ chéo 150ms. Reduce Motion: thay ngay.'],
     demo: ['Sau khi đổi điểm hoặc thanh toán ở máy iPOS, dòng mới hiện đầu danh sách.'],
-    diff: ['Thêm chip "Trừ tiền" (thu ngân dùng điểm trên iPOS) và lối vào Báo thiếu điểm (M20, câu 32).', 'Bỏ dòng mẫu "Điểm hết hạn · Điểm tích ngày 05/10/2025": theo câu 28 điểm tự gia hạn khi có điểm mới, KH mẫu đang tích điểm đều nên không có điểm hết hạn; ô "Sắp hết hạn" là 0 (Figma ghi 12.000).']
+    diff: ['Thêm chip "Trừ tiền" (thu ngân dùng điểm trên iPOS) và lối vào Báo thiếu điểm (M20, câu 32).', 'Ô "Sắp hết hạn" cộng các đợt điểm hết hạn trong 30 ngày tới (câu 28: hết hạn theo từng đợt tích); số mẫu 1.300 (Figma ghi 12.000).']
   }
 });
 
@@ -1967,14 +1986,14 @@ def('M17', {
     rules: ['Khách nhận thông báo +N điểm ngay khi nhân viên tích xong; điểm ở trạng thái chờ đối soát T+1 (biên bản họp 21/10, mục 2.3). Thẻ hạng hiện dòng "Chờ +N".', 'Thẻ hạng cập nhật điểm khả dụng; thanh tiến độ cập nhật điểm xét hạng.', dr(34), dr(25)],
     motion: [],
     demo: ['Chế độ Hai máy: thanh toán ở máy iPOS có quét mã thành viên; máy khách mở màn này với số điểm và số hoá đơn thật.', { t: 'Giả lập đối soát xong hôm sau: lên Platinum', act: 'demo-plat' }],
-    diff: ['Tên khung trên Figma ghi "+6.000 điểm"; nội dung màn và thẻ ghi chú ghi +1.200: bản HTML theo nội dung.', 'Không có dải cam điểm sắp hết hạn (câu 28), như M1.']
+    diff: ['Tên khung trên Figma ghi "+6.000 điểm"; nội dung màn và thẻ ghi chú ghi +1.200: bản HTML theo nội dung.', 'Không hiện dải cam điểm sắp hết hạn ở màn này; dải cam nằm ở Trang chủ (M1).']
   }
 });
 
 /* M18 · lên hạng Platinum (Figma 258:10960): mở màn là đặt hồ sơ mẫu sang Platinum */
 def('M18', {
   dev: 'kh', flow: 'home', fig: '258:10960', name: 'Lên hạng Platinum', edge: true, light: true, parent: 'HOME',
-  enter: (s, o) => { if (o.pop) return; s.tier = 'plat'; s.points = 283000 + s.held; s.tierPts = 200500; s.pending = 0; s.todayEarn = 0; s.history.forEach(h => { h.pend = false; }); s.lastEarn = null; },
+  enter: (s, o) => { if (o.pop) return; s.tier = 'plat'; s.points = 283000 + s.held; s.exp = seedExp(283000); s.tierPts = 200500; s.pending = 0; s.todayEarn = 0; s.history.forEach(h => { h.pend = false; }); s.lastEarn = null; },
   render: s => '<div class="succ" style="padding-bottom:70px">' + conf() + '<div class="tick">' + ic('check', 30) + '</div><h2>Bạn đã lên ' + tierN(s.tier) + '!</h2><p>Điểm của hoá đơn hôm qua đã đối soát xong. Hạng mới có hiệu lực ngay và giữ đến 31/12/2027.</p></div>' +
     '<div class="pad stack" style="margin-top:-52px;position:relative"><div class="card" style="padding:12px;box-shadow:0 8px 24px rgba(28,21,48,.12)"><div class="xs" style="display:flex;gap:6px;align-items:center;color:var(--m-action);font-weight:600;margin:0 0 8px 2px">' + ic('wallet', 14) + 'Thẻ thành viên mới</div>' + tierCard({ settled: true }) + '</div>' +
     '<div class="card" style="display:flex;justify-content:space-between;align-items:center;gap:10px"><div><div class="sm">Điểm xét hạng năm 2026</div><div class="xs mut">' + tierN(s.tier) + ' từ ' + fmtN(TIERS[s.tier].min) + ' điểm</div></div><div class="b" style="font-size:22px;white-space:nowrap">' + fmtN(s.tierPts) + ' <span class="sm">điểm</span></div></div>' +
@@ -2054,7 +2073,7 @@ A['redeem-start'] = () => {
 function doRedeem() {
   const o = offerById(st.sel.offer);
   if (o.race || o.stock <= 0) { o.stock = 0; o.race = false; go('M9', { noStack: true }); return; }
-  st.points -= o.pts; o.stock--; st.redeemed.push(o.id);
+  usePts(o.pts); o.stock--; st.redeemed.push(o.id);
   const v = { id: 'r' + Date.now(), title: o.title, bl: o.bl, sub: o.vSub, until: o.until, status: 'active', value: o.value, src: 'doi', fresh: true };
   st.vouchers.unshift(v); st.sel.voucher = v.id; st.freshWallet = true;
   addHistory({ kind: 'redeem', title: 'Đổi ưu đãi · ' + o.title, short: 'Đổi · ' + o.title, when: 'Hôm nay · ' + hm(), delta: -o.pts });
@@ -2497,7 +2516,7 @@ function linkFail(dev) {
 function linkOk() {
   const bl = st.link.bl, pts = st.link.pts;
   st.links[bl] = 'linked'; st.linkFails[bl] = 0;
-  st.points += pts; st.tierPts += pts; st.blPts[bl] = (st.blPts[bl] || 0) + pts;   /* câu 14: cộng dồn 12 tháng tính lùi từ ngày nối, tính vào xét hạng năm nay */
+  addPts(pts); st.tierPts += pts; st.blPts[bl] = (st.blPts[bl] || 0) + pts;   /* câu 14: cộng dồn 12 tháng tính lùi từ ngày nối, tính vào xét hạng năm nay */
   addHistory({ kind: 'link', bl, title: 'Cộng dồn khi liên kết ' + BL[bl].name, when: 'Hôm nay · ' + hm(), delta: pts, note: 'Giao dịch 12 tháng tính lùi từ hôm nay' });
   addNotif({ t: 'Đã liên kết ' + BL[bl].name + '. ' + fmtN(pts) + ' điểm từ 12 tháng gần nhất đã được cộng.', when: 'Vừa xong', ic: 'link', go: 'M4' });
   const t = tierOf(st.tierPts); if (TIER_ORDER.indexOf(t) > TIER_ORDER.indexOf(st.tier)) st.tier = t;
@@ -2597,7 +2616,7 @@ def('M25', {
 });
 A['demo-verify'] = ok => {
   const r = st.verifyReqs.shift(); if (!r) { toast('Chưa có yêu cầu nào đang chờ', 'kh', { icon: 'info' }); return; }
-  if (ok === '1') { st.link.bl = r.bl; st.links[r.bl] = 'linked'; const pts = st.link.pts; st.points += pts; st.tierPts += pts; st.blPts[r.bl] = (st.blPts[r.bl] || 0) + pts; addHistory({ kind: 'link', bl: r.bl, title: 'Cộng dồn khi liên kết ' + BL[r.bl].name, when: 'Hôm nay · ' + hm(), delta: pts, note: 'Giao dịch 12 tháng gần nhất' }); addNotif({ t: 'Đã liên kết ' + BL[r.bl].name + '. ' + fmtN(pts) + ' điểm từ 12 tháng gần nhất đã được cộng.', when: 'Vừa xong', ic: 'link', go: 'M22' }); toast('Đã liên kết ' + BL[r.bl].name + '. ' + fmtN(pts) + ' điểm từ 12 tháng gần nhất đã được cộng.', 'kh'); }
+  if (ok === '1') { st.link.bl = r.bl; st.links[r.bl] = 'linked'; const pts = st.link.pts; addPts(pts); st.tierPts += pts; st.blPts[r.bl] = (st.blPts[r.bl] || 0) + pts; addHistory({ kind: 'link', bl: r.bl, title: 'Cộng dồn khi liên kết ' + BL[r.bl].name, when: 'Hôm nay · ' + hm(), delta: pts, note: 'Giao dịch 12 tháng gần nhất' }); addNotif({ t: 'Đã liên kết ' + BL[r.bl].name + '. ' + fmtN(pts) + ' điểm từ 12 tháng gần nhất đã được cộng.', when: 'Vừa xong', ic: 'link', go: 'M22' }); toast('Đã liên kết ' + BL[r.bl].name + '. ' + fmtN(pts) + ' điểm từ 12 tháng gần nhất đã được cộng.', 'kh'); }
   else { st.links[r.bl] = 'none'; addNotif({ t: 'Yêu cầu liên kết ' + BL[r.bl].name + ' chưa được duyệt. Bạn có thể thử cách khác.', when: 'Vừa xong', ic: 'link', go: 'M22' }); toast('Yêu cầu liên kết ' + BL[r.bl].name + ' chưa được duyệt', 'kh', { icon: 'info', sub: 'Bạn có thể thử cách khác.' }); }
   go('M22', { noStack: true });
 };
@@ -2754,7 +2773,7 @@ function posGo(o = {}) { go(posId(), Object.assign({ keep: true, noStack: true }
 /* Thử nhánh từ 200.000 điểm khi khách mẫu đã tiêu bớt điểm: đặt lại điểm mẫu và báo trên màn */
 function ensurePts(s, need) {
   if (s.points - s.held >= need) return;
-  s.points = 245000 + s.held;
+  s.points = 245000 + s.held; s.exp = seedExp(245000);
   toast('Đã đặt lại điểm mẫu 245.000 để thử ngưỡng ' + fmtN(CONFIRM_AT) + ' điểm', 'nv', { icon: 'info' });
 }
 
@@ -2852,7 +2871,7 @@ function posPay() {
   if (p.member && p.offline) { r.earn = c.earn; r.queued = true; p.queue.push({ inv: p.inv, earn: r.earn, at }); }
   else if (p.member) {
     if (c.pd) {
-      st.points -= c.pd; r.pd = c.pd; r.left = avail();
+      usePts(c.pd); r.pd = c.pd; r.left = avail();
       addHistory({ kind: 'deduct', title: 'Trừ tiền · ' + PLACE, short: 'Trừ tiền · Kite', when: 'Hôm nay · ' + at, delta: -c.pd, note: 'Hoá đơn ' + p.inv + ' · giảm ' + money(c.pd) });
     }
     if (c.v) { c.v.status = 'used'; c.v.usedAt = at + ' ngày ' + today(); c.v.usedPlace = PLACE; c.v.fresh = false; r.v = c.v.title; }
@@ -3167,7 +3186,7 @@ $$('[data-mode]').forEach(b => b.addEventListener('click', () => {
 $('#tb-gift').addEventListener('click', () => { if (st.mode === 'nv') st.mode = 'kh'; A['gift-send'](); });
 /* Nạp điểm để thử lâu hơn: chỉ cộng điểm dùng được, không đổi điểm xét hạng, không ghi vào lịch sử điểm */
 $('#tb-topup').addEventListener('click', () => {
-  st.points += 1000000;
+  addPts(1000000);
   ['kh', 'nv'].forEach(rr);
   toast('Đã nạp thêm 1.000.000 điểm để thử', 'kh', { sub: 'Hiện có ' + fmtN(avail()) + ' điểm. Bấm Đặt lại để về số ban đầu.' });
 });
