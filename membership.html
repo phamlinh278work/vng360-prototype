@@ -605,6 +605,7 @@ body.notes-on .notes{display:block}
     <button data-mode="kh">App KH</button><button data-mode="nv">Máy iPOS</button><button data-mode="duo">Hai máy</button>
   </span>
   <button class="tb-btn" id="tb-gift" title="Campaign Re-MKT gửi ưu đãi Tiktak; khách nhận theo phương án B (câu 40)">Gửi ưu đãi mẫu</button>
+  <button class="tb-btn" id="tb-topup" title="Chỉ có trong bản xem thử: cộng 1.000.000 điểm dùng được vào hồ sơ đang xem, không tính vào xét hạng">+ Nạp 1 triệu điểm</button>
   <span class="tb-group">Hồ sơ
     <span class="tb-seg" role="group" aria-label="Hồ sơ mẫu">
       <button data-prof="gold">Gold</button><button data-prof="new">Thành viên mới</button>
@@ -3074,6 +3075,12 @@ $$('[data-mode]').forEach(b => b.addEventListener('click', () => {
   layout(); renderNotes();
 }));
 $('#tb-gift').addEventListener('click', () => { if (st.mode === 'nv') st.mode = 'kh'; A['gift-send'](); });
+/* Nạp điểm để thử lâu hơn: chỉ cộng điểm dùng được, không đổi điểm xét hạng, không ghi vào lịch sử điểm */
+$('#tb-topup').addEventListener('click', () => {
+  st.points += 1000000;
+  ['kh', 'nv'].forEach(rr);
+  toast('Đã nạp thêm 1.000.000 điểm để thử', 'kh', { sub: 'Hiện có ' + fmtN(avail()) + ' điểm. Bấm Đặt lại để về số ban đầu.' });
+});
 function resetTo(profile) {
   const keep = { mode: st.mode, giftOpt: st.giftOpt, showNotes: st.showNotes };
   if (profile === 'new') { st.pos = seedPos(); toNewMember(false); } else st = seedState();
