@@ -1025,7 +1025,7 @@ const FLOWS = [
   { id: 'login', name: 'Đăng nhập lại (thành viên cũ, máy mới)' },
   { id: 'pos', name: 'Hành trình 2 · Thanh toán tại quầy trên iPOS: tích điểm, voucher, dùng điểm' },
   { id: 'deduct', name: 'Hành trình 2 · App khách khi thu ngân quét mã, dùng điểm' },
-  { id: 'home', name: 'Hành trình 2 (tiếp) · Điểm về app, xem điểm và lên hạng' },
+  { id: 'home', name: 'Trang chủ, điểm và lịch sử điểm' },
   { id: 'redeem', name: 'Hành trình 3 · Đổi điểm và dùng voucher' },
   { id: 'gift', name: 'Nhận ưu đãi từ campaign · phương án B (đã chốt, câu 40)' },
   { id: 'giftx', name: 'Phương án A, C (không chọn, giữ để so sánh)' },
@@ -1844,7 +1844,7 @@ def('W8', {
     pinArea({ hint: 'Nhập mã PIN 6 số', what: 'dùng điểm' }) + '</div>',
   notes: { rules: ['Thiết bị mới cần OTP và mã PIN (brainstorm Mục 6.5); rủi ro SĐT đổi chủ (Mục 9).', 'Sai 5 lần liên tiếp: khoá 30 phút (Mục 7.2).', dr(16)], motion: [], demo: ['PIN 000000: sai, hiện số lần còn lại; sai 5 lần thì khoá 30 phút.', 'PIN 6 số khác: đúng.'], diff: [] }
 });
-/* ================= Hành trình 2 (tiếp) · Điểm về app, xem điểm và lên hạng ================= */
+/* ================= Trang chủ, điểm và lịch sử điểm (góp ý 27/10/2026: chưa tính hạng, bỏ Hành trình 2 tiếp và màn lên hạng M18) ================= */
 const pendTxt = () => 'dùng được từ 12:00, ' + tomorrow();
 function hRow(h, o = {}) {
   const m = { earn: ['ico-c', h.bl ? blIco(h.bl, 20) : ic('coins', 20)], redeem: ['ico-c p', ic('gift', 20)], deduct: ['ico-c p', ic('receipt', 20)], claw: ['ico-c p', ic('undo', 20)], expire: ['ico-c p', ic('hour', 20)], link: ['ico-c', ic('link', 20)], adjust: ['ico-c p', ic('edit', 20)], bonus: ['ico-c', ic('star', 20)] }[h.kind] || ['ico-c', ic('coins', 20)];
@@ -1977,7 +1977,6 @@ function pushBanner(s) {
   const e = s.lastEarn || { pts: 1200, place: 'Kite Coffee · Tràng Tiền', inv: 'KT-0082' };
   return '<button class="push" data-go="M4"><span class="pic">VNG</span><span style="flex:1;min-width:0;text-align:left"><span class="xs mut" style="display:block">VNG Membership · vừa xong</span><b style="display:block;font-size:16px;line-height:1.35">+' + fmtN(e.pts) + ' điểm tại ' + esc(e.place) + '</b><span class="xs" style="display:block;color:var(--m-muted)">Hoá đơn ' + esc(e.inv) + '. Điểm chờ đối soát, ' + pendTxt() + '.</span></span></button>';
 }
-A['demo-plat'] = () => go('M18', { noStack: true });
 def('M17', {
   dev: 'kh', flow: 'home', fig: '258:10797', name: 'Trang chủ · vừa tích +1.200 điểm', tab: 'home',
   enter: (s, o) => { if (o.pop || s.lastEarn) return; if (!(s.pending > 0)) { s.pending = 1200; s.todayEarn = 1200; } },
@@ -1985,26 +1984,11 @@ def('M17', {
   notes: {
     rules: ['Khách nhận thông báo +N điểm ngay khi nhân viên tích xong; điểm ở trạng thái chờ đối soát T+1 (biên bản họp 21/10, mục 2.3). Thẻ hạng hiện dòng "Chờ +N".', 'Thẻ hạng cập nhật điểm khả dụng; thanh tiến độ cập nhật điểm xét hạng.', dr(34), dr(25)],
     motion: [],
-    demo: ['Chế độ Hai máy: thanh toán ở máy iPOS có quét mã thành viên; máy khách mở màn này với số điểm và số hoá đơn thật.', { t: 'Giả lập đối soát xong hôm sau: lên Platinum', act: 'demo-plat' }],
+    demo: ['Chế độ Hai máy: thanh toán ở máy iPOS có quét mã thành viên; máy khách mở màn này với số điểm và số hoá đơn thật.'],
     diff: ['Tên khung trên Figma ghi "+6.000 điểm"; nội dung màn và thẻ ghi chú ghi +1.200: bản HTML theo nội dung.', 'Không hiện dải cam điểm sắp hết hạn ở màn này; dải cam nằm ở Trang chủ (M1).']
   }
 });
 
-/* M18 · lên hạng Platinum (Figma 258:10960): mở màn là đặt hồ sơ mẫu sang Platinum */
-def('M18', {
-  dev: 'kh', flow: 'home', fig: '258:10960', name: 'Lên hạng Platinum', edge: true, light: true, parent: 'HOME',
-  enter: (s, o) => { if (o.pop) return; s.tier = 'plat'; s.points = 283000 + s.held; s.exp = seedExp(283000); s.tierPts = 200500; s.pending = 0; s.todayEarn = 0; s.history.forEach(h => { h.pend = false; }); s.lastEarn = null; },
-  render: s => '<div class="succ" style="padding-bottom:70px">' + conf() + '<div class="tick">' + ic('check', 30) + '</div><h2>Bạn đã lên ' + tierN(s.tier) + '!</h2><p>Điểm của hoá đơn hôm qua đã đối soát xong. Hạng mới có hiệu lực ngay và giữ đến 31/12/2027.</p></div>' +
-    '<div class="pad stack" style="margin-top:-52px;position:relative"><div class="card" style="padding:12px;box-shadow:0 8px 24px rgba(28,21,48,.12)"><div class="xs" style="display:flex;gap:6px;align-items:center;color:var(--m-action);font-weight:600;margin:0 0 8px 2px">' + ic('wallet', 14) + 'Thẻ thành viên mới</div>' + tierCard({ settled: true }) + '</div>' +
-    '<div class="card" style="display:flex;justify-content:space-between;align-items:center;gap:10px"><div><div class="sm">Điểm xét hạng năm 2026</div><div class="xs mut">' + tierN(s.tier) + ' từ ' + fmtN(TIERS[s.tier].min) + ' điểm</div></div><div class="b" style="font-size:22px;white-space:nowrap">' + fmtN(s.tierPts) + ' <span class="sm">điểm</span></div></div>' +
-    '<button class="btn" data-go="M19">Xem quyền lợi ' + tierN(s.tier) + '</button><button class="btn sec" data-go="HOME">Về trang chủ</button></div>',
-  notes: {
-    rules: ['Đủ ngưỡng thì lên hạng ngay, giữ đến 31/12 năm kế tiếp (luồng 2 trên trang Membership — Luồng).', 'Platinum từ 200.000 điểm xét hạng trong năm, như thanh tiến độ ở M1.', 'Câu chữ: "Chúc mừng bạn lên hạng {hạng}. Hạng có hiệu lực đến 31/12/{năm}." (brainstorm Mục 7.3).', dr(26), dr(27), dr(29), dr(30)],
-    motion: ['Dấu tích nảy, hoa giấy rơi như M8; Reduce Motion: mờ dần.'],
-    demo: ['Mở màn này là hồ sơ mẫu chuyển sang Platinum (283.000 điểm, 200.500 điểm xét hạng). Bấm "Đặt lại" trên thanh công cụ để về Gold.'],
-    diff: ['Thẻ ghi chú M18 trên Figma ghi "Platinum từ 2.001 điểm" (thang cũ); màn Figma ghi 200.000: bản HTML theo màn (câu 26).', 'Thay màn "Lên hạng" của bản HTML trước (dựng từ brainstorm) bằng màn M18 của Figma.']
-  }
-});
 function tierPerks(t) {   /* quyền lợi theo hạng (câu 29) */
   const L = {
     silver: ['Tích điểm ở cả Kite, Tiktak, Resort', 'Đổi ưu đãi chung trong danh mục', 'Đúng ngày sinh nhật: điểm nhân đôi'],
@@ -2058,7 +2042,7 @@ def('M32', {
   dev: 'kh', flow: 'home', from: 'brainstorm Membership Mục 7.3 (câu thông báo), Mục 5.2; câu 34 của bảng đã chốt', name: 'Thông báo',
   enter: s => { s.unread = 0; },
   render: s => hd('Thông báo') + '<div class="pad"><div class="list">' + (s.notifs.map(n => '<button class="row" data-go="' + n.go + '"><span class="ico-c">' + ic(n.ic || 'bell', 20) + '</span><div class="tx"><div class="t1">' + esc(n.t) + '</div><div class="t2">' + esc(n.when) + '</div></div>' + ic('chev', 18) + '</button>').join('') || '<div class="row"><div class="tx t2">Chưa có thông báo.</div></div>') + '</div></div>',
-  notes: { rules: ['Câu thông báo lấy đúng brainstorm Mục 7.3: "+{N} điểm tại {Biz Line}, chờ đối soát.", "Voucher {tên} còn 3 ngày nữa hết hạn.", "{N} điểm sẽ hết hạn ngày {ngày}.", "Chúc mừng bạn lên hạng {hạng}…".', 'Chuông trên Trang chủ có chấm cam khi có thông báo chưa đọc (M1).', dr(34)], motion: [], demo: ['Thanh toán ở máy iPOS để thấy thông báo mới.'], diff: ['Đổi mã M17 của bản HTML trước thành M32: Figma dùng M17 cho "Trang chủ — vừa tích điểm".'] }
+  notes: { rules: ['Câu thông báo lấy đúng brainstorm Mục 7.3: "+{N} điểm tại {Biz Line}, chờ đối soát.", "Voucher {tên} còn 3 ngày nữa hết hạn.", "{N} điểm sẽ hết hạn ngày {ngày}.".', 'Chuông trên Trang chủ có chấm cam khi có thông báo chưa đọc (M1).', dr(34)], motion: [], demo: ['Thanh toán ở máy iPOS để thấy thông báo mới.'], diff: ['Đổi mã M17 của bản HTML trước thành M32: Figma dùng M17 cho "Trang chủ — vừa tích điểm".'] }
 });
 /* ================= Hành trình 3 · Đổi điểm và dùng voucher ================= */
 A.ofilter = (k, dev) => { st.sel.ofilter = k; rr(dev); };
@@ -3082,9 +3066,7 @@ const JOURNEYS = [
     ['Nhận voucher ngay', ['W4']], ['Dùng voucher khi thanh toán', ['W5']]] },
   { k: 'pos', n: 'Hành trình 2 · Thanh toán tại quầy trên iPOS', duo: true, steps: [
     ['Khách đưa mã thành viên', ['M3']], ['Thu ngân quét mã trên iPOS', ['P1', 'P1b']],
-    ['Áp voucher, dùng điểm vào hoá đơn', ['P2', 'P2b', 'P3', 'P3b', 'M16']], ['Thanh toán xong', ['P4', 'P4b', 'M15']]] },
-  { k: 'home', n: 'Hành trình 2 (tiếp) · Điểm về app, lên hạng', steps: [
-    ['Mở app, xem điểm', ['M1', 'M2']], ['Đưa mã thành viên khi thanh toán', ['M3']], ['Điểm về, chờ đối soát', ['M17']], ['Xem điểm và lên hạng', ['M4', 'M18']]] },
+    ['Áp voucher, dùng điểm vào hoá đơn', ['P2', 'P2b', 'P3', 'P3b', 'M16']], ['Thanh toán xong, điểm về app', ['P4', 'P4b', 'M15', 'M17']]] },
   { k: 'redeem', n: 'Hành trình 3 · Đổi điểm và dùng voucher', steps: [
     ['Chọn ưu đãi', ['M5', 'M6', 'M6b', 'M6c']], ['Xác nhận, vuốt để đổi', ['M7', 'M9']], ['Voucher vào Ví', ['M8', 'M10', 'M10b']],
     ['Mở mã tại quầy', ['M11']], ['Nhận ưu đãi', ['M11b']]] },
