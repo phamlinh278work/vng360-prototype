@@ -402,6 +402,18 @@ body.mobile.tb-open .tb-fab{background:var(--m-brand)}
 .pqr b{display:block;color:var(--m-brand);font-size:17px;margin-bottom:4px}
 .pqr p{margin:0;color:var(--m-muted);font-size:14px;line-height:1.4}
 .pfoot{text-align:center;font-size:12px;color:var(--m-muted);margin-top:16px}
+/* Bối cảnh ngoài đời ở đầu 3 màn in (góp ý 27/10/2026): người xem thấy đồ in nằm ở đâu trong quán */
+.scene{position:relative;width:358px;margin:10px auto 0;border-radius:24px;overflow:hidden;border:1px solid var(--m-border);box-shadow:0 10px 30px rgba(91,31,138,.10)}
+.scene svg{display:block}
+.scene .mini{position:absolute;overflow:hidden;pointer-events:none;border-radius:3px;box-shadow:0 2px 6px rgba(28,21,48,.28)}
+.scene .mini>div{width:358px;transform-origin:0 0}
+.scene .mini .paper{margin:0;box-shadow:none;border:0;border-radius:0}
+.scene .say{position:absolute;max-width:176px;background:#fff;border-radius:14px;padding:8px 11px;font-size:12.5px;line-height:1.4;color:var(--m-ink);box-shadow:0 4px 14px rgba(28,21,48,.16)}
+.scene .say::after{content:"";position:absolute;bottom:-7px;width:14px;height:14px;background:#fff;transform:rotate(45deg);border-radius:2px}
+.scene .say.l::after{left:22px}
+.scene .say small{display:block;font-size:11px;font-weight:600;color:var(--m-brand)}
+.scene-cap{width:358px;margin:8px auto 0;font-size:12.5px;line-height:1.45;color:var(--m-muted);text-align:center}
+.zoom-h{width:358px;margin:18px auto 0;font-size:14px;font-weight:600;color:var(--m-ink)}
 .bub{display:flex;gap:10px;align-items:flex-start;margin-top:14px}
 .bub.r{flex-direction:row-reverse}
 .bub .av{width:30px;height:30px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;background:var(--m-brand)}
@@ -1319,26 +1331,102 @@ const kbd = () => { let h = ''; for (let i = 1; i <= 9; i++) h += '<button data-
 
 /* Đồ in và lời thoại ngoài đời (không phải màn app) */
 const PRINT_NOTE = 'Bản in, lời thoại ngoài đời tại quán, không phải màn app.';
+/* ---- Bối cảnh ngoài đời (góp ý 27/10/2026): cảnh minh hoạ vẽ bằng SVG, đồ in thu nhỏ đặt đúng chỗ trong cảnh ---- */
+/* Thu nhỏ một bản in 358px vào khung w × h (px) tại toạ độ trong cảnh */
+const miniPrint = (html, x, y, w, h) => '<div class="mini" aria-hidden="true" inert style="left:' + x + 'px;top:' + y + 'px;width:' + w + 'px;height:' + h + 'px"><div style="transform:scale(' + (w / 358).toFixed(4) + ')">' + html + '</div></div>';
+/* Người vẽ phẳng: x là giữa người, y là mặt đất; act: 'phone' (giơ điện thoại về bên trái), 'point' (chỉ sang phải), 'none' */
+function scenePerson(x, y, o) {
+  const k = o.k || 1, skin = o.skin || '#F2C6A0', top = o.top || '#5B1F8A', leg = o.leg || '#3A3F55';
+  const Y = v => (y - v * k).toFixed(1), X = v => (x + v * k).toFixed(1);
+  let g = '<ellipse cx="' + x + '" cy="' + y + '" rx="' + 22 * k + '" ry="' + 4 * k + '" fill="rgba(28,21,48,.13)"/>' +
+    '<rect x="' + X(-9) + '" y="' + Y(66) + '" width="' + 7 * k + '" height="' + 64 * k + '" rx="' + 3 * k + '" fill="' + leg + '"/><rect x="' + X(2) + '" y="' + Y(66) + '" width="' + 7 * k + '" height="' + 64 * k + '" rx="' + 3 * k + '" fill="' + leg + '"/>' +
+    '<ellipse cx="' + X(-6) + '" cy="' + Y(1) + '" rx="' + 6 * k + '" ry="' + 3 * k + '" fill="#2B2220"/><ellipse cx="' + X(6) + '" cy="' + Y(1) + '" rx="' + 6 * k + '" ry="' + 3 * k + '" fill="#2B2220"/>' +
+    '<rect x="' + X(-17) + '" y="' + Y(132) + '" width="' + 34 * k + '" height="' + 72 * k + '" rx="' + 13 * k + '" fill="' + top + '"/>';
+  if (o.apron) g += '<rect x="' + X(-12) + '" y="' + Y(124) + '" width="' + 24 * k + '" height="' + 62 * k + '" rx="' + 4 * k + '" fill="' + o.apron + '"/><circle cx="' + x + '" cy="' + Y(104) + '" r="' + 4 * k + '" fill="#F4EBDC"/>';
+  g += '<rect x="' + X(-4) + '" y="' + Y(138) + '" width="' + 8 * k + '" height="' + 8 * k + '" fill="' + skin + '"/>' +
+    '<circle cx="' + x + '" cy="' + Y(150) + '" r="' + 12 * k + '" fill="' + skin + '"/>' +
+    '<path d="M' + X(-12) + ' ' + Y(150) + 'a' + 12 * k + ' ' + 12 * k + ' 0 0 1 ' + 24 * k + ' 0c0-' + 3 * k + '-' + 6 * k + '-' + 5 * k + '-' + 12 * k + '-' + 5 * k + 's-' + 12 * k + ' ' + 2 * k + '-' + 12 * k + ' ' + 5 * k + 'z" fill="' + (o.hair || '#2B2220') + '"/>';
+  if (o.cap) g += '<rect x="' + X(-13) + '" y="' + Y(164) + '" width="' + 26 * k + '" height="' + 7 * k + '" rx="' + 3 * k + '" fill="' + o.cap + '"/>';
+  if (o.act === 'phone') g += '<path d="M' + X(-12) + ' ' + Y(120) + 'L' + X(-26) + ' ' + Y(140) + '" stroke="' + top + '" stroke-width="' + 8 * k + '" stroke-linecap="round"/><rect x="' + X(-33) + '" y="' + Y(158) + '" width="' + 9 * k + '" height="' + 15 * k + '" rx="' + 2 * k + '" fill="#1C1530"/><circle cx="' + X(-27) + '" cy="' + Y(141) + '" r="' + 4 * k + '" fill="' + skin + '"/>';
+  if (o.act === 'point') g += '<path d="M' + X(12) + ' ' + Y(120) + 'L' + X(34) + ' ' + Y(128) + '" stroke="' + top + '" stroke-width="' + 8 * k + '" stroke-linecap="round"/><circle cx="' + X(38) + '" cy="' + Y(129) + '" r="' + 4 * k + '" fill="' + skin + '"/>';
+  return g;
+}
+/* Mặt tiền quán Kite: biển hiệu, mái hiên, cửa kính, vỉa hè; banner đứng (60 × 160 cm) trước cửa */
+function sceneFront(o = {}) {
+  const glass = '<linearGradient id="scg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBE6C4"/><stop offset="1" stop-color="#EDBE80"/></linearGradient>';
+  let awn = '';
+  for (let i = 0; i < 10; i++) awn += '<rect x="' + (14 + i * 33) + '" y="62" width="16.5" height="20" fill="#F4EBDC"/>';
+  let scal = 'M14 82';
+  for (let i = 0; i < 20; i++) scal += 'a8.25 8.25 0 0 0 16.5 0';
+  let tiles = '';
+  for (let i = 1; i < 9; i++) tiles += '<line x1="' + i * 44 + '" y1="238" x2="' + (i * 44 - 10) + '" y2="300" stroke="#CBC3B7"/>';
+  const lamp = cx => '<line x1="' + cx + '" y1="98" x2="' + cx + '" y2="112" stroke="#4A3428" stroke-width="1.5"/><path d="M' + (cx - 8) + ' 120a8 8 0 0 1 16 0z" fill="#3B2A20"/><circle cx="' + cx + '" cy="121" r="3.5" fill="#FFF4D6"/>';
+  const plant = (x0) => '<path d="M' + (x0 - 11) + ' 214h22l-3 18h-16z" fill="#B9693F"/><ellipse cx="' + (x0 - 6) + '" cy="204" rx="7" ry="13" fill="#3F6B47" transform="rotate(-20 ' + (x0 - 6) + ' 204)"/><ellipse cx="' + (x0 + 6) + '" cy="202" rx="7" ry="14" fill="#5E8C61" transform="rotate(18 ' + (x0 + 6) + ' 202)"/><ellipse cx="' + x0 + '" cy="198" rx="6" ry="15" fill="#4E7E55"/>';
+  const svg = '<svg viewBox="0 0 358 300" width="358" height="300" aria-hidden="true"><defs>' + glass + '</defs>' +
+    '<rect width="358" height="300" fill="#EFE5D8"/>' +
+    '<rect x="64" y="14" width="230" height="40" rx="6" fill="#3B2A20"/><g transform="translate(96 34) rotate(45)"><rect x="-6" y="-6" width="12" height="12" rx="2.5" fill="#E8521A"/><rect x="-6" y="-6" width="6" height="6" rx="1" fill="#C9A24A"/><rect x="0" y="0" width="6" height="6" rx="1" fill="#0D9488"/></g>' +
+    '<text x="186" y="40" text-anchor="middle" font-size="18" font-weight="700" fill="#F6EBDD" font-family="inherit">Kite Coffee</text>' +
+    '<rect x="14" y="62" width="330" height="20" fill="#2E5E4E"/>' + awn + '<path d="' + scal + 'z" fill="#2E5E4E"/>' +
+    '<rect x="14" y="92" width="330" height="140" fill="#4A3428"/>' +
+    '<rect x="22" y="100" width="148" height="124" fill="url(#scg)"/>' + lamp(58) + lamp(132) +
+    '<rect x="22" y="196" width="148" height="28" fill="#8A5A3C" opacity=".35"/><circle cx="96" cy="168" r="9" fill="#6B4A3A" opacity=".35"/><rect x="84" y="178" width="24" height="22" rx="8" fill="#6B4A3A" opacity=".35"/>' +
+    '<rect x="94" y="100" width="4" height="124" fill="#4A3428"/>' +
+    '<rect x="200" y="98" width="74" height="134" fill="url(#scg)"/><rect x="202" y="100" width="70" height="132" fill="none" stroke="#4A3428" stroke-width="4"/>' +
+    '<rect x="211" y="116" width="52" height="16" rx="3" fill="#fff"/><text x="237" y="127.5" text-anchor="middle" font-size="9" font-weight="700" fill="#2E5E4E" font-family="inherit">MỞ CỬA</text><rect x="258" y="160" width="4" height="24" rx="2" fill="#C9A26B"/>' +
+    '<rect x="282" y="100" width="54" height="124" fill="url(#scg)"/>' + lamp(309) +
+    '<rect x="0" y="232" width="358" height="68" fill="#D9D2C7"/><rect x="0" y="232" width="358" height="6" fill="#C7BFB3"/>' + tiles + '<line x1="0" y1="268" x2="358" y2="268" stroke="#CBC3B7"/>' +
+    plant(186) + plant(290) +
+    /* chân và khung banner đứng */
+    '<ellipse cx="146" cy="281" rx="40" ry="5" fill="rgba(28,21,48,.15)"/><rect x="114" y="272" width="64" height="8" rx="3" fill="#5B5B66"/><rect x="117" y="126" width="58" height="4" rx="2" fill="#5B5B66"/><rect x="119" y="129" width="54" height="144" fill="#fff"/>' +
+    (o.people || '') + '</svg>';
+  return '<div class="scene">' + svg + miniPrint(bannerPaper(424), 120, 130, 52, 142) + (o.extra || '') + '</div>';
+}
+/* Quầy order: bảng thực đơn, máy bán hàng, thu ngân; bảng để bàn A5 đứng cạnh máy */
+function sceneCounter() {
+  let menu = '';
+  for (let c = 0; c < 3; c++) for (let r = 0; r < 4; r++) menu += '<rect x="' + (46 + c * 62) + '" y="' + (44 + r * 10) + '" width="' + (c === 1 ? 34 : 40) + '" height="3" rx="1.5" fill="#F6EBDD" opacity=".7"/>';
+  let cups = '';
+  for (let i = 0; i < 4; i++) cups += '<path d="M' + (258 + i * 20) + ' 30h12l-2 12h-8z" fill="' + ['#F4EBDC', '#2E5E4E', '#F4EBDC', '#E8521A'][i] + '"/>';
+  const svg = '<svg viewBox="0 0 358 260" width="358" height="260" aria-hidden="true">' +
+    '<rect width="358" height="260" fill="#EFE5D8"/>' +
+    '<rect x="30" y="14" width="200" height="82" rx="6" fill="#2F2A26"/><text x="130" y="34" text-anchor="middle" font-size="11" font-weight="700" fill="#F6EBDD" letter-spacing="2" font-family="inherit">MENU</text>' + menu +
+    '<rect x="250" y="42" width="90" height="4" rx="2" fill="#8A5A3C"/>' + cups + '<rect x="250" y="76" width="90" height="4" rx="2" fill="#8A5A3C"/>' +
+    '<path d="M258 64h12l-2 12h-8zM288 64h12l-2 12h-8z" fill="#F4EBDC"/>' +
+    scenePerson(112, 222, { top: '#F4EBDC', apron: '#2E5E4E', cap: '#2E5E4E', skin: '#E8B98F', k: 0.9 }) +
+    '<rect x="0" y="166" width="358" height="10" fill="#B98560"/><rect x="0" y="176" width="358" height="84" fill="#9A6A47"/>' +
+    '<line x1="0" y1="206" x2="358" y2="206" stroke="#8A5A3C"/><line x1="0" y1="236" x2="358" y2="236" stroke="#8A5A3C"/>' +
+    '<rect x="176" y="150" width="20" height="16" fill="#3A3F55"/><rect x="160" y="116" width="52" height="36" rx="4" fill="#1C1530"/><rect x="164" y="120" width="44" height="28" rx="2" fill="#2563EB" opacity=".85"/><rect x="168" y="125" width="22" height="3" rx="1.5" fill="#fff" opacity=".8"/><rect x="168" y="132" width="32" height="3" rx="1.5" fill="#fff" opacity=".5"/>' +
+    /* chân chữ A phía sau bảng để bàn */
+    '<path d="M282 166l14-74h4l-10 74z" fill="#C9C2B8"/>' +
+    '<g opacity=".95"><circle cx="300" cy="226" r="20" fill="#2B2220"/><rect x="262" y="236" width="80" height="40" rx="20" fill="#0F766E"/><path d="M276 238L262 204" stroke="#0F766E" stroke-width="10" stroke-linecap="round"/><rect x="252" y="182" width="12" height="20" rx="2.5" fill="#1C1530"/><circle cx="262" cy="204" r="5" fill="#F2C6A0"/></g>' +
+    '</svg>';
+  return '<div class="scene">' + svg + miniPrint(bangPaper(), 232, 81, 54, 89) + '</div>';
+}
+/* Bản in banner đứng; photoH nhỏ hơn khi thu nhỏ vào cảnh để giữ đúng tỉ lệ 60 × 160 cm */
+const bannerPaper = photoH => '<div class="paper" style="margin-top:10px">' +
+  '<div class="ptop">' + kiteLogo + '<span class="brandcap">VNG MEMBERSHIP</span></div>' +
+  '<div style="color:var(--m-brand);font-weight:600;font-size:20px;margin-top:16px">Thành viên mới</div><div style="font-size:24px;font-weight:700;line-height:1.3;margin-top:2px">Cài app, đăng ký 1 chạm, giảm ngay ly đầu tiên</div>' +
+  '<div style="position:relative;margin-top:18px"><div class="photo" style="height:' + photoH + 'px">' + ic('coffee', 64) + '</div>' + spark(30, '', 'right:-12px;top:-14px') + spark(18, '', 'left:10px;top:12px') + spark(22, 'o', 'left:-12px;top:' + Math.round(photoH * 0.65) + 'px') + spark(16, '', 'right:56px;top:' + Math.round(photoH * 0.82) + 'px') +
+  '<div style="position:relative;margin:-56px 14px 0">' + bigTk('GIẢM NGAY', '10%', 'cho ly bạn đang gọi hôm nay', 'notch') + '</div>' + spark(22, 'p', 'right:-10px;bottom:-18px') + '</div>' +
+  '<div style="margin-top:42px">' + printQr(124) + '</div>' + printFoot + '</div>';
 def('BANNER', {
   dev: 'kh', flow: 'reg', fig: '261:14096', code: 'Banner', name: 'Banner đứng ở cửa quán (60 × 160 cm)', print: true, next: { id: 'NVCUA', t: 'Tiếp: nhân viên đứng cửa' },
-  render: () => '<div class="paper" style="margin-top:10px">' +
-    '<div class="ptop">' + kiteLogo + '<span class="brandcap">VNG MEMBERSHIP</span></div>' +
-    '<div style="color:var(--m-brand);font-weight:600;font-size:20px;margin-top:16px">Thành viên mới</div><div style="font-size:24px;font-weight:700;line-height:1.3;margin-top:2px">Cài app, đăng ký 1 chạm, giảm ngay ly đầu tiên</div>' +
-    '<div style="position:relative;margin-top:18px"><div class="photo" style="height:460px">' + ic('coffee', 64) + '</div>' + spark(30, '', 'right:-12px;top:-14px') + spark(18, '', 'left:10px;top:12px') + spark(22, 'o', 'left:-12px;top:300px') + spark(16, '', 'right:56px;top:376px') +
-    '<div style="position:relative;margin:-56px 14px 0">' + bigTk('GIẢM NGAY', '10%', 'cho ly bạn đang gọi hôm nay', 'notch') + '</div>' + spark(22, 'p', 'right:-10px;bottom:-18px') + '</div>' +
-    '<div style="margin-top:42px">' + printQr(124) + '</div>' + printFoot + '</div>',
+  render: () => sceneFront({ people: scenePerson(236, 290, { act: 'phone', top: '#0F766E', k: 0.95 }) }) +
+    '<div class="scene-cap">Khách đi tới cửa quán Kite thấy banner đứng cạnh cửa, mở điện thoại quét mã.</div><div class="zoom-h">Cận cảnh banner (60 × 160 cm)</div>' + bannerPaper(460),
   notes: {
     rules: ['Banner đứng khổ 60 × 160 cm đặt ngay cửa: khách thấy trước khi vào quầy (góp ý sau họp 21/10: banner và mã QR tại điểm bán).', 'Cùng hình và lời mời với bảng ở quầy; thêm dòng lời mời lớn đọc được từ xa. Mã QR in khoảng 10 cm để quét từ 1 m.', 'Mỗi cửa hàng một mã QR riêng để đếm lượt cài từ cửa so với từ quầy.', dr(1)],
     motion: [],
     demo: ['Bấm khung mã QR để giả lập khách quét: máy chưa có app thì mở kho ứng dụng (W0).'],
-    diff: [PRINT_NOTE + ' Bản HTML đặt trong khung máy chỉ để xem cùng luồng.', 'Ảnh ly cà phê trên Figma là ảnh minh hoạ (Unsplash); bản HTML thay bằng khối màu kèm biểu tượng. Logo Kite vẽ lại đơn giản.']
+    diff: [PRINT_NOTE + ' Bản HTML đặt trong khung máy chỉ để xem cùng luồng.', 'Cảnh mặt tiền quán ở đầu màn chỉ có ở bản HTML (góp ý 27/10/2026): để người xem hành trình biết đây là banner đứng cạnh cửa; banner trong cảnh là bản in thu nhỏ, ảnh ngắn lại cho đúng tỉ lệ 60 × 160 cm.', 'Ảnh ly cà phê trên Figma là ảnh minh hoạ (Unsplash); bản HTML thay bằng khối màu kèm biểu tượng. Logo Kite vẽ lại đơn giản.']
   }
 });
 def('NVCUA', {
   dev: 'kh', flow: 'reg', fig: '252:9800', code: 'NV cửa', name: 'Nhân viên đứng cửa chào và hướng dẫn quét mã', print: true, next: { id: 'BANG', t: 'Tiếp: bảng ở quầy order' },
   render: () => {
     const b = (who, t, r) => '<div class="bub' + (r ? ' r' : '') + '"><span class="av">' + (r ? 'KH' : 'NV') + '</span><div class="bt"><small>' + who + '</small>' + t + '</div></div>';
-    return '<div class="paper plain" style="margin-top:10px"><div class="xs mut b">Khi khách bước vào cửa</div><div class="h2" style="margin-top:10px;line-height:1.35">Nhân viên đứng cửa chào và hướng dẫn</div>' +
+    const scene = sceneFront({ people: scenePerson(72, 290, { act: 'point', top: '#F4EBDC', apron: '#2E5E4E', cap: '#2E5E4E', skin: '#E8B98F', k: 0.95 }) + scenePerson(236, 290, { act: 'phone', top: '#0F766E', k: 0.95 }),
+      extra: '<div class="say l" style="left:10px;top:58px;max-width:206px"><small>Nhân viên đứng cửa</small>Quét mã trên banner, giảm ngay 10% ly đầu tiên ạ!</div>' });
+    return scene + '<div class="scene-cap">Nhân viên đứng cạnh banner ở cửa, chỉ vào mã QR khi khách đi tới.</div><div class="zoom-h">Lời mời và kịch bản cho nhân viên</div>' + '<div class="paper plain" style="margin-top:10px"><div class="xs mut b">Khi khách bước vào cửa</div><div class="h2" style="margin-top:10px;line-height:1.35">Nhân viên đứng cửa chào và hướng dẫn</div>' +
       b('Nhân viên', 'Chào anh/chị ạ! Anh/chị quét mã trên banner này cài app VNG, đăng ký 1 chạm bằng Zalo là được giảm 10% ly đầu tiên hôm nay ạ.') +
       b('Khách', 'Có phải nhập nhiều không em?', true) +
       b('Nhân viên', 'Dạ không ạ, bấm "Tiếp tục với Zalo" là xong. Anh/chị cài trong lúc vào gọi món, lúc thanh toán đưa thu ngân quét voucher là được.') +
@@ -1348,22 +1436,24 @@ def('NVCUA', {
     rules: ['Góp ý sau họp 21/10: thêm hành trình ngoài đời, gồm banner và mã QR tại điểm bán, và nhân viên đứng cửa chủ động hướng dẫn khách quét QR cài app.', 'Mời ngay ở cửa để khách cài app trong lúc vào gọi món; đến lúc thanh toán voucher đã nằm trong Ví. Giữ hành trình gói trong một lần ghé (góp ý PM 20/10).', 'Câu mời nêu "đăng ký 1 chạm bằng Zalo" vì đăng nhập mạng xã hội là lối chính (góp ý sau họp 21/10).', dr(2), dr(3)],
     motion: [],
     demo: [],
-    diff: [PRINT_NOTE]
+    diff: [PRINT_NOTE, 'Cảnh mặt tiền quán có nhân viên đứng cạnh banner chỉ có ở bản HTML (góp ý 27/10/2026), để người xem hành trình hình dung đúng chỗ đứng và lúc mời.']
   }
 });
+const bangPaper = () => '<div class="paper" style="margin-top:10px">' +
+  '<div class="ptop">' + kiteLogo + '<span class="brandcap">VNG MEMBERSHIP</span></div>' +
+  '<div style="position:relative;margin-top:14px"><div class="photo" style="height:196px">' + ic('coffee', 48) + '</div>' + spark(26, '', 'right:-12px;top:-14px') + spark(16, '', 'left:10px;top:10px') + spark(20, 'o', 'left:-12px;top:136px') + spark(14, '', 'right:44px;top:150px') +
+  '<div style="position:relative;margin:-40px 14px 0">' + bigTk('GIẢM NGAY', '10%', 'cho ly bạn đang gọi hôm nay', 'notch') + '</div>' + spark(22, 'p', 'right:-10px;bottom:-18px') + '</div>' +
+  '<div style="margin-top:26px">' + printQr(100) + '</div>' + printFoot + '</div>';
 def('BANG', {
   dev: 'kh', flow: 'reg', fig: '253:10041', code: 'Bảng quầy', name: 'Bảng ở quầy · mặt trước (khách nhìn)', print: true, next: { id: 'W0', t: 'Khách quét mã: mở kho ứng dụng' },
-  render: () => '<div class="paper" style="margin-top:10px">' +
-    '<div class="ptop">' + kiteLogo + '<span class="brandcap">VNG MEMBERSHIP</span></div>' +
-    '<div style="position:relative;margin-top:14px"><div class="photo" style="height:196px">' + ic('coffee', 48) + '</div>' + spark(26, '', 'right:-12px;top:-14px') + spark(16, '', 'left:10px;top:10px') + spark(20, 'o', 'left:-12px;top:136px') + spark(14, '', 'right:44px;top:150px') +
-    '<div style="position:relative;margin:-40px 14px 0">' + bigTk('GIẢM NGAY', '10%', 'cho ly bạn đang gọi hôm nay', 'notch') + '</div>' + spark(22, 'p', 'right:-10px;bottom:-18px') + '</div>' +
-    '<div style="margin-top:26px">' + printQr(100) + '</div>' + printFoot + '</div>',
+  render: () => sceneCounter() +
+    '<div class="scene-cap">Bảng để bàn đứng cạnh máy bán hàng, ngang tầm mắt khách lúc gọi món và trả tiền.</div><div class="zoom-h">Cận cảnh bảng ở quầy (A5 đứng)</div>' + bangPaper(),
   notes: {
     rules: ['Bảng ở quầy nhắc lại lời mời cho khách chưa cài ở cửa; cùng hình và mã QR với banner ở cửa. Hiểu trong 2 giây: một món quà, một lời kêu gọi (hướng dẫn bảng đặt cạnh quầy của 4OVER4).', 'Món quà làm hình chính: ảnh ly nước và tấm vé "Giảm ngay 10%" nổi trên ảnh. Quán đồ uống hay mời tải app bằng một ly cụ thể (Highlands tặng 1 ly trà sữa cho tài khoản mới, theo bài đăng người dùng, chưa có nguồn chính thức).', 'Ghi ngay cạnh mã QR khách được gì: "Quét để nhận quà". QR Code Generator nêu lỗi hay gặp nhất là in mã mà không nói lợi ích khi quét.', 'Nền sáng (tím nhạt chuyển sang cam đào), ảnh viền trắng, sao lấp lánh vàng và cam, theo yêu cầu 22/10: bảng sáng sủa, nổi bật. Chữ chính vẫn tương phản cao: số tiền cam đậm, lời kêu gọi tím trên nền trắng.', 'Mã QR in khoảng 4 cm (QR Code Generator khuyên tối thiểu 2 cm). Mỗi quầy một mã để đếm lượt đăng ký từng nơi (Linkbreakers) và để voucher áp đúng Biz Line.', 'Ba bước đăng ký không in lên bảng: nhân viên nói (Bước 2), app tự dẫn từng bước (W1 đến W3).', 'Bảng QR tại quầy do đơn vị đặt, nhân viên có một câu mời ngắn (câu C1 ngày 21/10). Mỗi số điện thoại nhận một lần (brainstorm Membership Mục 4).', 'Tham khảo cùng cơ chế: Techcombank in mã QR tại cửa hàng Highlands, khách quét để mở tài khoản và nhận e-voucher 100.000đ (25/10/2024 đến 30/04/2025, đã hết hạn).', dr(1), dr(4)],
     more: [{ h: 'Đề xuất in ấn', items: ['Bảng để bàn khổ A5 đứng (148 × 210 mm), đặt cạnh máy thanh toán, ngang tầm mắt khách lúc trả tiền. Mặt sau in câu mời cho nhân viên (Bước 2).', 'Sao lấp lánh có thể ép kim vàng, ảnh và vé phủ bóng, để bảng bắt sáng dưới đèn quầy. Nền chuyển màu dùng mã màu riêng cho bản in.'] }],
     motion: [],
     demo: ['Bấm khung mã QR để giả lập khách quét: mở kho ứng dụng (W0).'],
-    diff: [PRINT_NOTE, 'Ảnh ly cà phê trên Figma là ảnh minh hoạ (Unsplash); bản HTML thay bằng khối màu kèm biểu tượng.']
+    diff: [PRINT_NOTE, 'Cảnh quầy order (thu ngân, máy bán hàng, bảng để bàn đứng cạnh máy) chỉ có ở bản HTML (góp ý 27/10/2026), để người xem hành trình biết bảng đặt ở đâu.', 'Ảnh ly cà phê trên Figma là ảnh minh hoạ (Unsplash); bản HTML thay bằng khối màu kèm biểu tượng.']
   }
 });
 
