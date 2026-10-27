@@ -462,12 +462,33 @@ body.mobile .ph{border-radius:0}
 .bottom.botbar{border-top:1px solid var(--m-border);background:var(--m-bg)}
 .ph.has-kbd .scroll{padding-bottom:300px}
 .caret{display:inline-block;width:2px;height:24px;background:var(--m-action);animation:fade .8s infinite alternate}
+/* Thanh "Vuốt để đổi" ở M7 (góp ý 27/10/2026: đổi điểm không cần PIN, kiểu OneU) */
+.swipe{position:relative;height:60px;border-radius:30px;background:var(--m-action);color:var(--m-on-action);overflow:hidden;user-select:none;-webkit-user-select:none}
+.swipe .sw-fill{position:absolute;left:0;top:0;bottom:0;width:60px;border-radius:30px;background:var(--m-action-pressed);transition:width .25s cubic-bezier(.2,.8,.2,1)}
+.swipe .sw-lbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:6px;padding-left:48px;font-weight:600;font-size:16px;pointer-events:none}
+.swipe .sw-hint{display:inline-flex;margin-left:2px}
+.swipe .sw-hint svg{animation:swhint 1.4s infinite}
+.swipe .sw-hint svg+svg{margin-left:-10px;animation-delay:.2s}
+.swipe .sw-knob{position:absolute;left:4px;top:4px;width:52px;height:52px;border-radius:50%;background:#fff;color:var(--m-action);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.18);cursor:grab;touch-action:none;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.swipe.drag .sw-knob,.swipe.drag .sw-fill{transition:none}
+.swipe.drag .sw-knob{cursor:grabbing}
+.swipe.nudge .sw-knob{animation:swnudge .5s}
+.swipe.busy .sw-lbl{padding-left:0;padding-right:48px}
+.swipe.busy .sw-fill{width:100%}
+.swipe.busy .sw-knob{left:auto;right:4px;cursor:default}
+.spin{width:22px;height:22px;border-radius:50%;border:2.5px solid var(--m-action-soft);border-top-color:var(--m-action);animation:spin .8s linear infinite;flex:none}
+.sheet .ib:disabled{opacity:.4;cursor:default}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes swhint{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes swnudge{0%,100%{transform:none}40%{transform:translateX(28px)}}
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important}
   .screen-in,.dim,.toast,.sheet,.modal{animation:fade .2s!important}
   .qrf .band2{display:none}
   .conf{display:none}
+  .swipe .sw-hint svg{opacity:1}
+  .spin{animation:spin .8s linear infinite!important}
 }
 
 /* ===== Ngăn kéo danh sách màn ===== */
@@ -789,7 +810,7 @@ const DRULE = {
   13: 'Chỉ tự nối lịch sử khi số điện thoại khớp, không phải số dùng chung và họ tên đầy đủ khớp; còn lại khách tự nối bằng mã của đơn vị hoặc nhờ nhân viên xác minh.',
   14: 'Nối lịch sử ở đơn vị khác: cộng giao dịch 12 tháng tính lùi từ ngày khách nối đơn vị đó; điểm cộng dồn chỉ tính xét hạng của năm hiện tại.',
   15: 'CRM Hub gộp hoặc tách hồ sơ: liên kết theo từng hồ sơ ở từng đơn vị; hồ sơ bị tách về "Chưa liên kết", điểm thu lại như hoàn giao dịch; không tự gộp hai tài khoản thành viên.',
-  16: 'Mã PIN đặt ở lần đầu cần dùng điểm (đổi ưu đãi hoặc xác nhận trừ điểm tại quầy), để đăng ký tại quầy vẫn 1 chạm. Quên PIN: mã OTP cộng thêm một bước xác minh bằng email hoặc tổng đài (M33).',
+  16: 'Đổi ưu đãi không cần mã PIN: khách xem lại số điểm sẽ trừ rồi vuốt để đổi (cập nhật 27/10/2026 theo góp ý, giống OneU). Mã PIN chỉ dùng khi đồng ý trừ từ ' + fmtN(CONFIRM_AT) + ' điểm tại quầy (M16) và khi đăng nhập trên máy mới (W8); đặt ở lần đầu cần đến, để đăng ký tại quầy vẫn 1 chạm. Quên PIN: mã OTP cộng thêm một bước xác minh bằng email hoặc tổng đài (M33).',
   17: 'Rút đồng ý nhận ưu đãi ngay trong app; xoá tài khoản thì báo trước sẽ mất điểm và voucher; giữ dấu vết hoá đơn đã tích để hoá đơn đó không được tích lại.',
   18: 'Tiktak và Resort: kết nối được phần mềm bán hàng của đơn vị thì làm như iPOS, không thì dùng một trang web nhỏ cho nhân viên quét mã.',
   19: 'Kite chuyển hẳn khỏi iPOS CRM: quy điểm cũ sang điểm mới, giữ hạng cũ đến hết năm, voucher cũ dùng đến hết hạn, tắt tích điểm của iPOS CRM đúng ngày ra mắt.',
@@ -820,7 +841,7 @@ const DRULE = {
 };
 const dr = n => ({ t: DRULE[n], q: n });
 /* Màn của bản HTML dựng theo câu đã chốt (Figma chưa vẽ), thêm vào cột "Màn liên quan" */
-const DEC_EXTRA = { 9: ['W9'], 13: ['M23'], 14: ['M22', 'M24'], 15: ['M22'], 16: ['M29', 'M33'], 17: ['M27', 'M30'], 27: ['M19'], 29: ['M19'], 32: ['M20'], 34: ['M32'], 39: ['M11'] };
+const DEC_EXTRA = { 9: ['W9'], 13: ['M23'], 14: ['M22', 'M24'], 15: ['M22'], 16: ['M7', 'M29', 'M33', 'W8'], 17: ['M27', 'M30'], 27: ['M19'], 29: ['M19'], 32: ['M20'], 34: ['M32'], 39: ['M11'] };
 /* Nguyên văn khung "Cần anh/chị chốt" (Figma 289:20700): nhóm, câu, màn liên quan, lựa chọn và đề xuất của BA, người được hỏi.
    Ngày 26/10/2026 cả 43 câu chốt theo đề xuất của BA; cột "Đã chốt" lấy từ DRULE bên dưới. */
 const DEC = [
@@ -1076,10 +1097,10 @@ function checkPin(b) {
   p.fails = 0; p.buf = ''; p.err = '';
   return 'ok';
 }
-function pinArea(o = {}) {   /* theo Figma M7, M7b, M7c: ô PIN, dòng báo, bàn phím, "Quên PIN?" bên dưới */
+function pinArea(o = {}) {   /* kiểu ô PIN của Figma M7, M7b, M7c (nay dùng ở M16, W8, M28): ô PIN, dòng báo, bàn phím, "Quên PIN?" bên dưới */
   const lk = pinLocked(), d = new Date(st.pin.lockUntil || 0);
   const red = t => '<span style="color:var(--m-error);font-weight:600;display:inline-flex;gap:6px;align-items:center">' + ic('alertc', 16) + t + '</span>';
-  const msg = lk ? red('Sai 5 lần. Tạm khoá ' + (o.what || 'đổi điểm') + ' 30 phút, thử lại lúc ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes()))
+  const msg = lk ? red('Sai 5 lần. Tạm khoá ' + (o.what || 'dùng điểm') + ' 30 phút, thử lại lúc ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes()))
     : st.pin.err ? red(esc(st.pin.err)) : '<span class="mut">' + (o.hint || 'Nhập mã PIN 6 số để xác nhận') + '</span>';
   return cells(lk ? '' : st.pin.buf, { mask: true, err: lk || !!st.pin.err }) + '<div style="text-align:center;margin-top:12px;font-size:14px">' + msg + '</div>' +
     '<div' + (lk ? ' style="opacity:.4;pointer-events:none" aria-disabled="true"' : '') + '>' + keypad() + '</div>' +
@@ -1611,7 +1632,7 @@ def('W9', {
     };
   },
   notes: {
-    rules: [dr(9), 'Cùng quy tắc OTP với W2-SĐT: 6 số, hạn 5 phút, gửi lại tối đa 3 lần mỗi giờ (brainstorm Mục 7.1, 7.2); câu lỗi theo Mục 7.3.', 'Xác minh xong thì đi tiếp đúng việc khách đang làm (đặt PIN rồi đổi ưu đãi, hoặc liên kết đơn vị).'],
+    rules: [dr(9), 'Cùng quy tắc OTP với W2-SĐT: 6 số, hạn 5 phút, gửi lại tối đa 3 lần mỗi giờ (brainstorm Mục 7.1, 7.2); câu lỗi theo Mục 7.3.', 'Xác minh xong thì đi tiếp đúng việc khách đang làm (mở bảng đổi ưu đãi, hoặc liên kết đơn vị).'],
     motion: ['Ô sai rung ngang 2 lần 150ms; Reduce Motion: chỉ đổi viền.'],
     demo: ['Đăng ký bằng Google hoặc Facebook (W1, W3d), rồi ở Trang chủ bấm "Liên kết ›" một đơn vị: app mở màn này trước.', 'Mã 000000: sai. Mã 999999: hết hạn. Mã 6 số khác: đúng.'],
     diff: ['Màn dựng theo câu 9 đã chốt; câu chữ trên màn là câu tự viết.']
@@ -1927,10 +1948,8 @@ A['open-offer'] = id => { st.sel.offer = id; const o = offerById(id); go(st.rede
 A['open-v'] = id => { const v = vById(id); if (!v) return; st.sel.voucher = id; v.fresh = false; go(v.status === 'used' ? 'M11b' : id === 'w1' && v.status === 'active' ? 'W5' : 'M11'); };
 A.vtab = (k, dev) => { st.sel.vtab = k; rr(dev); };
 A['redeem-start'] = () => {
-  if (pinLocked()) { go('M7c'); return; }
   if (needPhoneOtp(() => A['redeem-start']())) return;          /* câu 9: đăng ký bằng Google, Facebook thì xác minh số trước */
-  if (!st.pin.set) { st.pin.after = 'M7'; st.pin.mode = 'set'; go('M29'); return; }   /* câu 16: đặt PIN ở lần đầu dùng điểm */
-  go('M7');
+  go('M7');   /* câu 16 (cập nhật 27/10/2026): đổi điểm không cần PIN, vuốt để đổi ở M7 */
 };
 function doRedeem() {
   const o = offerById(st.sel.offer);
@@ -1989,9 +2008,9 @@ def('M6', {
   dev: 'kh', flow: 'redeem', fig: '79:19709', name: 'Chi tiết ưu đãi', edge: true, light: true, bg: '#fff',
   render: s => { const o = offerById(s.sel.offer); return { body: offerDetail(s), bottom: '<button class="btn" data-act="redeem-start">Đổi ' + fmtN(o.pts) + ' điểm</button>', bottomCls: 'botbar' }; },
   notes: {
-    rules: ['Giá điểm kèm "Bạn có 245.000 điểm → còn 195.000 điểm sau khi đổi" (URD UN-009: biết rõ trước khi xác nhận).', 'Số suất còn lại và giới hạn mỗi thành viên do đơn vị đặt.', 'Điều kiện: hạn 30 ngày từ lúc đổi; dùng một lần, gắn với tài khoản, không tặng; nơi áp dụng.', 'Nút dính đáy "Đổi 50.000 điểm" mở bảng xác nhận và nhập PIN (M7).', dr(35), dr(16)],
+    rules: ['Giá điểm kèm "Bạn có 245.000 điểm → còn 195.000 điểm sau khi đổi" (URD UN-009: biết rõ trước khi xác nhận).', 'Số suất còn lại và giới hạn mỗi thành viên do đơn vị đặt.', 'Điều kiện: hạn 30 ngày từ lúc đổi; dùng một lần, gắn với tài khoản, không tặng; nơi áp dụng.', 'Nút dính đáy "Đổi 50.000 điểm" mở bảng xác nhận (M7); khách vuốt để đổi, không cần PIN.', dr(35), dr(16)],
     motion: ['Ảnh thu nhỏ dần khi cuộn (parallax nhẹ); nút dính đáy luôn hiện. Reduce Motion: bỏ parallax.'],
-    demo: ['Thành viên chưa đặt PIN (hồ sơ "Thành viên mới") bấm Đổi sẽ qua M29 đặt PIN trước.', 'Đổi xong rồi mở lại ưu đãi đó: sang M6c (đã đổi đủ lượt).'],
+    demo: ['Đổi xong rồi mở lại ưu đãi đó: sang M6c (đã đổi đủ lượt).'],
     diff: ['Ảnh ưu đãi trên Figma là ảnh chụp; bản HTML thay bằng khối màu kèm biểu tượng đơn vị.']
   }
 });
@@ -2013,39 +2032,56 @@ def('M6c', {
   notes: { rules: ['Ưu đãi giới hạn số lần mỗi thành viên; đã đổi đủ thì nút mờ (luồng 3, bước kiểm suất và giới hạn). Trường hợp "Đã đổi đủ lượt".', 'Hết suất hoặc vượt giới hạn mỗi thành viên thì không cho đổi, không trừ điểm.'], motion: [], demo: ['Đổi một ưu đãi ở M6 rồi mở lại ưu đãi đó từ danh mục.'], diff: [] }
 });
 
-/* Bảng xác nhận và nhập PIN (Figma M7, M7b, M7c) */
+/* Bảng xác nhận đổi điểm (Figma M7). Góp ý 27/10/2026: bỏ nhập PIN, vuốt hết thanh là đổi (kiểu OneU) */
 function m7Sheet(s) {
-  const o = offerById(s.sel.offer);
-  return '<div class="dim"></div><div class="sheet"><div class="grab"></div><div style="display:flex;align-items:flex-start;gap:8px"><div style="flex:1"><div class="b" style="font-size:21px">Đổi ' + esc(o.title) + '</div><div class="xs mut">' + esc(o.blLine) + '</div></div><button class="ib" data-back aria-label="Đóng">' + ic('close', 20) + '</button></div>' +
+  const o = offerById(s.sel.offer), busy = !!s.redeemBusy;
+  return '<div class="dim"></div><div class="sheet"><div class="grab"></div><div style="display:flex;align-items:flex-start;gap:8px"><div style="flex:1"><div class="b" style="font-size:21px">Đổi ' + esc(o.title) + '</div><div class="xs mut">' + esc(o.blLine) + '</div></div><button class="ib" data-back aria-label="Đóng"' + (busy ? ' disabled' : '') + '>' + ic('close', 20) + '</button></div>' +
     '<div class="grp" style="margin-top:14px"><div class="kv"><div class="k">Điểm hiện có</div><div class="v" style="text-align:right;font-weight:500">' + fmtN(avail()) + '</div><div class="k">Sẽ trừ</div><div class="v" style="text-align:right;font-weight:500">' + fmtN(-o.pts) + '</div><div class="k b" style="color:var(--m-ink)">Còn lại</div><div class="v" style="text-align:right;color:var(--m-action)">' + fmtN(avail() - o.pts) + ' điểm</div></div></div>' +
     '<div style="margin:14px 0"><div class="sm b" style="display:flex;gap:6px;align-items:center">' + ic('cal', 16) + 'Voucher dùng đến ' + o.until + '</div><div class="xs mut" style="margin-top:2px">Sau khi đổi, bạn không huỷ được. Voucher hết hạn sẽ không hoàn điểm.</div></div>' +
-    pinArea() + '</div>';
+    swipeBar({ act: 'redeem-confirm', label: 'Vuốt để đổi ' + fmtN(o.pts) + ' điểm', busyLabel: 'Đang đổi điểm…', busy }) + '</div>';
 }
-const M7_NOTES = {
-  rules: ['Bảng trượt bo 24 cạnh trên. Phép tính: hiện có 245.000 / sẽ trừ −50.000 / còn lại 195.000.', 'Hạn voucher = 30 ngày từ lúc đổi. Câu chữ chốt trong brainstorm: "Sau khi đổi, bạn không huỷ được. Voucher hết hạn sẽ không hoàn điểm."', 'Đổi điểm cần PIN; sai: "Mã PIN không đúng. Bạn còn {N} lần thử."; sai 5 lần liên tiếp khoá đổi điểm 30 phút.', 'Hết suất hoặc mất mạng: không trừ điểm (URD UN-009: không mất điểm oan), xem M9.', dr(16)],
-  motion: ['Bảng trượt lên 250ms; ô PIN rung nhẹ khi sai. Reduce Motion: mờ dần, không rung.'],
-  demo: ['PIN 000000: sai (M7b). Sai 5 lần: khoá 30 phút (M7c). PIN 6 số khác: đúng, sang M8.', '"Quên PIN?" mở M33 (đặt lại mã PIN).'],
-  diff: []
+/* Thanh vuốt để xác nhận: kéo nút tròn hết thanh thì gọi A[act]; buông giữa chừng thì trượt về */
+function swipeBar(o) {
+  return '<div class="swipe' + (o.busy ? ' busy' : '') + '" data-swipe="' + o.act + '"><div class="sw-fill"></div>' +
+    '<div class="sw-lbl" aria-hidden="true">' + (o.busy ? esc(o.busyLabel) : esc(o.label) + '<span class="sw-hint">' + ic('chev', 16) + ic('chev', 16) + '</span>') + '</div>' +
+    '<button class="sw-knob" type="button" aria-label="' + esc(o.busy ? o.busyLabel : o.label + '. Bấm Enter để xác nhận') + '"' + (o.busy ? ' disabled' : '') + '>' + (o.busy ? '<span class="spin"></span>' : ic('chev', 22)) + '</button></div>';
+}
+function wireSwipe(ph) {
+  const el = ph.querySelector('[data-swipe]'); if (!el || el.classList.contains('busy')) return;
+  const knob = el.querySelector('.sw-knob'), fill = el.querySelector('.sw-fill');
+  let x0 = null, dx = 0, max = 0, k = 1, moved = false;
+  const set = v => { knob.style.transform = v ? 'translateX(' + v + 'px)' : ''; fill.style.width = (60 + v) + 'px'; };
+  const fire = () => { const f = A[el.dataset.swipe]; if (f) f(); };
+  knob.addEventListener('pointerdown', e => {
+    x0 = e.clientX; dx = 0; moved = false; max = el.clientWidth - knob.offsetWidth - 8;
+    k = el.getBoundingClientRect().width / el.offsetWidth || 1;   /* khung điện thoại có thể đang thu nhỏ */
+    el.classList.add('drag'); knob.setPointerCapture(e.pointerId);
+  });
+  knob.addEventListener('pointermove', e => { if (x0 === null) return; dx = Math.max(0, Math.min(max, (e.clientX - x0) / k)); if (dx > 4) moved = true; set(dx); });
+  const end = () => { if (x0 === null) return; x0 = null; el.classList.remove('drag'); if (dx >= max * 0.85) { set(max); fire(); } else set(0); };
+  knob.addEventListener('pointerup', end); knob.addEventListener('pointercancel', end);
+  knob.addEventListener('click', e => {
+    if (e.detail === 0) { fire(); return; }   /* Enter hoặc Space trên bàn phím thay cho thao tác vuốt */
+    if (!moved) { el.classList.remove('nudge'); void el.offsetWidth; el.classList.add('nudge'); }
+  });
+}
+A['redeem-confirm'] = () => {
+  if (st.redeemBusy || st.cur.kh !== 'M7') return;
+  const t = st.redeemBusy = Date.now(); rr('kh');
+  setTimeout(() => { if (st.redeemBusy !== t) return; st.redeemBusy = 0; if (st.cur.kh === 'M7') doRedeem(); }, 1200);
 };
-const m7Key = (k, dev) => pinKey(k, dev, b => { const r = checkPin(b); if (r === 'ok') doRedeem(); else if (r === 'lock') go('M7c', { noStack: true, replace: true }); else go('M7b', { noStack: true, replace: true }); });
+const M7_NOTES = {
+  rules: ['Bảng trượt bo 24 cạnh trên. Phép tính: hiện có 245.000 / sẽ trừ −50.000 / còn lại 195.000.', 'Hạn voucher = 30 ngày từ lúc đổi. Câu chữ chốt trong brainstorm: "Sau khi đổi, bạn không huỷ được. Voucher hết hạn sẽ không hoàn điểm."', 'Đổi điểm không cần mã PIN (góp ý 27/10/2026, giống OneU): khách xem lại số điểm sẽ trừ rồi vuốt thanh "Vuốt để đổi" hết cỡ là đổi. Buông trước khi tới cuối thì nút trượt về, không đổi.', 'Vuốt xong: thanh hiện "Đang đổi điểm…" khoảng 1 giây, nút đóng tạm khoá; đổi được thì sang M8. Hết suất hoặc mất mạng: không trừ điểm (URD UN-009: không mất điểm oan), xem M9.', 'Dùng bàn phím hoặc trình đọc màn hình: nút tròn trên thanh nhận Enter hoặc Space thay cho thao tác vuốt.', dr(16)],
+  motion: ['Bảng trượt lên 250ms. Nút tròn đi theo ngón tay, phần đã vuốt đậm màu dần; buông trước 85% chiều dài thì trượt về (250ms), tới cuối thì nằm ở cuối và quay vòng chờ. Hai mũi tên trên thanh nhấp nháy để gợi ý vuốt; chạm mà không kéo thì nút nhích sang phải rồi về. Reduce Motion: mũi tên đứng yên, trượt về tức thì.'],
+  demo: ['Kéo nút tròn sang phải hết thanh để đổi; buông giữa chừng thì không đổi.', 'Ưu đãi "Giảm 30% đồ uống" (Kite, còn 1 suất) giả lập vừa hết suất lúc vuốt: sang M9.'],
+  diff: ['Figma M7 vẽ ô nhập PIN 6 số, bàn phím và "Quên PIN?"; bản HTML thay bằng thanh "Vuốt để đổi" theo góp ý 27/10/2026. Hai màn Figma M7b (sai PIN) và M7c (sai 5 lần, khoá 30 phút) không còn dùng trong luồng đổi điểm nên bỏ khỏi bản xem thử.']
+};
 def('M7', {
-  dev: 'kh', flow: 'redeem', fig: '79:19833', name: 'Xác nhận đổi điểm và nhập PIN', edge: true, light: true, usesPin: true, parent: 'M6',
-  enter: (s, o) => { if (!o.pop) { s.pin.buf = ''; s.pin.err = ''; } },
-  onKey: m7Key, render: s => ({ body: offerDetail(s, true), overlay: m7Sheet(s) }), notes: M7_NOTES
+  dev: 'kh', flow: 'redeem', fig: '79:19833', name: 'Xác nhận đổi điểm · vuốt để đổi', edge: true, light: true, parent: 'M6',
+  enter: (s, o) => { if (!o.pop) s.redeemBusy = 0; },
+  mount: ph => wireSwipe(ph),
+  render: s => ({ body: offerDetail(s, true), overlay: m7Sheet(s) }), notes: M7_NOTES
 });
-def('M7b', {
-  dev: 'kh', flow: 'redeem', fig: '258:11263', name: 'Nhập PIN · sai PIN', edge: true, light: true, usesPin: true, parent: 'M6',
-  enter: s => { if (!s.pin.err) { s.pin.fails = Math.max(s.pin.fails, 1); s.pin.err = 'Mã PIN không đúng. Bạn còn ' + (5 - s.pin.fails) + ' lần thử.'; } },
-  onKey: m7Key, render: s => ({ body: offerDetail(s, true), overlay: m7Sheet(s) }),
-  notes: Object.assign({}, M7_NOTES, { rules: ['Nhập sai: báo số lần thử còn lại (luồng 3). Trường hợp "Sai mã PIN".'].concat(M7_NOTES.rules) })
-});
-def('M7c', {
-  dev: 'kh', flow: 'redeem', fig: '258:11404', name: 'Nhập PIN · sai 5 lần, tạm khoá 30 phút', edge: true, light: true, usesPin: true, parent: 'M6',
-  enter: s => { if (!pinLocked()) { s.pin.fails = 5; s.pin.lockUntil = Date.now() + 30 * 60 * 1000; } },
-  onKey: () => { }, render: s => ({ body: offerDetail(s, true), overlay: m7Sheet(s) }),
-  notes: Object.assign({}, M7_NOTES, { rules: ['Khoá đổi điểm 30 phút (luồng 3); bàn phím mờ, giờ mở khoá ghi trên dòng báo. Trường hợp "Sai PIN 5 lần, tạm khoá".', 'Khoá áp cho cả đổi điểm và xác nhận dùng điểm tại quầy (M16).', dr(16)], demo: ['"Quên PIN? Đặt lại mã PIN" mở M33.', { t: 'Mở khoá ngay', act: 'demo-unlock-pin' }] })
-});
-A['demo-unlock-pin'] = () => { st.pin.lockUntil = 0; st.pin.fails = 0; st.pin.err = ''; ['kh'].forEach(d => { if (S[st.cur[d]].usesPin) rr(d); }); renderNotes(); };
 
 def('M8', {
   dev: 'kh', flow: 'redeem', fig: '79:19931', name: 'Đổi thành công', edge: true, light: true, parent: 'M5',
@@ -2141,7 +2177,7 @@ def('M11b', {
 /* Đặt mã PIN (lần đầu hoặc đổi) */
 const easyPin = b => /^(\d)\1{5}$/.test(b) || '0123456789'.includes(b) || '9876543210'.includes(b);
 def('M29', {
-  dev: 'kh', flow: 'redeem', from: 'câu 16 của bảng đã chốt (26/10/2026): đặt PIN ở lần đầu cần dùng điểm; brainstorm Membership Mục 5.3 bước 3, 7.1', name: 'Đặt mã PIN', usesPin: true,
+  dev: 'kh', flow: 'acct', from: 'câu 16 của bảng đã chốt (cập nhật 27/10/2026): đặt PIN ở lần đầu cần đồng ý trừ điểm tại quầy; brainstorm Membership Mục 5.3 bước 3, 7.1', name: 'Đặt mã PIN', usesPin: true,
   enter: (s, o) => { if (o.pop) return; s.pin.buf = ''; s.pin.err = ''; s.pin.first = ''; s.pin.stage = s.pin.mode === 'change' ? 'old' : 'enter'; },
   onKey: (k, dev) => pinKey(k, dev, b => {
     const p = st.pin;
@@ -2155,10 +2191,10 @@ def('M29', {
   }),
   render: s => {
     const p = s.pin, title = p.stage === 'old' ? 'Nhập mã PIN hiện tại' : p.stage === 'confirm' ? 'Nhập lại mã PIN' : (p.mode === 'change' || p.mode === 'reset' ? 'Đặt mã PIN mới' : 'Đặt mã PIN 6 số');
-    return hd(p.mode === 'change' ? 'Đổi mã PIN' : p.mode === 'reset' ? 'Đặt lại mã PIN' : 'Đặt mã PIN') + '<div class="pad"><div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin:6px 0 22px;text-align:center"><span class="ico-c p" style="width:56px;height:56px">' + ic('lock', 26) + '</span><div class="b" style="font-size:19px">' + title + '</div><div class="mut sm">Mã PIN dùng để xác nhận khi đổi điểm và khi thu ngân dùng điểm của bạn.</div></div>' +
+    return hd(p.mode === 'change' ? 'Đổi mã PIN' : p.mode === 'reset' ? 'Đặt lại mã PIN' : 'Đặt mã PIN') + '<div class="pad"><div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin:6px 0 22px;text-align:center"><span class="ico-c p" style="width:56px;height:56px">' + ic('lock', 26) + '</span><div class="b" style="font-size:19px">' + title + '</div><div class="mut sm">Mã PIN dùng để đồng ý khi thu ngân trừ từ ' + fmtN(CONFIRM_AT) + ' điểm của bạn và khi đăng nhập trên máy mới.</div></div>' +
       (p.stage === 'old' ? pinArea({ forgot: false, hint: 'Nhập mã PIN đang dùng' }) : cells(p.buf, { mask: true, err: !!p.err }) + '<div style="text-align:center;margin-top:10px;font-size:14px;' + (p.err ? 'color:var(--m-error);font-weight:600' : 'color:var(--m-muted)') + '">' + (p.err || (p.stage === 'confirm' ? 'Nhập lại để xác nhận' : 'Chọn 6 số dễ nhớ với bạn, khó đoán với người khác')) + '</div>' + keypad()) + '</div>';
   },
-  notes: { rules: [dr(16), 'Đặt xong quay lại đúng bước đang làm (xác nhận đổi M7, hoặc sau khi đặt lại PIN ở M33).'], motion: ['Ô sai rung; Reduce Motion: chỉ đổi viền.'], demo: ['Nhập 2 lần khác nhau: báo không khớp. Nhập 111111 hoặc 123456: báo quá dễ đoán.'], diff: ['Figma chưa vẽ màn đặt PIN; câu "Hai lần nhập không khớp…" và "Mã PIN quá dễ đoán…" là câu tự viết.'] }
+  notes: { rules: [dr(16), 'Đặt xong quay lại đúng bước đang làm (đồng ý trừ điểm tại quầy M16, hoặc sau khi đặt lại PIN ở M33).'], motion: ['Ô sai rung; Reduce Motion: chỉ đổi viền.'], demo: ['Nhập 2 lần khác nhau: báo không khớp. Nhập 111111 hoặc 123456: báo quá dễ đoán.'], diff: ['Figma chưa vẽ màn đặt PIN; câu "Hai lần nhập không khớp…" và "Mã PIN quá dễ đoán…" là câu tự viết.'] }
 });
 /* ================= Luồng 2 · App khách khi thu ngân dùng điểm trên iPOS ================= */
 /* Thu ngân nhập từ CONFIRM_AT điểm trở lên: gửi yêu cầu lên app khách, khách xác nhận bằng PIN trong 3 phút */
@@ -2222,6 +2258,7 @@ def('M15', {
   }
 });
 
+A['m16-setpin'] = () => { st.pin.mode = 'set'; st.pin.after = 'M16'; go('M29'); };   /* câu 16: PIN đặt ở lần đầu cần đồng ý trừ điểm tại quầy */
 def('M16', {
   dev: 'kh', flow: 'deduct', fig: '274:17478', name: 'Yêu cầu dùng điểm từ quầy (từ 200.000 điểm)', edge: true, usesPin: true, parent: 'HOME',
   enter: (s, o) => {
@@ -2241,10 +2278,10 @@ def('M16', {
     return { body: '<div style="padding-top:54px" inert>' + base + '</div>', overlay: '<div class="dim"></div><div class="sheet"><div class="grab"></div><div style="display:flex;align-items:flex-start"><div style="flex:1"><div class="b" style="font-size:19px">' + PLACE + ' đề nghị trừ điểm</div><div class="sm mut">Hoá đơn ' + esc(r.invoice) + ' · còn <span data-cd="req">' + mmss(left) + '</span> để xác nhận</div></div><button class="ib" data-act="m16-reject" aria-label="Đóng và từ chối">' + ic('close', 20) + '</button></div>' +
       '<div class="grp" style="margin-top:12px"><div class="kv"><div class="k">Điểm dùng được</div><div class="v" style="text-align:right">' + fmtN(a) + '</div><div class="k">Sẽ trừ</div><div class="v" style="text-align:right">' + fmtN(-r.pts) + '</div><div class="k b" style="color:var(--m-ink)">Còn lại</div><div class="v" style="text-align:right;color:var(--m-action)">' + fmtN(a - r.pts) + ' điểm</div></div></div>' +
       '<div style="display:flex;gap:10px;margin:12px 0">' + ic('receipt', 20) + '<div class="sm"><div class="b">Giảm ' + money(r.money) + ' cho hoá đơn ' + money(r.amount) + '</div><div class="mut">Nhập PIN là đồng ý. Không phải hoá đơn của bạn? Bấm Từ chối, điểm không bị trừ.</div></div></div>' +
-      pinArea({ forgot: false, what: 'dùng điểm' }) + '<button class="btn sec" style="margin-top:10px" data-act="m16-reject">Từ chối</button></div>' };
+      (s.pin.set ? pinArea({ forgot: false, what: 'dùng điểm' }) : '<div class="band info">' + ic('lock', 20, 'ic') + '<span>Bạn chưa có mã PIN. Đặt mã PIN 6 số, rồi nhập mã đó để đồng ý.</span></div><button class="btn" style="margin-top:10px" data-act="m16-setpin">Đặt mã PIN</button>') + '<button class="btn sec" style="margin-top:10px" data-act="m16-reject">Từ chối</button></div>' };
   },
   notes: {
-    rules: ['Thu ngân nhập từ 200.000 điểm trên iPOS thì app khách nhận yêu cầu này; dưới 200.000 điểm thì trừ luôn, không hỏi (Figma Hành trình 2 · iPOS, P3b).', 'Khách nhập PIN là đồng ý: điểm được áp vào hoá đơn, chỉ bị trừ khi hoá đơn thanh toán xong. Từ chối hoặc hết 3 phút: huỷ, thu ngân thu đủ tiền.', 'Sai PIN 5 lần: khoá dùng điểm 30 phút.', dr(21), dr(16), dr(20)],
+    rules: ['Thu ngân nhập từ 200.000 điểm trên iPOS thì app khách nhận yêu cầu này; dưới 200.000 điểm thì trừ luôn, không hỏi (Figma Hành trình 2 · iPOS, P3b).', 'Khách nhập PIN là đồng ý: điểm được áp vào hoá đơn, chỉ bị trừ khi hoá đơn thanh toán xong. Từ chối hoặc hết 3 phút: huỷ, thu ngân thu đủ tiền.', 'Sai PIN 5 lần: khoá dùng điểm tại quầy 30 phút.', 'Khách chưa có mã PIN (đổi ưu đãi không cần PIN nên có thể chưa đặt): tấm hiện nút "Đặt mã PIN", đặt xong quay lại đây nhập mã để đồng ý.', dr(21), dr(16), dr(20)],
     motion: ['Tấm trượt lên kèm rung nhẹ; Reduce Motion: mờ dần.'],
 
     demo: ['Chế độ Hai máy: ở máy iPOS bấm Dùng điểm, nhập từ 200.000 điểm; máy khách hiện màn này.', { t: 'Giả lập quầy gửi yêu cầu 220.000 điểm', act: 'demo-req' }, { t: 'Cho hết 3 phút ngay', act: 'demo-req-timeout' }],
@@ -2488,10 +2525,10 @@ A['pin-change'] = () => { st.pin.mode = st.pin.set ? 'change' : 'set'; st.pin.af
 def('M28', {
   dev: 'kh', flow: 'acct', from: 'câu 16 của bảng đã chốt; sitemap Membership (Mã PIN); brainstorm Mục 7.1, 7.2', name: 'Mã PIN', usesPin: true,
   render: s => hd('Mã PIN') + '<div class="pad stack">' +
-    (pinLocked() ? '<div class="band err">' + ic('lock', 20, 'ic') + '<span>Đã khoá dùng điểm 30 phút do nhập sai mã PIN 5 lần. Thử lại sau <span data-cd="pinlock">' + pinLeftTxt() + '</span>.</span></div>' : '') +
-    '<div class="list"><button class="row" data-act="pin-change"><span class="ico-c p" style="width:36px;height:36px">' + ic('lock', 18) + '</span><div class="tx"><div class="t1">' + (s.pin.set ? 'Đổi mã PIN' : 'Đặt mã PIN') + '</div><div class="t2">' + (s.pin.set ? 'Nhập mã hiện tại rồi đặt mã mới' : 'Dùng khi đổi điểm và dùng điểm trừ tiền') + '</div></div>' + ic('chev', 18) + '</button>' +
+    (pinLocked() ? '<div class="band err">' + ic('lock', 20, 'ic') + '<span>Đã khoá dùng điểm tại quầy 30 phút do nhập sai mã PIN 5 lần. Thử lại sau <span data-cd="pinlock">' + pinLeftTxt() + '</span>.</span></div>' : '') +
+    '<div class="list"><button class="row" data-act="pin-change"><span class="ico-c p" style="width:36px;height:36px">' + ic('lock', 18) + '</span><div class="tx"><div class="t1">' + (s.pin.set ? 'Đổi mã PIN' : 'Đặt mã PIN') + '</div><div class="t2">' + (s.pin.set ? 'Nhập mã hiện tại rồi đặt mã mới' : 'Dùng khi đồng ý trừ từ ' + fmtN(CONFIRM_AT) + ' điểm tại quầy') + '</div></div>' + ic('chev', 18) + '</button>' +
     '<button class="row" data-go="M33"><span class="ico-c o" style="width:36px;height:36px">' + ic('alert', 18) + '</span><div class="tx"><div class="t1">Quên mã PIN?</div><div class="t2">Đặt lại bằng mã OTP và xác minh qua email hoặc tổng đài</div></div>' + ic('chev', 18) + '</button></div>' +
-    '<div class="band info">' + ic('info', 20, 'ic') + '<span>Mã PIN gồm 6 số. Nhập sai 5 lần liên tiếp sẽ khoá dùng điểm 30 phút.</span></div></div>',
+    '<div class="band info">' + ic('info', 20, 'ic') + '<span>Mã PIN gồm 6 số. Nhập sai 5 lần liên tiếp sẽ khoá dùng điểm tại quầy 30 phút. Đổi ưu đãi trong app không cần PIN.</span></div></div>',
   notes: { rules: ['PIN 6 chữ số (brainstorm Mục 7.1); sai 5 lần liên tiếp khoá 30 phút (Mục 7.2).', dr(16)], motion: [], demo: ['"Quên mã PIN?" mở M33.'], diff: ['Figma chưa vẽ trang Mã PIN.'] }
 });
 /* M33 · quên PIN: mã OTP cộng thêm một bước xác minh bằng email hoặc tổng đài (câu 16) */
@@ -2499,7 +2536,7 @@ const maskEmail = e => { const [a, b] = String(e || '').split('@'); return b ? a
 function forgotDone(dev) {
   const f = st.forgot, from = f.from || 'M28';
   st.pin.mode = 'reset'; st.pin.lockUntil = 0; st.pin.fails = 0; st.pin.err = '';   /* đã xác minh danh tính: mở khoá để đặt PIN mới */
-  st.pin.after = /^M7/.test(from) ? 'M7' : from === 'W8' ? 'W8' : 'M28';
+  st.pin.after = from === 'W8' ? 'W8' : 'M28';
   st.cur[dev] = st.stack[dev].pop() || 'M28';
   go('M29');
 }
@@ -2537,7 +2574,7 @@ def('M33', {
         ? '<div class="card"><div class="field"><label for="m33c">Mã 6 số đã gửi đến ' + esc(maskEmail(s.user.email)) + '</label><input id="m33c" class="inp' + (f.err ? ' err' : '') + '" inputmode="numeric" maxlength="6" data-model="forgot.code" data-fmt="digits" value="' + esc(f.code) + '">' + (f.err ? '<div class="ferr">' + esc(f.err) + '</div>' : '') + '</div></div><button class="btn" data-act="fp-email">Xác minh</button>'
         : '<div class="card sm">Nhân viên tổng đài hỏi thông tin tài khoản (họ tên, ngày sinh, giao dịch gần nhất) để xác minh, rồi mở bước đặt PIN mới trên app của bạn.</div><button class="btn" data-act="fp-call">' + ic('phone', 18) + 'Gọi tổng đài</button>') + '</div>';
   },
-  notes: { rules: [dr(16), 'Bước 1: mã OTP gửi về số điện thoại (6 số, hạn 5 phút, gửi lại tối đa 3 lần mỗi giờ). Bước 2: mã 6 số gửi qua email đã lưu, hoặc gọi tổng đài để nhân viên xác minh.', 'Đặt PIN mới xong: hết khoá 30 phút, quay lại việc đang làm (xác nhận đổi điểm M7, đăng nhập máy mới W8, hoặc trang Mã PIN M28).'], motion: [], demo: ['OTP 000000: sai; 999999: hết hạn; 6 số khác: đúng.', 'Mã email 000000: sai; 6 số khác: đúng. "Gọi tổng đài": giả lập tổng đài xác minh sau 1,6 giây.'], diff: ['Figma chưa vẽ luồng quên PIN; bản HTML dựng theo câu 16 đã chốt, câu chữ là câu tự viết.'] }
+  notes: { rules: [dr(16), 'Bước 1: mã OTP gửi về số điện thoại (6 số, hạn 5 phút, gửi lại tối đa 3 lần mỗi giờ). Bước 2: mã 6 số gửi qua email đã lưu, hoặc gọi tổng đài để nhân viên xác minh.', 'Đặt PIN mới xong: hết khoá 30 phút, quay lại việc đang làm (đăng nhập máy mới W8, hoặc trang Mã PIN M28).'], motion: [], demo: ['OTP 000000: sai; 999999: hết hạn; 6 số khác: đúng.', 'Mã email 000000: sai; 6 số khác: đúng. "Gọi tổng đài": giả lập tổng đài xác minh sau 1,6 giây.'], diff: ['Figma chưa vẽ luồng quên PIN; bản HTML dựng theo câu 16 đã chốt, câu chữ là câu tự viết.'] }
 });
 A['del-ack'] = (a, dev) => { st.del.ack = !st.del.ack; rr(dev); };
 A['del-send'] = (a, dev) => { if (!st.del.ack) return; st.del.sent = true; rr(dev); };
@@ -2924,7 +2961,7 @@ const JOURNEYS = [
   { k: 'home', n: 'Hành trình 2 (tiếp) · Điểm về app, lên hạng', steps: [
     ['Mở app, xem điểm', ['M1', 'M2']], ['Đưa mã thành viên khi thanh toán', ['M3']], ['Điểm về, chờ đối soát', ['M17']], ['Xem điểm và lên hạng', ['M4', 'M18']]] },
   { k: 'redeem', n: 'Hành trình 3 · Đổi điểm và dùng voucher', steps: [
-    ['Chọn ưu đãi', ['M5', 'M6', 'M6b', 'M6c']], ['Xác nhận, nhập PIN', ['M7', 'M7b', 'M7c', 'M9']], ['Voucher vào Ví', ['M8', 'M10', 'M10b']],
+    ['Chọn ưu đãi', ['M5', 'M6', 'M6b', 'M6c']], ['Xác nhận, vuốt để đổi', ['M7', 'M9']], ['Voucher vào Ví', ['M8', 'M10', 'M10b']],
     ['Mở mã tại quầy', ['M11']], ['Nhận ưu đãi', ['M11b']]] },
   { k: 'gift', n: 'Ưu đãi từ campaign · phương án B', steps: [['Pop-up quà, bấm nhận', ['PA-B1']], ['Đã lưu vào ví', ['PA-B2']], ['Hết suất lúc bấm nhận', ['PA-B3']]] }
 ];
