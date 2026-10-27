@@ -626,7 +626,7 @@ body.notes-on .notes{display:block}
   <span class="tb-sp"></span>
   <button class="tb-btn" id="tb-dec" aria-pressed="false" title="43 câu trong bảng &quot;Cần anh/chị chốt&quot; trên Figma, chốt theo đề xuất của BA ngày 26/10/2026">Đã chốt cho MVP (43)</button>
   <button class="tb-btn" id="tb-notes" aria-pressed="false">Ghi chú</button>
-  <button class="tb-btn" id="tb-reset" title="Đưa dữ liệu mẫu về ban đầu">Đặt lại</button>
+  <button class="tb-btn" id="tb-reset" title="Đưa dữ liệu mẫu về ban đầu và mở lại Hành trình 1">Đặt lại</button>
   <nav class="jb" id="jb" aria-label="Hành trình"></nav>
 </div>
 
@@ -3171,23 +3171,25 @@ $('#tb-topup').addEventListener('click', () => {
   ['kh', 'nv'].forEach(rr);
   toast('Đã nạp thêm 1.000.000 điểm để thử', 'kh', { sub: 'Hiện có ' + fmtN(avail()) + ' điểm. Bấm Đặt lại để về số ban đầu.' });
 });
-function resetTo(profile) {
+function resetTo(profile, toStart) {   /* toStart: nút Đặt lại mở lại Hành trình 1 từ bước đầu */
   const keep = { mode: st.mode, giftOpt: st.giftOpt, showNotes: st.showNotes };
   if (profile === 'new') { st.pos = seedPos(); toNewMember(false); } else st = seedState();
   Object.assign(st, keep);
   st.cur.nv = 'P1'; st.stack = { kh: [], nv: [] };
   renderDev('nv', { anim: false });
-  go(profile === 'new' ? 'M2' : 'M1', { noStack: true });
+  if (toStart) { st.jr = JOURNEYS[0].k; goStep(JOURNEYS[0], 0); } else go(profile === 'new' ? 'M2' : 'M1', { noStack: true });
 }
 $$('[data-prof]').forEach(b => b.addEventListener('click', () => resetTo(b.dataset.prof)));
-$('#tb-reset').addEventListener('click', () => { resetTo('gold'); });
+$('#tb-reset').addEventListener('click', () => { resetTo('gold', true); });
 $('#tb-notes').addEventListener('click', () => { st.showNotes = !st.showNotes; renderNotes(); layout(); });
 
 /* Khởi động */
 (function init() {
   renderDev('kh', { anim: false });
   renderDev('nv', { anim: false });
-  const h = decodeURIComponent(location.hash.slice(1));
+  /* Mặc định mở Hành trình 1. Đường dẫn có sẵn mã màn (#M5) mở đúng màn đó; tải lại trang thì về Hành trình 1 vì dữ liệu mẫu cũng về ban đầu */
+  const nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+  const h = nav && nav.type === 'reload' ? '' : decodeURIComponent(location.hash.slice(1));
   if (h && S[h]) { if (S[h].dev === 'nv') st.mode = 'nv'; go(h, { replace: true, noStack: true }); }
   else go('BANNER', { replace: true, noStack: true });
   renderDrawer(); layout();
