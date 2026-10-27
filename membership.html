@@ -1615,13 +1615,14 @@ def('W4', {
       '<div class="pad" style="margin-top:16px"><div class="card"><div class="sm mut" style="display:flex;gap:6px;align-items:center;margin-bottom:10px">' + ic('ticket', 16) + 'Đã vào Ví voucher · 1 voucher</div>' + ticket(v) + '</div>' +
       '<button class="btn" style="margin-top:16px" data-act="open-v" data-arg="w1">Dùng ngay tại quầy</button>' +
       '<button class="btn sec" style="margin-top:12px" data-go="WALLET">Để trong ví, dùng sau</button>' +
+      '<div style="text-align:center;margin-top:14px"><button class="lnk" data-go="HOME">Về trang chủ</button></div>' +
       '<p class="sm mut" style="margin-top:14px">Liên kết Kite, Tiktak, Resort và cộng dồn điểm 12 tháng làm sau, trong mục Tài khoản.</p></div>';
   },
   notes: {
     rules: ['Câu chữ đã chốt: "Chào mừng bạn đến VNGroup Membership! Voucher {giá trị} đã có trong Ví, dùng ngay tại quầy." (brainstorm Mục 7.3, sửa 20/10).', 'Voucher gắn với tài khoản, dùng một lần, mã QR tự đổi mỗi phút (Mục 5.3, 7.2). Bố cục đầu màn và vé theo màn M8 Đổi thành công.', 'Liên kết Biz Line khác và cộng dồn 12 tháng làm sau, không chặn bước này (luồng 1, bước 7, sửa 20/10).', dr(4), dr(5), dr(6), dr(7)],
     motion: ['Dấu tích nảy, hoa giấy rơi 600ms như M8; Reduce Motion: chỉ mờ dần.'],
-    demo: ['Hồ sơ đã chuyển sang "Thành viên mới" (Silver, 0 điểm, chưa đặt PIN).'],
-    diff: ['Tên khung W4 trên Figma ghi "voucher 20.000đ" (ví dụ của PM, câu C3 biên bản 21/10). Giá trị đã chốt ngày 26/10/2026: giảm 10% hoá đơn (góp ý sau họp 21/10), đúng như nội dung màn và ghi chú W1; bản HTML hiện giảm 10% ở W1, W4, W5 và mọi nơi có voucher chào mừng.']
+    demo: ['Hồ sơ đã chuyển sang "Thành viên mới" (Silver, 0 điểm, chưa đặt PIN). Bấm "Về trang chủ" để sang M2, trang chủ của thành viên mới.'],
+    diff: ['Thêm lối "Về trang chủ" (sang M2) dưới hai nút của Figma, để khách vừa đăng ký về được trang chủ (góp ý 27/10/2026).', 'Tên khung W4 trên Figma ghi "voucher 20.000đ" (ví dụ của PM, câu C3 biên bản 21/10). Giá trị đã chốt ngày 26/10/2026: giảm 10% hoá đơn (góp ý sau họp 21/10), đúng như nội dung màn và ghi chú W1; bản HTML hiện giảm 10% ở W1, W4, W5 và mọi nơi có voucher chào mừng.']
   }
 });
 def('W5', {
@@ -1634,13 +1635,14 @@ def('W5', {
       (v.status === 'active' ? (s.khOffline ? offlineBand : qrLive('w1', 200)) : '<div class="band info">' + ic('checkc', 20, 'ic') + '<span>Voucher đã dùng lúc ' + esc(v.usedAt || '') + '.</span></div>') +
       '<div class="sm" style="display:flex;gap:6px;align-items:center;justify-content:center;margin:14px 0">' + ic('clock', 16) + 'Dùng đến 28/10/2026 · còn 7 ngày</div>' +
       '<div class="grp" style="display:flex;gap:12px">' + ic('scan', 22) + '<div><div class="lnk" style="font-weight:500">Đưa thu ngân quét</div><div class="sm">Đưa thu ngân quét mã này. Mã đổi mỗi phút; ảnh chụp mã không dùng được.</div></div></div>' +
-      '<p class="sm mut" style="margin-top:14px">Sau khi quét, hoá đơn được giảm 10% (tối đa ' + money(WELCOME_CAP) + '); phần còn lại được tích điểm, dùng được sau đối soát.</p></div>';
+      '<p class="sm mut" style="margin-top:14px">Sau khi quét, hoá đơn được giảm 10% (tối đa ' + money(WELCOME_CAP) + '); phần còn lại được tích điểm, dùng được sau đối soát.</p>' +
+      '<div style="text-align:center;margin-top:8px"><button class="lnk" data-go="HOME">Về trang chủ</button></div></div>';
   },
   notes: {
     rules: ['Giống màn M11: mã QR đổi mỗi phút, ảnh chụp không dùng được; thu ngân quét trên iPOS hoặc chọn voucher trong thẻ thành viên (Hành trình 2 · iPOS).', 'Quầy mất mạng thì không áp dụng voucher; voucher còn hạn để dùng lần sau (Mục 6.4). Nhân viên quét nhầm thì Manager hoàn tác trong ngày.', 'Sau khi quét: hoá đơn giảm 10%, phần còn lại sinh điểm, chờ đối soát T+1 mới dùng được (biên bản họp 21/10, mục 2.3).', dr(4), dr(5), dr(23), dr(39)],
     motion: ['Đồng hồ sống và dải sáng chạy như M11.'],
     demo: ['Chọn "Hai máy" trên thanh công cụ, ở máy iPOS bấm "+ Thành viên VNG 360" rồi bấm khung quét: voucher này được áp vào hoá đơn; thanh toán xong máy khách sang M11b.', { t: 'Bật hoặc tắt: điện thoại khách mất mạng', act: 'demo-kh-offline' }],
-    diff: ['Dòng cuối thêm "(tối đa ' + money(WELCOME_CAP) + ')" theo câu 4 đã chốt (có trần giảm); Figma chưa ghi trần.']
+    diff: ['Dòng cuối thêm "(tối đa ' + money(WELCOME_CAP) + ')" theo câu 4 đã chốt (có trần giảm); Figma chưa ghi trần.', 'Thêm lối "Về trang chủ" (sang M2) ở cuối màn (góp ý 27/10/2026).']
   }
 });
 
