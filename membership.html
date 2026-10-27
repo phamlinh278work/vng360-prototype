@@ -47,6 +47,16 @@ input,select,textarea{font:inherit;color:inherit}
 .tb-seg button:last-child{border-right:0}
 .tb-seg button[aria-pressed="true"]{background:#202024;color:#fff}
 .tb-group{display:inline-flex;align-items:center;gap:6px;color:var(--c-muted);white-space:nowrap}
+/* Thanh hành trình: theo các khung "Hành trình n" và thanh "Bước n" trên trang Membership — Màn hình (nháp) */
+.jb{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;padding-top:7px;border-top:1px solid var(--c-line)}
+.jb-sel{height:28px;border:1px solid var(--c-line);border-radius:8px;background:#fff;padding:0 8px;font:inherit;font-weight:600;color:var(--m-brand)}
+.jb-step{height:28px;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--c-line);border-radius:999px;background:#fff;padding:0 11px 0 4px;color:var(--m-ink);white-space:nowrap}
+.jb-step i{font-style:normal;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:var(--m-group);color:var(--m-brand);font-size:11px;font-weight:700}
+.jb-step:hover{border-color:var(--m-brand-light)}
+.jb-step.on{background:var(--m-brand);border-color:var(--m-brand);color:#fff}
+.jb-step.on i{background:#fff}
+.jb-step:focus-visible,.jb-sel:focus-visible{outline:2px solid var(--m-brand-light);outline-offset:2px}
+.jb-arrow{color:var(--c-muted)}
 .tb-sp{flex:1}
 .tb-check{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;color:var(--c-ink)}
 
@@ -575,6 +585,7 @@ body.notes-on .notes{display:block}
   <button class="tb-btn" id="tb-dec" aria-pressed="false" title="43 câu trong bảng &quot;Cần anh/chị chốt&quot; trên Figma, chốt theo đề xuất của BA ngày 26/10/2026">Đã chốt cho MVP (43)</button>
   <button class="tb-btn" id="tb-notes" aria-pressed="false">Ghi chú</button>
   <button class="tb-btn" id="tb-reset" title="Đưa dữ liệu mẫu về ban đầu">Đặt lại</button>
+  <nav class="jb" id="jb" aria-label="Hành trình"></nav>
 </div>
 
 <div class="scrim" id="scrim"></div>
@@ -2901,7 +2912,42 @@ function renderDrawer() {
   $('#dr-list').innerHTML = '<div style="padding:4px 16px 0;font-size:12px;color:var(--c-muted)">' + nFig + ' màn theo Figma · ' + nNew + ' màn chưa có trên Figma</div>' + (h || '<p style="padding:16px">Không tìm thấy màn.</p>');
   markDrawer();
 }
-function markDrawer() { $$('#dr-list .it').forEach(b => b.classList.toggle('cur', b.dataset.nav === st.cur.kh || b.dataset.nav === st.cur.nv)); }
+/* Hành trình và các bước, theo khung "Hành trình n" và thanh "Bước n" trên Figma; mỗi bước gồm các màn của bước đó */
+const JOURNEYS = [
+  { k: 'reg', n: 'Hành trình 1 · Khách mới tại quầy', steps: [
+    ['Đến cửa quán', ['BANNER', 'NVCUA']], ['Đến quầy order', ['BANG']], ['Quét mã, tải app', ['W0']],
+    ['Đăng ký 1 chạm', ['W1', 'W2', 'W1-SĐT', 'W1b', 'W1c', 'W2-SĐT', 'W2b', 'W2c', 'W2d', 'W3', 'W3b', 'W3c', 'W3d', 'W9']],
+    ['Nhận voucher ngay', ['W4']], ['Dùng voucher khi thanh toán', ['W5']]] },
+  { k: 'pos', n: 'Hành trình 2 · Thanh toán tại quầy trên iPOS', duo: true, steps: [
+    ['Khách đưa mã thành viên', ['M3']], ['Thu ngân quét mã trên iPOS', ['P1', 'P1b']],
+    ['Áp voucher, dùng điểm vào hoá đơn', ['P2', 'P2b', 'P3', 'P3b', 'M16']], ['Thanh toán xong', ['P4', 'P4b', 'M15']]] },
+  { k: 'home', n: 'Hành trình 2 (tiếp) · Điểm về app, lên hạng', steps: [
+    ['Mở app, xem điểm', ['M1', 'M2']], ['Đưa mã thành viên khi thanh toán', ['M3']], ['Điểm về, chờ đối soát', ['M17']], ['Xem điểm và lên hạng', ['M4', 'M18']]] },
+  { k: 'redeem', n: 'Hành trình 3 · Đổi điểm và dùng voucher', steps: [
+    ['Chọn ưu đãi', ['M5', 'M6', 'M6b', 'M6c']], ['Xác nhận, nhập PIN', ['M7', 'M7b', 'M7c', 'M9']], ['Voucher vào Ví', ['M8', 'M10', 'M10b']],
+    ['Mở mã tại quầy', ['M11']], ['Nhận ưu đãi', ['M11b']]] },
+  { k: 'gift', n: 'Ưu đãi từ campaign · phương án B', steps: [['Pop-up quà, bấm nhận', ['PA-B1']], ['Đã lưu vào ví', ['PA-B2']], ['Hết suất lúc bấm nhận', ['PA-B3']]] }
+];
+function curJourney() {
+  const id = st.cur[st.focus] || st.cur.kh, has = j => j.steps.some(x => x[1].includes(id));
+  const keep = JOURNEYS.find(j => j.k === st.jr);
+  return keep && has(keep) ? keep : JOURNEYS.find(has) || keep || JOURNEYS[0];
+}
+function renderJB() {
+  const j = curJourney(), id = st.cur[st.focus] || st.cur.kh;
+  st.jr = j.k;
+  $('#jb').innerHTML = '<select class="jb-sel" id="jb-sel" aria-label="Chọn hành trình">' + JOURNEYS.map(x => '<option value="' + x.k + '"' + (x.k === j.k ? ' selected' : '') + '>' + esc(x.n) + '</option>').join('') + '</select>' +
+    j.steps.map((x, i) => (i ? '<span class="jb-arrow" aria-hidden="true">›</span>' : '') + '<button class="jb-step' + (x[1].includes(id) ? ' on' : '') + '" data-jstep="' + i + '"' + (x[1].includes(id) ? ' aria-current="step"' : '') + '><i>' + (i + 1) + '</i>' + esc(x[0]) + '</button>').join('');
+  layout();
+}
+function goStep(j, i) {
+  const first = j.steps[i][1][0];
+  if (j.duo) st.mode = 'duo'; else if (st.mode !== 'duo') st.mode = S[first].dev;
+  go(first);
+}
+$('#jb').addEventListener('click', e => { const b = e.target.closest('[data-jstep]'); if (b) goStep(curJourney(), +b.dataset.jstep); });
+$('#jb').addEventListener('change', e => { if (e.target.id !== 'jb-sel') return; const j = JOURNEYS.find(x => x.k === e.target.value); st.jr = j.k; goStep(j, 0); });
+function markDrawer() { $$('#dr-list .it').forEach(b => b.classList.toggle('cur', b.dataset.nav === st.cur.kh || b.dataset.nav === st.cur.nv)); renderJB(); }
 $('#dr-list').addEventListener('click', e => { const b = e.target.closest('[data-nav]'); if (!b) return; const sc = S[b.dataset.nav]; if (st.mode !== 'duo') st.mode = sc.dev; go(b.dataset.nav); if (!wideDrawer()) closeDrawer(); });
 $('#dr-q').addEventListener('input', renderDrawer);
 $('#tb-list').addEventListener('click', () => { $('#drawer').classList.contains('open') ? closeDrawer() : openDrawer(); });
@@ -2990,8 +3036,8 @@ $('#tb-notes').addEventListener('click', () => { st.showNotes = !st.showNotes; r
   renderDev('nv', { anim: false });
   const h = decodeURIComponent(location.hash.slice(1));
   if (h && S[h]) { if (S[h].dev === 'nv') st.mode = 'nv'; go(h, { replace: true, noStack: true }); }
-  else go('M1', { replace: true, noStack: true });
-  renderDrawer();
+  else go('BANNER', { replace: true, noStack: true });
+  renderDrawer(); layout();
   setInterval(tick, 1000);
   window.addEventListener('resize', layout);
 })();
