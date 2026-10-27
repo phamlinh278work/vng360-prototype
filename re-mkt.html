@@ -359,6 +359,11 @@ svg{flex:none}
 .kpi .kl i{width:8px;height:8px;background:#404040;display:inline-block;flex:none}
 .kpi .kv2{font-size:28px;font-weight:600;line-height:36px;margin-top:4px}
 .kpi .kd{font-size:12px;color:var(--text-muted)}
+.kpi.hl{border-color:var(--primary);background:var(--primary-subtle)}
+.kpi .dlt{font-weight:600}
+.kpi .dlt.up{color:var(--success-ink)}
+.kpi .dlt.dn{color:var(--error-ink)}
+.roi-lo{color:var(--error-ink)}
 .ch-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-md);padding:16px}
 .ch-card h3{font-size:14.5px;margin:0 0 10px;font-weight:600}
 .hbar{display:grid;grid-template-columns:170px 1fr;align-items:center;gap:12px;margin:8px 0;font-size:13.5px}
@@ -434,7 +439,7 @@ const NAV = {
   ],
   finance: [
     { k: 'quy', t: 'Quỹ và ngân sách', ic: 'menu', go: 'R-F1', subs: [{ k: 'hanmuc', t: 'Hạn mức quỹ theo quý', go: 'R-F2' }, { k: 'doisoat', t: 'Bảng chi phí cuối tháng', go: 'R-F5' }] },
-    { k: 'bc', t: 'Báo cáo', ic: 'pulse', go: 'R-E1' },
+    { k: 'bc', t: 'Báo cáo', ic: 'pulse', go: 'R-E3' },
   ],
   gpcn: [
     { k: 'lich', t: 'Lịch marketing', ic: 'cal', go: 'R-A2', subs: [{ k: 'dip', t: 'Các dịp trong năm', go: 'R-A7' }] },
@@ -2154,30 +2159,123 @@ def('R-F5', {
 });
 ACT.exportX = () => toast('Bản xem thử không tạo file Excel thật.', 'todo');
 /* ================= Báo cáo (R-E1 … R-E4) ================= */
-const REPORTS = [
-  ['MKT-01', 'Hiệu quả campaign theo thời gian thực', 'Đã gửi, đã mở, đã dùng voucher, tỉ lệ chuyển đổi theo giờ; so với mục tiêu', 'Thời gian thực', 'BL Admin, BL Manager', 'P0 · màn R-C3', 'R-C3', ['admin', 'manager', 'gpcn']],
-  ['MKT-02', 'Tổng kết campaign', 'Số KH nhận và dùng voucher; thời gian từ nhận đến dùng; doanh thu, chi phí; ROI', 'Sau khi chốt số', 'BL Manager, Finance HO', 'P0 · màn R-E2', 'R-E2', ['manager', 'finance', 'gpcn']],
-  ['MKT-03', 'ROI theo campaign', 'Doanh thu trên chi phí voucher; xếp hạng campaign; dịp và loại ưu đãi hiệu quả', 'Hằng tháng', 'GPCN HO, BL Manager', 'P1', '', []],
-  ['MKT-04', 'Hiệu quả theo tập KH', 'So tỉ lệ chuyển đổi giữa các hạng, Biz Line, khu vực', 'Hằng tháng', 'Phòng MKT, GPCN HO', 'P1', '', []],
-  ['MKT-05', 'Ngân sách và quỹ MKT', 'Đã duyệt so với thực chi, số dư quỹ, chi dự kiến của campaign chờ, cảnh báo cạn', 'Hằng tuần', 'Finance HO, GPCN HO', 'P0 · màn R-E3', 'R-E3', ['finance', 'gpcn']],
-  ['MKT-06', 'Số lần KH nhận ưu đãi', 'Số campaign mỗi KH nhận trong tháng, KH chạm trần, tỉ lệ tắt nhận ưu đãi', 'Hằng tháng', 'GPCN HO, Phòng MKT', 'P0 · màn R-E4', 'R-E4', ['gpcn']],
-  ['MKT-07', 'Lịch campaign toàn tập đoàn', 'Timeline mọi campaign, trạng thái, ngân sách đã duyệt, KH trùng giữa campaign', 'Thời gian thực', 'GPCN HO', 'P0 · màn R-A2', 'R-A2', ['gpcn']],
-  ['MKT-08', 'Tổng hợp quý và năm', 'Số campaign, tổng chi phí, tổng doanh thu, ROI trung bình, campaign tốt và kém', 'Hằng quý', 'Ban TGĐ, GPCN HO', 'P1', '', []],
-];
+/* Tab báo cáo theo vai (góp ý 27/10/2026). BL Admin, BL Manager chỉ có Hiệu quả campaign nên không hiện thanh tab */
+const RPT_TABS = [['R-E1', 'Hiệu quả campaign', ['admin', 'manager', 'finance', 'gpcn']], ['R-E3', 'Ngân sách và quỹ', ['finance', 'gpcn']], ['R-E4', 'Số lần KH nhận ưu đãi', ['gpcn']]];
+function rptTabs(s, cur) {
+  const t = RPT_TABS.filter((x) => x[2].includes(s.role));
+  return t.length < 2 ? '' : '<div class="tabs">' + t.map((x) => '<button class="tab' + (x[0] === cur ? ' act' : '') + '"' + (x[0] === cur ? '' : ' data-go="' + x[0] + '"') + '>' + x[1] + '</button>').join('') + '</div>';
+}
+
+/* ---------- R-E1 hiệu quả remarketing: màn chỉ số thay cho danh mục 8 báo cáo (góp ý 27/10/2026) ---------- */
+/* Campaign đã chốt số, tiền tính bằng triệu đồng. Halloween Weekend theo R-E2; Back-to-Work T10 lấy chi phí và ROI 2,3x theo R-E3, các số còn lại minh hoạ */
+const E1_CLOSED = {
+  hw: { date: '31/10/2026', sent: 1008, used: 268, rev: 156, inc: 57.5, est: 45, cost: 38, optout: 6 },
+  btw: { date: '05/10/2026', sent: 2430, used: 512, rev: 103.5, inc: 36, est: 32, cost: 45, optout: 17 },
+};
+/* Campaign Kite, Resort đang chạy: số đã gửi theo R-E4; lượt dùng và số KH tắt nhận là minh hoạ */
+const E1_LIVE = { cafe: { used: 874, optout: 21 }, tet: { used: 147, optout: 9 } };
+/* Quý 3/2026 của từng đơn vị, để so với kỳ trước (minh hoạ) */
+const E1_Q3 = {
+  Tiktak: { sent: 2910, used: 576, inc: 41, rev: 158, cost: 62, optout: 26 },
+  Kite: { sent: 5200, used: 1196, inc: 38, rev: 119, cost: 41, optout: 31 },
+  Resort: { sent: 900, used: 54, inc: 12, rev: 46, cost: 15, optout: 5 },
+};
+const E1_PERIODS = [['q4', 'Quý 4/2026'], ['m10', 'Tháng 10/2026'], ['m11', 'Tháng 11/2026'], ['m12', 'Tháng 12/2026']];
+const E1_SHOWN = ['Đã duyệt', 'Đang chạy', 'Tạm dừng', 'Đã kết thúc', 'Đã chốt số'];
+const xRoi = (v) => (Math.round(v * 10) / 10).toString().replace('.', ',') + 'x';
+/* Mọi campaign từ Đã duyệt trở đi của các đơn vị vai đang xem được thấy; BL Admin, BL Manager chỉ thấy Tiktak */
+function e1All(s) {
+  const own = s.role === 'admin' || s.role === 'manager';
+  const okU = (bl) => (own ? bl === 'Tiktak' : unitOk(bl));
+  const rows = [];
+  const add = (o) => { if (okU(o.bl) && E1_SHOWN.includes(o.status)) rows.push(o); };
+  ['hw', 'btw'].forEach((id) => add(Object.assign({ id, name: s.camps[id].name, bl: 'Tiktak', status: 'Đã chốt số', closed: true, go: id === 'hw' ? 'hw|R-E2' : 'btw|R-C3' }, E1_CLOSED[id])));
+  const c = s.camps.bf, sentBf = ['Đang chạy', 'Tạm dừng', 'Đã kết thúc', 'Đã chốt số'].includes(c.status) ? sendStats(c).sentFig : 0;
+  const bf = { id: 'bf', name: 'Black Friday Flash Deal', bl: 'Tiktak', date: c.m.date, sent: sentBf, used: sentBf ? c.used || 0 : 0, optout: c.optout || 0, status: c.status, go: 'bf|R-C3' };
+  if (c.closed) {   /* doanh thu = lượt dùng hợp lệ × giá trị giao dịch trung bình 800.000đ (file concept); phần tăng thêm 45% là minh hoạ */
+    const rev = (c.closed.used - c.closed.refunds) * 0.8;
+    Object.assign(bf, { closed: true, used: c.closed.used, rev, inc: rev * 0.45, est: c.closed.held / 1e6, cost: c.closed.actual / 1e6 });
+  }
+  add(bf);
+  ['cafe', 'tet', 'noel'].forEach((id) => {
+    const x = s.camps[id]; if (!x) return;
+    const live = ['Đang chạy', 'Tạm dừng', 'Đã kết thúc'].includes(x.status), lv = E1_LIVE[id] || { used: 0, optout: 0 };
+    add({ id, name: x.name, bl: x.bl, date: (x.fixed && x.fixed.sendOn) || x.runDate, sent: live ? sendStats(x).sentFig : 0, used: live ? lv.used : 0, optout: live ? lv.optout : 0, status: x.status, go: id + '|R-C3' });
+  });
+  return rows;
+}
+const e1InPeriod = (r, per) => (per === 'q4' ? ['10', '11', '12'].includes(r.date.slice(3, 5)) : r.date.slice(3, 5) === per.slice(1));
+function e1Sum(rows) {
+  const t = { sent: 0, used: 0, optout: 0, n: 0, inc: 0, rev: 0, cost: 0, est: 0, nc: 0 };
+  rows.forEach((r) => {
+    if (r.sent) { t.sent += r.sent; t.used += r.used; t.optout += r.optout; t.n++; }
+    if (r.closed) { t.inc += r.inc; t.rev += r.rev; t.cost += r.cost; t.est += r.est; t.nc++; }
+  });
+  return t;
+}
+/* Kỳ trước để so: quý 4 so với quý 3, tháng so với tháng liền trước (tháng 10 không có số tháng 9 nên không so) */
+function e1Prev(s, all, per) {
+  if (per === 'q4') {
+    const own = s.role === 'admin' || s.role === 'manager';
+    const t = { sent: 0, used: 0, optout: 0, inc: 0, rev: 0, cost: 0, nc: 1, label: 'Quý 3' };
+    Object.keys(E1_Q3).filter((u) => (own ? u === 'Tiktak' : unitOk(u))).forEach((u) => ['sent', 'used', 'optout', 'inc', 'rev', 'cost'].forEach((k) => { t[k] += E1_Q3[u][k]; }));
+    return t;
+  }
+  if (per === 'm10') return null;
+  const pm = per === 'm11' ? 'm10' : 'm11';
+  return Object.assign(e1Sum(all.filter((r) => e1InPeriod(r, pm))), { label: 'Tháng ' + pm.slice(1) });
+}
+/* Mũi tên xanh khi tốt lên, đỏ khi xấu đi, kèm số kỳ trước */
+function e1Trend(cur, prev, txt, goodUp) {
+  if (prev == null || !isFinite(prev) || !isFinite(cur)) return '';
+  const up = cur > prev, same = Math.abs(cur - prev) < 1e-9;
+  return '<br><span class="dlt ' + (same ? '' : (up === goodUp ? 'up' : 'dn')) + '">' + (same ? '=' : up ? '▲' : '▼') + '</span> ' + txt;
+}
 def('R-E1', {
-  name: 'Danh sách báo cáo (BL Manager)', flow: 'f5', figma: true, roles: ['admin', 'manager', 'finance', 'gpcn'], role: 'manager', nav: 'bc',
+  name: 'Hiệu quả remarketing (BL Manager)', flow: 'f5', figma: true, roles: ['admin', 'manager', 'finance', 'gpcn'], role: 'manager', nav: 'bc',
   snap: () => snap('approved', (s) => { s.today = '21/11/2026'; }),
-  view: (s) => crumb([['Báo cáo', 'R-E1'], ['Danh sách báo cáo']]) + pageHead('Báo cáo của Re-MKT', 'Chọn một báo cáo để xem. BL Manager chỉ thấy số liệu của đơn vị mình; Finance HO thấy ngân sách và quỹ; GPCN HO thấy toàn bộ. Mọi báo cáo remarketing nằm ở web Re-MKT.', '<button class="btn btn-s" data-act="exportX">Xuất Excel</button><button class="btn btn-p" data-todo="Lịch gửi báo cáo">Lịch gửi báo cáo</button>') + fresh('Số liệu cập nhật lúc 09:00 · ' + s.today) +
-    '<table class="tbl"><thead><tr><th>Mã</th><th>Báo cáo</th><th>Nội dung chính</th><th>Chu kỳ</th><th>Người xem</th><th>Đợt</th></tr></thead><tbody>' + REPORTS.map((r) => {
-      const can = r[6] && r[7].includes(s.role);
-      return '<tr' + (can ? ' class="clk" data-go="' + r[6] + '" title="Mở ' + r[0] + '"' : (r[5] === 'P1' ? ' style="color:var(--text-subtle)" title="Báo cáo P1 chưa mở ở đợt đầu"' : ' title="Không thuộc vai đang xem"')) + '><td>' + r[0] + '</td><td>' + (can ? '<span class="lnk">' + r[1] + '</span>' : r[1]) + '</td><td class="sm">' + r[2] + '</td><td>' + r[3] + '</td><td>' + r[4] + '</td><td>' + r[5] + '</td></tr>';
-    }).join('') + '</tbody></table><div class="tbl-note">MKT-01 và MKT-07 đã có màn riêng (R-C3, R-A2). Báo cáo P1 chỉ hiện tên, chưa mở được ở đợt đầu.</div>',
-  notes: { rules: ['Danh mục 8 báo cáo MKT-01 đến MKT-08 lấy từ file concept Re-MKT (bảng Báo cáo) và brainstorm Mục 4: P0 gồm 01, 02, 05, 06, 07; P1 gồm 03, 04, 08.', 'Nội dung chính và chu kỳ ghi theo file concept. Cột Người xem theo phân quyền xem báo cáo của brainstorm Mục 6.2: BL Admin campaign của mình, BL Manager đơn vị mình, Finance HO ngân sách và quỹ, GPCN HO toàn bộ.', 'MKT-01 đã là màn R-C3, MKT-07 đã là màn R-A2; không vẽ lại.'],
-    roles: ['BL Manager (màn này): mở được MKT-01, 02, 03 của đơn vị mình; các báo cáo còn lại hiện tên nhưng không mở được (tự chọn).', 'Finance HO: MKT-05 và phần chi phí của MKT-02. GPCN HO: toàn bộ.'],
-    self: ['Màn danh sách báo cáo không có trong tài liệu; thêm để có chỗ vào từ mục Báo cáo trên thanh bên.', 'Nút Lịch gửi báo cáo (email định kỳ) là minh hoạ; brainstorm Re-MKT chưa có, CRM Hub có email tóm tắt tuần.'],
-    decided: [D(10)],
-    diff: ['Bỏ khối thông báo "báo cáo remarketing sẽ nằm trong CRM Hub" của Figma: câu 10 chốt mọi báo cáo giữ ở web Re-MKT.', 'Bấm một dòng để mở báo cáo (Figma chưa vẽ thao tác); dòng không thuộc vai đang xem hoặc báo cáo P1 thì không bấm được. MKT-03 (P1) chưa có màn nên BL Manager chưa mở được.'],
-    demo: ['Đổi vai để thấy báo cáo mở được theo vai.'] },
+  view: (s) => {
+    const per = s.ui.e1p || 'q4', fin = s.role === 'finance', own = s.role === 'admin' || s.role === 'manager';
+    const all = e1All(s), rows = all.filter((r) => e1InPeriod(r, per)), t = e1Sum(rows), pv = e1Prev(s, all, per);
+    const perLbl = E1_PERIODS.find((p) => p[0] === per)[1];
+    const scope = own ? 'đơn vị Tiktak' : (S.unitView === 'all' ? 'cả tập đoàn' : 'đơn vị ' + S.unitView);
+    const pvTxt = (v) => (pv ? pv.label + ': ' + v : '');
+    const roi = t.nc && t.cost ? t.inc / t.cost : NaN, pvRoi = pv && pv.nc && pv.cost ? pv.inc / pv.cost : NaN;
+    const useR = t.sent ? t.used / t.sent : NaN, pvUse = pv && pv.sent ? pv.used / pv.sent : NaN;
+    const optR = t.sent ? t.optout / t.sent : NaN, pvOpt = pv && pv.sent ? pv.optout / pv.sent : NaN;
+    const noClose = 'Chưa có campaign nào chốt số trong kỳ';
+    const tiles = [
+      ['ROI tăng thêm', t.nc ? xRoi(roi) : '—', t.nc ? '1 đồng chi phí mang về ' + xRoi(roi).replace('x', '') + ' đồng doanh thu tăng thêm · theo doanh thu voucher ' + xRoi(t.rev / t.cost) + e1Trend(roi, pvRoi, pvTxt(isFinite(pvRoi) ? xRoi(pvRoi) : ''), true) : noClose, 'var(--primary)', 'hl'],
+      ['Doanh thu tăng thêm', t.nc ? tr(t.inc, 1) : '—', t.nc ? 'So với nhóm đối chứng không nhận tin · ' + t.nc + ' campaign đã chốt số' + e1Trend(t.inc, pv && pv.nc ? pv.inc : null, pvTxt(pv ? tr(pv.inc, 1) : ''), true) : noClose],
+      ['Chi phí thực', t.nc ? tr(t.cost, 1) : '—', t.nc ? 'Dự kiến ' + tr(t.est, 1) + ' · lệch ' + (t.cost >= t.est ? '+' : '−') + pct1(Math.abs(t.cost - t.est) / t.est) + (pv && pv.nc ? '<br>' + pvTxt(tr(pv.cost, 1)) : '') : noClose],
+    ];
+    if (!fin) tiles.push(
+      ['Đã gửi', t.sent ? fmtInt(t.sent) : '—', t.sent ? t.n + ' campaign · KH nhận tin, đã trừ nhóm đối chứng' + (pv && pv.sent ? '<br>' + pvTxt(fmtInt(pv.sent)) : '') : 'Chưa có campaign nào gửi trong kỳ'],
+      ['Tỉ lệ dùng voucher', t.sent ? pct1(useR) : '—', t.sent ? fmtInt(t.used) + ' lượt dùng trên số đã gửi' + e1Trend(useR, pvUse, pvTxt(isFinite(pvUse) ? pct1(pvUse) : ''), true) : 'Chưa có campaign nào gửi trong kỳ'],
+      ['Tắt nhận ưu đãi', t.sent ? pct1(optR) : '—', t.sent ? fmtInt(t.optout) + ' KH · mục tiêu dưới 2%' + e1Trend(optR, pvOpt, pvTxt(isFinite(pvOpt) ? pct1(pvOpt) : ''), false) : 'Chưa có campaign nào gửi trong kỳ', optR >= 0.02 ? 'var(--warning)' : 'var(--success)'],
+    );
+    const kpis = '<div class="kpis" style="grid-template-columns:repeat(' + tiles.length + ',1fr)">' + tiles.map((x) => '<div class="kpi' + (x[4] ? ' ' + x[4] : '') + '"><div class="kl"><i' + (x[3] ? ' style="background:' + x[3] + '"' : '') + '></i>' + x[0] + '</div><div class="kv2">' + x[1] + '</div><div class="kd">' + x[2] + '</div></div>').join('') + '</div>';
+    const sorted = rows.slice().sort((a, b) => (a.closed && b.closed ? b.inc / b.cost - a.inc / a.cost : a.closed ? -1 : b.closed ? 1 : pDate(a.date) - pDate(b.date)));
+    const showBl = !own && S.unitView === 'all';
+    const dash = '<span class="muted">—</span>';
+    const canGo = (r) => SCR[r.go.split('|')[1]].roles.includes(s.role);   /* vai không mở được màn đích thì dòng không bấm được */
+    const tbl = rows.length ? '<table class="tbl"><thead><tr><th>Campaign</th><th>Ngày gửi</th>' + (fin ? '' : '<th class="num">Đã gửi</th><th class="num">Tỉ lệ dùng</th>') + '<th class="num">Doanh thu tăng thêm</th><th class="num">Chi phí thực</th><th class="num">ROI tăng thêm</th><th>Trạng thái</th></tr></thead><tbody>' +
+      sorted.map((r) => (canGo(r) ? '<tr class="clk" data-act="openCampAt" data-arg="' + r.go + '" title="Mở ' + esc(r.name) + '"><td><span class="lnk">' + esc(r.name) + '</span>' : '<tr><td>' + esc(r.name)) + (showBl ? ' <span class="chip-bl">' + r.bl + '</span>' : '') + '</td><td>' + r.date.slice(0, 5) + '</td>' +
+        (fin ? '' : '<td class="num">' + (r.sent ? fmtInt(r.sent) : dash) + '</td><td class="num">' + (r.sent ? pct1(r.used / r.sent) : dash) + '</td>') +
+        '<td class="num">' + (r.closed ? tr(r.inc, 1) : dash) + '</td><td class="num">' + (r.closed ? tr(r.cost, 1) : dash) + '</td>' +
+        '<td class="num">' + (r.closed ? '<b class="' + (r.inc / r.cost < 1 ? 'roi-lo' : '') + '">' + xRoi(r.inc / r.cost) + '</b><div class="xs muted">doanh thu voucher ' + xRoi(r.rev / r.cost) + '</div>' : dash) + '</td><td>' + tag(r.status) + '</td></tr>').join('') +
+      '</tbody></table><div class="tbl-note">Xếp theo ROI tăng thêm, campaign chưa chốt số ở cuối. Doanh thu tăng thêm = (doanh thu mỗi KH nhóm đã gửi − doanh thu mỗi KH nhóm đối chứng) × số KH đã gửi. Doanh thu, chi phí và ROI có sau khi chốt số, 7 ngày sau khi voucher hết hạn. ROI tăng thêm dưới 1x (chữ đỏ): campaign mang về ít hơn số tiền đã chi.</div>'
+      : '<div class="card card-pad" style="text-align:center;padding:40px 16px"><b>Chưa có campaign nào gửi trong ' + perLbl.toLowerCase() + '</b><p class="sm muted" style="margin:6px 0 0">Chọn kỳ khác ở ô Kỳ báo cáo.</p></div>';
+    const perSel = '<label class="sm muted" style="align-self:center">Kỳ báo cáo</label><select class="sel" style="width:160px" data-model="ui.e1p" data-rerender="1">' + E1_PERIODS.map((p) => '<option value="' + p[0] + '"' + (p[0] === per ? ' selected' : '') + '>' + p[1] + '</option>').join('') + '</select>';
+    return crumb([['Báo cáo', 'R-E1'], ['Hiệu quả campaign']]) + pageHead('Hiệu quả remarketing', (fin ? 'Chi phí và doanh thu tăng thêm' : 'Kết quả') + ' các campaign của ' + scope + ', tính theo ngày gửi. Bấm một campaign để xem chi tiết.', perSel + '<button class="btn btn-s" data-act="exportX">Xuất Excel</button>') + fresh('Số liệu cập nhật lúc 09:00 · ' + s.today) +
+      rptTabs(s, 'R-E1') + kpis + tbl;
+  },
+  notes: { rules: ['Chỉ số chính là ROI tăng thêm = doanh thu tăng thêm so với nhóm đối chứng chia chi phí thực (brainstorm Mục 5.4 bước 5). ROI theo doanh thu voucher chỉ ghi phụ, vì nó tính cả khách đằng nào cũng mua nên luôn cao hơn thực tế. Chốt ngày 27/10/2026.', 'Sáu ô: ROI tăng thêm, Doanh thu tăng thêm, Chi phí thực (so với dự kiến), Đã gửi, Tỉ lệ dùng voucher, Tắt nhận ưu đãi (mục tiêu dưới 2% mỗi campaign, brainstorm Mục 10). Mỗi ô so với kỳ trước: mũi tên xanh khi tốt lên, đỏ khi xấu đi.', 'Ba ô tiền và ROI chỉ tính campaign đã chốt số có nhóm đối chứng (gửi từ 1.000 KH, Mục 7.2). Đã gửi, Tỉ lệ dùng, Tắt nhận tính cả campaign đang chạy.', 'Kỳ báo cáo theo ngày gửi: quý (so với quý trước) hoặc tháng (so với tháng liền trước). Ô Kỳ thay cho hai báo cáo MKT-03 ROI theo campaign và MKT-08 tổng hợp quý của file concept.', 'Bảng campaign xếp theo ROI tăng thêm; bấm campaign đã chốt số mở Tổng kết (R-E2), campaign đang chạy hoặc đã duyệt mở màn theo dõi (R-C3).', 'Số Halloween Weekend theo R-E2, Back-to-Work T10 lấy chi phí và ROI 2,3x theo R-E3; lượt dùng, doanh thu tăng thêm của Back-to-Work, campaign Kite, Resort và số quý 3 là minh hoạ.'],
+    roles: ['BL Admin, BL Manager: campaign của đơn vị mình (Tiktak), không có thanh tab. BL Admin không bấm được campaign đã chốt số có Tổng kết (R-E2 chỉ mở cho BL Manager, Finance HO, GPCN HO).', 'Finance HO: có thêm tab Ngân sách và quỹ (R-E3, mục Báo cáo mở vào tab này); ở tab này chỉ thấy ba ô tiền và các cột tiền, chỉ bấm được campaign có Tổng kết.', 'GPCN HO: cả tập đoàn, ba tab; lọc đơn vị bằng ô Xem dữ liệu của trên thanh trên, bảng có thêm nhãn Biz Line.'],
+    self: ['Bỏ cột Mã MKT-0x và Đợt P0/P1 khỏi màn; danh mục 8 báo cáo của file concept vẫn ở tài liệu. MKT-01 là R-C3, MKT-07 là R-A2 (mục Lịch marketing), MKT-04 hiệu quả theo hạng nằm ở bảng của R-E2.', 'Bỏ nút Lịch gửi báo cáo của bản trước: brainstorm Re-MKT không có.'],
+    decided: [D(10), D(11)],
+    diff: ['Figma R-E1 đã vẽ lại ngày 27/10/2026 theo màn này (trước đó là bảng danh sách 8 báo cáo); R-E3, R-E4 trên Figma thêm thanh tab cùng ngày.'],
+    demo: ['Đổi Kỳ báo cáo sang Tháng 12/2026: Tiktak chưa có campaign nào gửi.', 'Đổi vai GPCN HO, chọn Tất cả đơn vị để thấy campaign Kite, Resort và ba tab.', 'Mở R-C3 (Black Friday đang chạy) từ danh sách màn rồi bấm mục Báo cáo: Black Friday có số đã gửi và tỉ lệ dùng; tiền và ROI có sau khi chốt số.'] },
 });
 
 /* ---------- R-E2 tổng kết campaign ---------- */
@@ -2222,7 +2320,7 @@ def('R-E3', {
     const c = s.camps.bf; const nl = s.camps.noel;
     const bfStatus = c.closed ? 'Đã chốt số · thực chi ' + tr(c.closed.actual / 1e6, 1) : (c.budget === 'Đã giữ' ? (c.status === 'Đang chạy' ? 'Đang chạy · giữ ' + tr(costM(c), 1) : 'Đã duyệt · giữ ' + tr(costM(c), 1) + ' · chạy 29/11') : (c.status === 'Đã huỷ' ? 'Đã huỷ · trả về quỹ' : (WAITING_ROLE[c.status] ? c.status : c.status)));
     const rows = [['Halloween Weekend', 'Tiktak', 'Quỹ Tiktak', '45 tr', '38 tr', '4,1x', 'Đã chốt số 14/11 · trả 7 tr về quỹ'], ['Back-to-Work T10', 'Tiktak', 'Quỹ Tiktak', '32 tr', '45 tr', '2,3x', 'Đã chốt số · vượt dự kiến 41%'], ['Black Friday Flash Deal', 'Tiktak', 'Quỹ Tiktak', tr(costM(c), 1), c.closed ? tr(c.closed.actual / 1e6, 1) : '—', '—', bfStatus], ['Kite Noel Combo', 'Kite', 'Quỹ Kite', '24 tr', '—', '—', nl.budget === 'Đã giữ' ? 'Đã duyệt · giữ 24 tr · chạy 24/12' : nl.status]].filter((r) => unitOk(r[1]));
-    return crumb([['Báo cáo', 'R-E1'], ['Ngân sách và quỹ MKT']]) + pageHead('Ngân sách và quỹ MKT — Q4/2026', 'Hạn mức theo quý do Finance HO nhập · ba mức Dự kiến, Đã giữ, Thực chi · chốt số 7 ngày sau khi voucher hết hạn', '<button class="btn btn-s" data-act="exportX">Xuất Excel</button>' + (s.role === 'finance' ? '<button class="btn btn-p" data-go="R-F5">Bảng đối soát tháng</button>' : '')) + fresh('Số liệu cập nhật lúc 09:00 · ' + s.today) +
+    return crumb([['Báo cáo', 'R-E1'], ['Ngân sách và quỹ MKT']]) + pageHead('Ngân sách và quỹ MKT — Q4/2026', 'Hạn mức theo quý do Finance HO nhập · ba mức Dự kiến, Đã giữ, Thực chi · chốt số 7 ngày sau khi voucher hết hạn', '<button class="btn btn-s" data-act="exportX">Xuất Excel</button>' + (s.role === 'finance' ? '<button class="btn btn-p" data-go="R-F5">Bảng đối soát tháng</button>' : '')) + fresh('Số liệu cập nhật lúc 09:00 · ' + s.today) + rptTabs(s, 'R-E3') +
       '<div class="kpis k5">' + kpiBox('Hạn mức Q4 · Quỹ Tiktak', t.limit + ' tr', 'Finance HO nhập đầu quý') + kpiBox('Thực chi', tr(sp, 0), (c.closed ? '3' : '2') + ' campaign đã chốt số') + kpiBox('Đã giữ', tr(rs, 0), 'Campaign đã duyệt, chờ chạy hoặc đang chạy', '#2563EB') + kpiBox('Còn lại', tr(av, 0), Math.round(av / t.limit * 100) + '% hạn mức · ' + (av < t.limit * 0.2 ? 'dưới' : 'trên') + ' ngưỡng cảnh báo 20%', '#00913E') + kpiBox('ROI trung bình', '3,2x', 'Các campaign đã chốt số trong quý') + '</div>' +
       '<div class="ch-card mb16"><h3>Quỹ Q4/2026 theo nguồn: thực chi, đã giữ và hạn mức</h3><div class="row xs muted mb8" style="gap:16px"><span><i style="display:inline-block;width:8px;height:8px;background:#2563EB"></i> Thực chi</span><span><i style="display:inline-block;width:8px;height:8px;background:#E8521A"></i> Đã giữ cho campaign đã duyệt</span><span><i style="display:inline-block;width:8px;height:8px;background:#F4F4F4;border:1px solid #ddd"></i> Còn lại trong hạn mức</span></div>' + bars + '<p class="xs muted" style="margin:8px 0 0">Độ dài thanh nền tỉ lệ với hạn mức quý. Cảnh báo Finance HO khi quỹ còn dưới 20% hạn mức; ' + (s.funds.some((f) => avail(f) < f.limit * 0.2) ? 'có quỹ đã chạm mức này.' : 'chưa quỹ nào chạm mức này.') + '</p></div>' +
       '<table class="tbl"><thead><tr><th>Campaign</th><th>Biz Line</th><th>Quỹ</th><th class="num">Dự kiến</th><th class="num">Thực chi</th><th class="num">ROI</th><th>Trạng thái</th></tr></thead><tbody>' + rows.map((r) => '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[2] + '</td><td class="num">' + r[3] + '</td><td class="num">' + r[4] + '</td><td class="num">' + r[5] + '</td><td>' + esc(r[6]) + '</td></tr>').join('') + '</tbody></table>';
@@ -2231,7 +2329,7 @@ def('R-E3', {
     roles: ['Finance HO và GPCN HO: mọi quỹ, chỉ xem. BL Manager xem chi phí campaign của đơn vị ở R-E2.'],
     self: ['Thanh ngang: độ dài nền tỉ lệ với hạn mức; hai dãy Thực chi và Đã giữ dùng màu chính và màu nhấn của hệ thống, đã kiểm tra phân biệt được với người mù màu.', 'Thanh bên Finance HO chọn mục Báo cáo; mục Quỹ và ngân sách là nơi nhập hạn mức, không phải báo cáo.'],
     decided: [D(6), D(8)],
-    diff: ['Số theo campaign mẫu xuyên suốt, sau khi BL Manager duyệt Black Friday: Đã giữ 232 tr (Figma: 127 tr), Còn lại 140 tr = 28% (Figma: 245 tr), dự kiến Black Friday 40 tr (Figma: 59,5 tr).', 'Kite Noel Combo ghi Đã duyệt · giữ 24 tr (Figma: chờ Finance HO duyệt); 24 tr nằm ở Đã giữ của Quỹ Kite (96 + 24 / 300 tr) như Figma. Không còn bước Finance HO duyệt (câu 6).', 'Số trên màn tính lại theo trạng thái của bản xem thử: huỷ hoặc chốt số Black Friday thì Đã giữ, Còn lại đổi theo. BL Manager không mở màn này vì R-E1 không xếp MKT-05 cho vai này.'],
+    diff: ['Số theo campaign mẫu xuyên suốt, sau khi BL Manager duyệt Black Friday: Đã giữ 232 tr (Figma: 127 tr), Còn lại 140 tr = 28% (Figma: 245 tr), dự kiến Black Friday 40 tr (Figma: 59,5 tr).', 'Kite Noel Combo ghi Đã duyệt · giữ 24 tr (Figma: chờ Finance HO duyệt); 24 tr nằm ở Đã giữ của Quỹ Kite (96 + 24 / 300 tr) như Figma. Không còn bước Finance HO duyệt (câu 6).', 'Số trên màn tính lại theo trạng thái của bản xem thử: huỷ hoặc chốt số Black Friday thì Đã giữ, Còn lại đổi theo. BL Manager không mở màn này (tab Ngân sách và quỹ chỉ có ở Finance HO, GPCN HO).'],
     demo: ['Mở R-C5, huỷ campaign rồi quay lại: Đã giữ của Quỹ Tiktak giảm 40 tr, Còn lại tăng.'] },
 });
 
@@ -2241,7 +2339,7 @@ def('R-E4', {
   snap: () => snap('running', (s) => { s.today = '30/11/2026'; }),
   view: (s) => {
     const st = sendStats(s.camps.bf); const cut = 420 + 1720 + st.capped;
-    return crumb([['Báo cáo', 'R-E1'], ['Số lần KH nhận ưu đãi']]) + pageHead('Số lần KH nhận ưu đãi — tháng 11/2026', 'Trần 2 campaign mỗi KH mỗi tháng, tính chung cả tập đoàn (bộ đếm của Membership) · thông báo giao dịch không tính · KH chạm trần bị loại khỏi campaign ưu tiên thấp hơn', '<button class="btn btn-s" data-act="exportX">Xuất Excel</button>') + fresh('Số liệu tính đến 23:59 · 30/11/2026') +
+    return crumb([['Báo cáo', 'R-E1'], ['Số lần KH nhận ưu đãi']]) + pageHead('Số lần KH nhận ưu đãi — tháng 11/2026', 'Trần 2 campaign mỗi KH mỗi tháng, tính chung cả tập đoàn (bộ đếm của Membership) · thông báo giao dịch không tính · KH chạm trần bị loại khỏi campaign ưu tiên thấp hơn', '<button class="btn btn-s" data-act="exportX">Xuất Excel</button>') + fresh('Số liệu tính đến 23:59 · 30/11/2026') + rptTabs(s, 'R-E4') +
     '<div class="kpis k5">' + kpiBox('Thành viên đồng ý nhận ưu đãi', '12.882', 'Tập có thể gửi của cả tập đoàn') + kpiBox('Nhận ít nhất 1 campaign', '10.422', '80,9% thành viên đồng ý nhận') + kpiBox('Chạm trần 2 campaign', '2.890', '22,4% · không gửi thêm trong tháng', '#B26000') + kpiBox('Lượt bị loại vì trần', fmtInt(cut), 'Thuộc campaign có mức ưu tiên thấp hơn, hoặc KH đã nhận đủ trước khi chốt tập gửi', '#B26000') + kpiBox('Tắt nhận ưu đãi trong tháng', '0,8%', '103 thành viên · mục tiêu dưới 2% mỗi campaign', '#00913E') + '</div>' +
     '<div class="grid2"><div class="ch-card"><h3>Thành viên theo số campaign đã nhận trong tháng</h3>' + barChartV([['Chưa nhận', 2460], ['Nhận 1', 7532], ['Nhận 2 (chạm trần)', 2890]], 520, 210) + '<p class="xs muted" style="margin:6px 0 0">Tổng 12.882 thành viên đã đồng ý nhận ưu đãi. Không KH nào nhận quá 2 campaign (tiêu chí thành công của brainstorm).</p></div>' +
     '<div><table class="tbl"><thead><tr><th>Campaign</th><th>Ưu tiên</th><th>Ngày gửi</th><th class="num">Đã gửi</th><th class="num">Bị loại</th></tr></thead><tbody>' + [['Kite · Cà phê sáng tháng 11', s.camps.cafe.priority, '12/11', '3.800', '420', 'Kite', 'cafe'], ['Resort · Đặt sớm Tết', s.camps.tet.priority, '20/11', '2.100', '1.720', 'Resort', 'tet'], ['Tiktak · Black Friday Flash Deal', s.camps.bf.priority, '29/11', fmtInt(st.sentFig), fmtInt(st.capped), 'Tiktak', 'bf']].filter((r) => unitOk(r[5])).map((r) => '<tr><td><button class="lnk" data-act="openCampAt" data-arg="' + r[6] + '|R-C6">' + r[0] + '</button></td><td>' + r[1] + '</td><td>' + r[2] + '</td><td class="num">' + r[3] + '</td><td class="num">' + r[4] + '</td></tr>').join('') + '</tbody></table></div></div>';
@@ -2251,7 +2349,7 @@ def('R-E4', {
     self: ['Biểu đồ cột một dãy, màu chính, ba cột 0, 1, 2 campaign.'],
     own: ['Trần 2 campaign mỗi khách mỗi tháng là quy định tin quảng cáo (câu 4) nên không có nút đổi trần; bộ đếm do Membership giữ (câu 12).'],
     decided: [D(4), D(12), D(1)],
-    diff: ['Số theo campaign mẫu xuyên suốt (Figma: 8.420 đồng ý nhận; 5.960 nhận ít nhất 1 = 70,8%; 1.310 chạm trần = 15,6%; 2.140 lượt bị loại; 67 tắt nhận; cột biểu đồ 2.460 / 4.650 / 1.310). Black Friday ghi đã gửi 7.412, bị loại 312. Mức ưu tiên Thường thay cho Trung bình (câu 1).', 'Bỏ nút Đổi trần gửi của Figma (trần cố định theo câu 4).', 'Bấm tên campaign trong bảng mở màn Kết quả gửi và phân xử trần (R-C6, chưa có trên Figma). BL Manager chưa mở được màn này theo R-E1.'],
+    diff: ['Số theo campaign mẫu xuyên suốt (Figma: 8.420 đồng ý nhận; 5.960 nhận ít nhất 1 = 70,8%; 1.310 chạm trần = 15,6%; 2.140 lượt bị loại; 67 tắt nhận; cột biểu đồ 2.460 / 4.650 / 1.310). Black Friday ghi đã gửi 7.412, bị loại 312. Mức ưu tiên Thường thay cho Trung bình (câu 1).', 'Bỏ nút Đổi trần gửi của Figma (trần cố định theo câu 4).', 'Bấm tên campaign trong bảng mở màn Kết quả gửi và phân xử trần (R-C6, chưa có trên Figma). BL Manager không mở màn này (tab Số lần KH nhận ưu đãi chỉ có ở GPCN HO).'],
     demo: ['Đổi ô Xem dữ liệu của sang Kite để lọc bảng.', 'Bấm tên một campaign trong bảng để mở màn Kết quả gửi và phân xử trần (R-C6).'] },
 });
 /* ================= Khởi động ================= */
