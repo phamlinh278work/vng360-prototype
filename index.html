@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VNG 360 Prototype</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Bố cục: một cột hẹp, đầu trang tím của VNG 360, ba thẻ dẫn vào ba bản xem thử */
+:root{
+  --brand:#5B1F8A; --brand-soft:#F3ECFA; --ink:#1C1626; --muted:#5E566B; --line:#E4DEEC; --bg:#F7F5FA; --card:#FFFFFF;
+  --font:'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.5;-webkit-font-smoothing:antialiased}
+header{background:var(--brand);color:#fff}
+.wrap{max-width:920px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+header .wrap{padding-block:40px 36px;display:flex;flex-direction:column;gap:8px}
+.mark{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:15px;letter-spacing:.02em}
+.mark i{width:28px;height:28px;border-radius:6px;background:#CE4100;display:grid;place-items:center;font-style:normal;font-weight:700}
+h1{margin:6px 0 0;font-size:30px;line-height:1.2;font-weight:600;text-wrap:balance}
+header p{margin:0;color:#E6D9F3;max-width:62ch}
+main .wrap{padding-block:32px 48px;display:flex;flex-direction:column;gap:16px}
+.card{display:grid;grid-template-columns:1fr auto;gap:8px 24px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:22px 24px;text-decoration:none;color:inherit;transition:border-color .15s, box-shadow .15s}
+.card:hover,.card:focus-visible{border-color:var(--brand);box-shadow:0 4px 18px rgba(91,31,138,.10);outline:none}
+.card h2{margin:0;font-size:19px;font-weight:600}
+.card p{margin:4px 0 0;color:var(--muted);font-size:14px;max-width:60ch}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.meta span{font-size:12px;font-weight:500;color:var(--brand);background:var(--brand-soft);border-radius:999px;padding:2px 10px}
+.go{font-weight:600;color:var(--brand);white-space:nowrap}
+.note{color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:16px;margin-top:8px}
+@media (max-width:560px){.card{grid-template-columns:1fr}.go{justify-self:start}}
+@media (prefers-reduced-motion:reduce){.card{transition:none}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <span class="mark"><i>V</i>VNG 360</span>
+  <h1>Bản xem thử ba sản phẩm</h1>
+  <p>Bản MVP đã chốt ngày 26/10/2026, dựng theo file Figma "360 Customers". Mỗi bản có nút Ghi chú để xem quy tắc từng màn và nút Đã chốt để xem các quyết định.</p>
+</div></header>
+<main><div class="wrap">
+  <a class="card" href="crm-hub.html">
+    <div><h2>CRM Hub</h2>
+      <p>Nạp danh sách khách hàng, duyệt hồ sơ nghi trùng, hồ sơ KH 360°, tổng quan đơn vị, người dùng và lịch sử thao tác.</p>
+      <div class="meta"><span>Web · màn 1440</span><span>39 màn</span><span>Staff · Manager · GPCN HO</span></div></div>
+    <span class="go">Mở bản xem thử →</span></a>
+  <a class="card" href="re-mkt.html">
+    <div><h2>Re-MKT</h2>
+      <p>Lịch marketing, tạo campaign theo bốn bước, duyệt, theo dõi campaign đang chạy, quỹ và báo cáo.</p>
+      <div class="meta"><span>Web · màn 1440</span><span>36 màn</span><span>BL Admin · BL Manager · Finance HO · GPCN HO</span></div></div>
+    <span class="go">Mở bản xem thử →</span></a>
+  <a class="card" href="membership.html">
+    <div><h2>Membership</h2>
+      <p>App thành viên: đăng ký tại quầy, tích và đổi điểm, ví voucher; kèm màn iPOS của thu ngân và chế độ xem hai máy.</p>
+      <div class="meta"><span>App · màn 390</span><span>76 màn</span><span>Khách hàng · Thu ngân</span></div></div>
+    <span class="go">Mở bản xem thử →</span></a>
+  <p class="note">Tài liệu nội bộ. Dữ liệu trên các màn là dữ liệu mẫu. Nên xem trên máy tính.</p>
+</div></main>
+</body>
+</html>
