@@ -228,6 +228,7 @@ select.inp{appearance:none;-webkit-appearance:none;padding-right:34px;background
 /* khung */
 .card{background:#fff;border:1px solid var(--border);border-radius:6px;padding:18px 20px}
 .card+.card{margin-top:16px}
+.grid>.card+.card,.grid>.bl-card+.bl-card{margin-top:0}
 .card h3{font-size:15px;margin:0 0 12px;font-weight:600}
 .sec-t{font-size:16px;font-weight:600;margin:26px 0 12px;display:flex;align-items:center;gap:10px}
 .sec-t:first-child{margin-top:0}
@@ -419,7 +420,7 @@ body.notes-on .ct{padding-left:24px;padding-right:24px}
     <button data-act="pvRole" data-role="gpcn">GPCN HO · Tue Duong</button>
   </div>
   <label class="pv-switch" id="pv-notes-sw" data-act="pvNotes"><i></i>Ghi chú</label>
-  <button class="pv-btn" data-act="pvAsks" title="Các câu đã chốt cho bản MVP ngày 26/10/2026">Đã chốt (35)</button>
+  <button class="pv-btn" data-act="pvAsks" title="Các câu đã chốt cho bản MVP ngày 26/10/2026 và câu mới chờ chốt">Đã chốt (35) · chờ chốt (4)</button>
   <button class="pv-btn" data-act="pvReset" title="Đưa mọi dữ liệu mẫu về như lúc mở file">Đặt lại</button>
 </div>
 <nav id="pv-drawer" aria-label="Danh sách màn"></nav>
@@ -455,6 +456,8 @@ const ICON = {
   download:'<path d="M12 4v12M7 11l5 5 5-5"/><path d="M4 20h16"/>',
   lock:'<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
   building:'<path d="M4 21V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v16M15 9h4a1 1 0 0 1 1 1v11M3 21h18M8 8h3M8 12h3M8 16h3"/>',
+  inbox:'<path d="M3 13h5l2 3h4l2-3h5"/><path d="M5.5 5h13l2.5 8v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-6z"/>',
+  ext:'<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
   x:'<path d="M6 6l12 12M18 6 6 18"/>'
 };
 const ic = (n, sz = 20, sw = 1.8) => `<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[n] || ''}</svg>`;
@@ -472,11 +475,12 @@ function initialState() {
   return {
     role: 'manager',
     clock: 1,                              /* phút sau 15:00 ngày 28/10/2026, dùng cho thao tác mới */
+    /* mem: quyền xử lý yêu cầu từ app Membership; rmkt: vai trò ở web Re-MKT (câu 39, chờ chốt) */
     users: [
-      {id:'u1', name:'Hoa Nguyen', role:'Manager', me:true},
-      {id:'u2', name:'Minh Tran', role:'Staff', imp:true,  rev:false},
-      {id:'u3', name:'Đặng Thu H', role:'Staff', imp:false, rev:true},
-      {id:'u4', name:'Bùi Văn K',  role:'Staff', imp:false, rev:false}
+      {id:'u1', name:'Hoa Nguyen', role:'Manager', me:true, rmkt:'BL Manager'},
+      {id:'u2', name:'Minh Tran', role:'Staff', imp:true,  rev:false, mem:false, rmkt:'BL Admin'},
+      {id:'u3', name:'Đặng Thu H', role:'Staff', imp:false, rev:true, mem:true, rmkt:''},
+      {id:'u4', name:'Bùi Văn K',  role:'Staff', imp:false, rev:false, mem:false, rmkt:''}
     ],
     /* lần nạp: thứ tự như màn B1 */
     imports: [
@@ -507,23 +511,32 @@ function initialState() {
     customers: {
       c1:{id:'c1', code:'KH-000101', name:'Nguyễn Văn A', phoneM:'090xxxx001', emailM:'***@example.com', phone:'0901 234 001', email:'nva@example.com', type:'Cá nhân', tags:['Khách quen'],
         last:'12/10/2026', cnt:24, spend:'3.850.000 đ', first:'15/03/2025', risk:'Active', riskSince:'12/10/2026', owner:'Hoa Nguyen',
-        recs:[{bl:'Kite', name:'Nguyễn Văn A', src:'Lần nạp Kite 25/10/2026 09:15'}, {bl:'Tiktak', name:'Nguyen Van A', src:'Lần nạp Tiktak 27/10/2026 08:40'}, {bl:'Resort', name:'Nguyễn Văn A', src:'Lần nạp Resort 18/10/2026 10:05'}],
+        recs:[{bl:'Kite', name:'Nguyễn Văn A', src:'Lần nạp Kite 25/10/2026 09:15', pts:24000}, {bl:'Tiktak', name:'Nguyen Van A', src:'Lần nạp Tiktak 27/10/2026 08:40', pts:28000}, {bl:'Resort', name:'Nguyễn Văn A', src:'Lần nạp Resort 18/10/2026 10:05', pts:18600}],
+        mem:{since:'05/09/2026', at:'Kite', tier:'Gold', tierPts:70600, avail:46800, pend:4500, pendAt:'12:00, 29/10/2026', consent:{on:true, at:'05/09/2026'},
+          links:{Kite:['ok', 'tự liên kết theo SĐT, 05/09/2026'], Tiktak:['ok', 'mã booking, 06/09/2026'], Resort:['ok', 'Manager Resort xác minh, 08/09/2026']},
+          offers:[['Voucher chào mừng giảm 10%', 'Kite', '05/09/2026', 'Đã dùng 05/09/2026'], ['Quà Back-to-Work T10', 'Tiktak', '06/10/2026', 'Đã dùng 09/10/2026'], ['Đổi điểm: 1 ly cà phê bất kỳ', 'Kite', '25/10/2026', 'Còn hạn đến 24/11/2026']]},
         others:[{bl:'Tiktak', use:true, month:'09/2026', range:'5 – 10 triệu đ', company:'Công ty TNHH Minh Phát'}, {bl:'Resort', use:true, month:'07/2026', range:'Trên 10 triệu đ'}],
         notes:[{by:'Hoa Nguyen', at:'14/10/2026 10:20', bl:'Kite', text:'KH hỏi về chương trình thành viên dùng chung của tập đoàn; hẹn báo khi có thông tin.'},
                {by:'Minh Tran', at:'02/09/2026 08:05', bl:'Kite', text:'Hay ghé buổi sáng ngày thường, thường mua mang đi.'}]},
       c2:{id:'c2', code:'KH-000102', name:'Trần Thị B', phoneM:'090xxxx115', emailM:'***@example.com', phone:'0902 318 115', email:'tranthib@example.com', type:'Cá nhân', tags:['Mới'],
         last:'03/10/2026', cnt:2, spend:'180.000 đ', first:'03/10/2026', risk:'Active', riskSince:'03/10/2026', owner:null,
-        recs:[{bl:'Kite', name:'Trần Thị B', src:'Lần nạp Kite 25/10/2026 09:15'}, {bl:'Tiktak', name:'Tran Thi B', src:'Lần nạp Tiktak 27/10/2026 08:40'}],
+        recs:[{bl:'Kite', name:'Trần Thị B', src:'Lần nạp Kite 25/10/2026 09:15', pts:18000}, {bl:'Tiktak', name:'Tran Thi B', src:'Lần nạp Tiktak 27/10/2026 08:40', pts:0}],
+        mem:{since:'03/10/2026', at:'Kite', tier:'Silver', tierPts:18000, avail:18000, pend:0, consent:{on:false, at:'20/10/2026'},
+          links:{Kite:['ok', 'tự liên kết theo SĐT, 03/10/2026'], Tiktak:['wait', 'gửi mã booking 28/10/2026 09:40'], Resort:['no', '']},
+          offers:[['Voucher chào mừng giảm 10%', 'Kite', '03/10/2026', 'Đã dùng 03/10/2026']]},
         others:[{bl:'Tiktak', use:true, month:'10/2026', range:'2 – 5 triệu đ'}, {bl:'Resort', use:false}], notes:[]},
       c3:{id:'c3', code:'KH-000103', name:'Lê Văn C', phoneM:'090xxxx220', emailM:'—', phone:'0903 456 220', email:'', type:'Cá nhân', tags:['Cá nhân'],
         last:'28/08/2026', cnt:9, spend:'1.120.000 đ', first:'30/05/2025', risk:'Thấp', riskSince:'28/09/2026', owner:'Hoa Nguyen',
-        recs:[{bl:'Kite', name:'Lê Văn C', src:'Lần nạp Kite 25/10/2026 09:15'}, {bl:'Kite', name:'Lê C', src:'Thêm tay · Minh Tran · 26/10/2026 · tự liên kết (thiếu tên đệm)'}],
+        recs:[{bl:'Kite', name:'Lê Văn C', src:'Lần nạp Kite 25/10/2026 09:15', pts:41000}, {bl:'Kite', name:'Lê C', src:'Thêm tay · Minh Tran · 26/10/2026 · tự liên kết (thiếu tên đệm)', pts:0}],
+        mem:{since:'26/10/2026', at:'Kite', tier:'Silver', tierPts:41000, avail:41000, pend:0, consent:{on:true, at:'26/10/2026'},
+          links:{Kite:['ok', 'đăng ký tại quầy 26/10/2026, cộng dồn giao dịch 12 tháng'], Tiktak:['no', ''], Resort:['no', '']},
+          offers:[['Voucher chào mừng giảm 10%', 'Kite', '26/10/2026', 'Còn hạn đến 25/11/2026']]},
         others:[{bl:'Tiktak', use:false}, {bl:'Resort', use:false}],
         notes:[{by:'Minh Tran', at:'27/10/2026 09:12', bl:'Kite', text:'Gọi lại mời dùng thử món mới, KH hẹn ghé cuối tuần.', afterMerge:true},
                {by:'Hoa Nguyen', at:'27/10/2026 15:40', bl:'Kite', text:'KH báo số này dùng chung với người nhà.', afterMerge:true},
                {by:'Hoa Nguyen', at:'05/09/2026 11:00', bl:'Kite', text:'Đã lâu chưa quay lại; ghi nhận để chăm sóc khi có chương trình.'}]},
       c4:{id:'c4', code:'KH-000104', name:'Phạm Thu D', phoneM:'090xxxx331', emailM:'***@example.com', phone:'0904 552 331', email:'phamthud@example.com', type:'Cá nhân', tags:['Khách quen'],
-        last:'05/07/2026', cnt:31, spend:'5.400.000 đ', first:'21/01/2024', risk:'Cao', riskSince:'03/10/2026', owner:'Minh Tran',
+        last:'05/07/2026', cnt:31, spend:'5.400.000 đ', first:'21/01/2024', risk:'Cao', riskSince:'03/10/2026', owner:'Minh Tran', kiteCard:'KITE-0331',
         recs:[{bl:'Kite', name:'Phạm Thu D', src:'Lần nạp Kite 25/10/2026 09:15'}],
         others:[{bl:'Tiktak', use:false}, {bl:'Resort', use:true, month:'12/2025', range:'5 – 10 triệu đ'}], notes:[]},
       c5:{id:'c5', code:'KH-000105', name:'Hoàng Minh E', phoneM:'090xxxx442', emailM:'—', phone:'0905 671 442', email:'', type:'Cá nhân', tags:['Có thể trùng'], dupWith:{name:'Hoàng Minh Em', bl:'Resort', pair:'p5'},
@@ -532,6 +545,9 @@ function initialState() {
         others:[{bl:'Tiktak', use:false}, {bl:'Resort', use:false}], notes:[]},
       c6:{id:'c6', code:'KH-000106', name:'Võ Thị F', phoneM:'090xxxx553', emailM:'***@example.com', phone:'0906 780 553', email:'vothif@example.com', type:'Cá nhân', tags:['Cá nhân'],
         last:null, cnt:null, spend:null, first:null, risk:null, owner:'Hoa Nguyen', manual:true,
+        mem:{since:'22/10/2026', at:'Kite', tier:'Silver', tierPts:0, avail:0, pend:0, consent:{on:true, at:'22/10/2026'}, fresh:true,
+          links:{Kite:['ok', 'tự liên kết theo SĐT, 22/10/2026'], Tiktak:['no', ''], Resort:['no', '']},
+          offers:[['Voucher chào mừng giảm 10%', 'Kite', '22/10/2026', 'Còn hạn đến 21/11/2026']]},
         recs:[{bl:'Kite', name:'Võ Thị F', src:'Thêm tay · Hoa Nguyen · 22/10/2026'}],
         others:[{bl:'Tiktak', use:false}, {bl:'Resort', use:false}], notes:[]}
     },
@@ -572,7 +588,42 @@ function initialState() {
     exportCtx: null,
     assignTo: '',
     gpcnUnit: 'Kite',
-    newCust: 0
+    newCust: 0,
+    /* ô chọn khoảng thời gian ở B1, F và khoảng giao dịch gần nhất ở G1 */
+    impPeriod: 'all', logPeriod: 'all', txRange: 'all',
+    /* yêu cầu khách gửi từ app Membership (luồng 5, chưa có trên Figma) */
+    links: [
+      {id:'lk2', cust:'c4', name:'Phạm Thu D', bl:'Kite', appPhone:'093xxxx412', joined:'27/10/2026 · đăng ký tại Tiktak', kind:'Mã thẻ KH Kite', val:'KITE-0331', at:'28/10/2026 07:50', due:'29/10/2026 07:50', left:'còn 16 giờ', status:'cho',
+        match:{name:'Phạm Thu D', phone:'090xxxx331', card:'KITE-0331', rec:'KH-000104 · Lần nạp Kite 25/10/2026 09:15', tx12:'9 giao dịch · 1.260.000 đ (28/10/2025 đến nay)', pts:25200, tierPts:18800, tier:'Silver'}},
+      {id:'lk3', name:'Ngô Thị G', bl:'Kite', appPhone:'093xxxx207', joined:'26/10/2026 · đăng ký tại Kite', kind:'Email đã dùng ở Kite', val:'ngothig@example.com', at:'27/10/2026 08:10', due:'28/10/2026 08:10', left:'Quá hạn', over:true, status:'cho', match:null},
+      {id:'lk1', cust:'c2', name:'Trần Thị B', bl:'Tiktak', appPhone:'090xxxx115', joined:'03/10/2026 · đăng ký tại Kite', kind:'Mã booking Tiktak', val:'TK-3310', at:'28/10/2026 09:40', due:'29/10/2026 09:40', left:'còn 18 giờ', status:'cho',
+        match:{name:'Tran Thi B', phone:'090xxxx115', card:'TK-3310', rec:'Bản ghi Tiktak · Lần nạp Tiktak 27/10/2026 08:40', tx12:'2 giao dịch · 3.400.000 đ (28/10/2025 đến nay)', pts:340000, tierPts:340000, tier:'Platinum'}},
+      {id:'lk0', name:'Mạc Thị W', bl:'Kite', appPhone:'091xxxx320', joined:'25/10/2026 · đăng ký tại Kite', kind:'Mã thẻ KH Kite', val:'KITE-9012', at:'25/10/2026 19:30', due:'26/10/2026 19:30', status:'tuchoi', by:'Hoa Nguyen', doneAt:'26/10/2026 10:05', reason:'Mã thẻ không khớp bản ghi nào của Kite.', match:null}
+    ],
+    misses: [
+      {id:'ms1', cust:'c1', name:'Nguyễn Văn A', bl:'Kite', inv:'K-2610-0457', day:'26/10/2026', claim:90000, note:'Quên đưa mã thành viên lúc thanh toán.', at:'27/10/2026 20:15', due:'30/10/2026', status:'cho',
+        found:{at:'26/10/2026 18:42', amt:85000, shop:'Kite Láng Hạ', state:'chua'}},
+      {id:'ms2', cust:'c2', name:'Trần Thị B', bl:'Kite', inv:'K-0310-0112', day:'03/10/2026', claim:120000, note:'Không thấy điểm của hoá đơn sáng 03/10.', at:'28/10/2026 08:02', due:'02/11/2026', status:'cho',
+        found:{at:'03/10/2026 08:16', amt:120000, shop:'Kite Láng Hạ', state:'datich', tichAt:'03/10/2026 08:16', tichPts:12000}},
+      {id:'ms3', cust:'c6', name:'Võ Thị F', bl:'Kite', inv:'K-2710-9999', day:'27/10/2026', claim:55000, note:'', at:'28/10/2026 10:30', due:'02/11/2026', status:'cho', found:null},
+      {id:'ms4', name:'Lý Thu M', bl:'Tiktak', inv:'TT-1810-221', day:'18/10/2026', claim:1200000, note:'Thuê phòng họp, quầy không quét mã.', at:'23/10/2026 17:20', due:'28/10/2026', status:'cho',
+        found:{at:'18/10/2026 14:05', amt:1200000, shop:'Tiktak Lotus', state:'chua'}}
+    ],
+    dels: [
+      {id:'dr1', kind:'xoa', name:'Phùng Gia Z', code:'KH-000118', bl:'Kite', at:'14/10/2026 21:05', due:'13/11/2026', status:'dang', avail:4200, neg:0, vouchers:1, invs:12,
+        steps:{lock:'14/10/2026 21:05', voucher:'14/10/2026 21:05', refund:false, erase:false, sms:false}},
+      {id:'dr2', kind:'xoa', name:'Vũ Hoàng P', code:'KH-000121', bl:'Kite', at:'20/10/2026 09:12', due:'19/11/2026', status:'dang', avail:0, neg:1500, vouchers:0, invs:5,
+        steps:{lock:'20/10/2026 09:12', voucher:'20/10/2026 09:12', refund:false, erase:false, sms:false}},
+      {id:'dr0', kind:'xoa', name:'Âu Gia V', code:'KH-000096', bl:'Resort', at:'02/10/2026 16:40', due:'01/11/2026', status:'xong', avail:0, neg:0, vouchers:0, invs:3, doneAt:'09/10/2026 11:20', by:'Tue Duong',
+        steps:{lock:'02/10/2026 16:40', voucher:'02/10/2026 16:40', refund:true, erase:true, sms:true}}
+    ],
+    consents: [
+      {name:'Trần Thị B', cust:'c2', bl:'Kite', at:'20/10/2026 21:14', via:'app · Tài khoản › Đồng ý và thông báo'},
+      {name:'Đoàn Thị Q', bl:'Kite', at:'17/10/2026 07:58', via:'app · Tài khoản › Đồng ý và thông báo'},
+      {name:'Kiều Minh R', bl:'Tiktak', at:'11/10/2026 12:30', via:'gửi yêu cầu xoá rồi rút lại'}
+    ],
+    vtab: {v1:'cho', v3:'cho', v5:'xoa'},
+    lkDraft: {reason:'', other:''}, msDraft: {reason:''}
   };
 }
 let S = initialState();
@@ -584,6 +635,8 @@ const isMgr = () => S.role === 'manager';
 const mgrUp = () => S.role !== 'staff';
 const canImport = () => S.role !== 'staff' || !!staffUser().imp;
 const canReview = () => S.role !== 'staff' || !!staffUser().rev;
+/* yêu cầu từ app Membership: Manager, GPCN HO và Staff được giao quyền (câu 46 của bảng Membership, chờ chốt) */
+const canMem = () => S.role !== 'staff' || !!staffUser().mem;
 
 /* ---------- giờ cho thao tác mới ---------- */
 function nowStr() { S.clock += 1; const m = S.clock; return `28/10/2026 ${15 + Math.floor(m / 60)}:${String(m % 60).padStart(2, '0')}`; }
@@ -613,6 +666,7 @@ const FLOWS = [
   {key:'f2', name:'Luồng 2 · Duyệt cặp nghi trùng và tách'},
   {key:'f3', name:'Luồng 3 · Hồ sơ KH 360°'},
   {key:'f4', name:'Luồng 4 · Phân tích và Tổng quan'},
+  {key:'f6', name:'Luồng 5 · Yêu cầu từ app Membership (mới 28/10, vẽ theo đề xuất)'},
   {key:'f5', name:'Đăng nhập, phân quyền và truy vết'}
 ];
 function def(id, o) { SCREENS[id] = Object.assign({id, code:id, fig:false}, o); }
@@ -628,6 +682,10 @@ const NAV = [
   {key:'nap', label:'Nạp dữ liệu', icon:'plus', go:'A1', show:() => canImport(), kids:[
     {key:'napmoi', label:'Nạp file mới', go:'A1'},
     {key:'lsnap', label:'Lịch sử nạp', go:'B1'}]},
+  {key:'yc', label:'Yêu cầu Membership', icon:'inbox', go:'V1', show:() => canMem(), kids:[
+    {key:'xm', label:'Xác minh liên kết', go:'V1', note:() => memCount('links')},
+    {key:'td', label:'Báo thiếu điểm', go:'V3', note:() => memCount('misses')},
+    {key:'xoa', label:'Xoá tài khoản, rút đồng ý', go:'V5', show:() => isGpcn(), note:() => memCount('dels')}]},
   {key:'bc', label:'Báo cáo', icon:'pulse', go:'E', show:() => mgrUp(), kids:[
     {key:'crm07', label:'Tổng hợp xuyên tập đoàn (CRM-07)', go:'L1', show:() => isGpcn()},
     {key:'crm06', label:'Chất lượng nạp (CRM-06)', go:'E'},
@@ -646,7 +704,8 @@ function sidebar(active) {
     h += `<div class="nv${act ? ' act' : ''}" data-go="${n.go}">${ic(n.icon)}<span>${esc(n.label)}</span></div>`;
     for (const k of n.kids || []) {
       if (k.show && !k.show()) continue;
-      h += `<div class="nv nv-sub${k.key === active ? ' act' : ''}" data-go="${k.go}">${esc(k.label)}${k.note ? `<small>${esc(k.note)}</small>` : ''}</div>`;
+      const note = typeof k.note === 'function' ? k.note() : k.note;
+      h += `<div class="nv nv-sub${k.key === active ? ' act' : ''}" data-go="${k.go}"><span>${esc(k.label)}${note ? `<small>${esc(note)}</small>` : ''}</span></div>`;
     }
   }
   h += `</nav><div class="sb-foot"><span class="av">${r.init}</span><div><b>${esc(r.name)}</b><span>${esc(r.title)}</span></div></div></aside>`;
@@ -661,6 +720,12 @@ function topbar() {
 const crumb = (...parts) => `<div class="bc">${parts.map((p, i) => i === parts.length - 1 ? `<b>${esc(Array.isArray(p) ? p[0] : p)}</b>` : (Array.isArray(p) ? `<a data-go="${p[1]}">${esc(p[0])}</a>` : esc(p))).join(' &nbsp;/&nbsp; ')}</div>`;
 const pageHead = (title, sub, actions = '', extra = '') => `<div class="ph"><div class="ph-t"><h1>${title}</h1>${sub ? `<p>${sub}</p>` : ''}${extra}</div>${actions ? `<div class="ph-a">${actions}</div>` : ''}</div>`;
 const wait = (code, text) => `<span class="wait" title="${esc(text || '')}">chờ ${esc(code)}</span>`;
+/* ô chọn khoảng thời gian (B1, F) và khoảng giao dịch gần nhất (G1); mốc là ngày dữ liệu 28/10/2026 */
+const PERIODS = [['all', 'Tất cả thời gian'], ['0', 'Hôm nay 28/10/2026'], ['7', '7 ngày qua'], ['30', '30 ngày qua']];
+const TX_RANGES = [['all', 'Tất cả'], ['30', 'Trong 30 ngày'], ['90', '30 đến 90 ngày'], ['old', 'Trên 90 ngày'], ['none', 'Chưa có giao dịch']];
+const periodSel = (key, cur) => `<select class="inp" data-in="${key}">${PERIODS.map(o => `<option value="${o[0]}"${cur === o[0] ? ' selected' : ''}>${o[1]}</option>`).join('')}</select>`;
+const inPeriod = (at, p) => p === 'all' || daysTo(String(at).slice(0, 10)) <= +p;
+const inTxRange = (last, r) => r === 'all' || (r === 'none' ? !last : !!last && (r === '30' ? daysTo(last) < 30 : r === '90' ? daysTo(last) >= 30 && daysTo(last) < 90 : daysTo(last) >= 90));
 
 function noAccess(sc) {
   return `${crumb('Không có quyền')}
@@ -931,14 +996,14 @@ def('A6', {flow:'f1', fig:true, name:'Kết quả lần nạp', roleHint:'Ngư�
 /* ---- B1 lịch sử nạp ---- */
 function historyScreen() {
   const f = S.impFilter || {st:'all', by:'all'};
-  const rows = S.imports.filter(m => (f.st === 'all' || m.status === f.st) && (f.by === 'all' || m.by === f.by));
+  const rows = S.imports.filter(m => (f.st === 'all' || m.status === f.st) && (f.by === 'all' || m.by === f.by) && inPeriod(m.at, S.impPeriod));
   const cell = (m, i) => m.res ? (i === 5 ? (m.upd || 0) : m.res[i]) : '—';
   return `${crumb('Nạp dữ liệu', 'Lịch sử nạp')}
   ${pageHead('Lịch sử nạp', 'Các lần nạp của đơn vị Kite kèm người nạp, thời điểm, trạng thái và kết quả.', `<button class="btn btn-p" data-go="A1">Nạp file mới</button>`)}
   <div class="filters">
     <select class="inp" data-in="impSt"><option value="all">Trạng thái: Tất cả</option>${[['cho','Chờ xử lý'],['dang','Đang xử lý'],['xong','Hoàn tất'],['khong','Không hoàn tất'],['go','Đã gỡ']].map(o => `<option value="${o[0]}"${f.st === o[0] ? ' selected' : ''}>Trạng thái: ${o[1]}</option>`).join('')}</select>
     <select class="inp" data-in="impBy"><option value="all">Người nạp: Tất cả</option>${['Hoa Nguyen','Minh Tran','Tue Duong'].map(n => `<option${f.by === n ? ' selected' : ''}>${n}</option>`).join('')}</select>
-    <div class="dt"><button class="inp" data-todo="Chọn khoảng thời gian">Khoảng thời gian</button>${ic('cal', 16)}</div>
+    <div class="dt">${periodSel('impPeriod', S.impPeriod)}${ic('cal', 16)}</div>
   </div>
   <div class="tbl"><table>
     <tr><th>Thời điểm</th><th>Người nạp</th><th>Đơn vị</th><th>Trạng thái</th><th class="num">Tạo mới</th><th class="num">Cập nhật</th><th class="num">Liên kết<br>tự động</th><th class="num">Chờ<br>duyệt</th><th class="num">Gộp<br>trong file</th><th class="num">Bỏ qua</th><th>Thao tác</th></tr>
@@ -1039,6 +1104,20 @@ function decidePairs(ids, d) {
 }
 
 /* ---- K1 so sánh cặp ---- */
+/* hồ sơ trong cặp có là thành viên Membership không (câu 38, chờ chốt): [hồ sơ 1, hồ sơ 2] */
+const PAIR_MEM = {p1:['c1', null], p2:['c2', 'lk3'], p3:['c3', null], p5:[null, null]};
+function pairMemText(ref) {
+  if (!ref) return 'Chưa là thành viên';
+  if (ref.startsWith('lk')) return 'Có tài khoản app, chưa liên kết Kite (đang chờ xác minh)';
+  const m = S.customers[ref].mem;
+  return m ? `Thành viên ${m.tier} · từ ${m.since} · ${num(m.avail)} điểm` : 'Chưa là thành viên';
+}
+function pairMemNote(pr) {
+  const pm = PAIR_MEM[pr.id] || [null, null], isM = r => !!r && !r.startsWith('lk') && !!(S.customers[r] || {}).mem;
+  if (!pm[0] && !pm[1]) return '';
+  if (isM(pm[0]) && isM(pm[1])) return `<div class="al w"><b>Cả hai hồ sơ đều có tài khoản thành viên Membership</b>Gộp hồ sơ không gộp hai tài khoản thành viên; điểm, hạng, voucher giữ riêng từng tài khoản. Báo GPCN HO xử lý cùng khách (câu 15 của bảng Membership).</div>`;
+  return `<div class="al i"><b>Một hồ sơ là thành viên Membership</b>Gộp chỉ liên kết hai hồ sơ trong CRM Hub. Giao dịch của hồ sơ kia không tự cộng điểm cho tài khoản thành viên; khách nối thêm bằng nút Liên kết trong app${pm[1] && pm[1].startsWith('lk') ? ', yêu cầu liên kết đang chờ ở mục Xác minh liên kết' : ''} (câu 15 của bảng Membership; câu 38 chờ chốt).</div>`;
+}
 def('K1', {flow:'f2', name:'So sánh cặp hồ sơ', src:'SRS FR-crm-hub-026 đến 028', roleHint:'Người duyệt (từ nút Mở cặp ở C1)', role:'manager', nav:'hangcho',
   allow:p => canReview() && (isGpcn() || !(pairById(p || 'p1') || {}).cross),
   render(p) {
@@ -1048,11 +1127,13 @@ def('K1', {flow:'f2', name:'So sánh cặp hồ sơ', src:'SRS FR-crm-hub-026 đ
     if (pr.done) return head + `<div class="al i form-w"><b>Cặp đã có quyết định</b>${pr.done.d === 'other' ? `Cặp hồ sơ này đã được ${esc(pr.done.by)} xử lý.` : `${pr.done.d === 'merge' ? 'Gộp' : 'Không phải trùng'} · ${esc(pr.done.by)}.`}</div><button class="btn btn-o" data-go="C1">Về hàng chờ duyệt</button>`;
     const A = pr.A, B = pr.B, mk = k => pr.match.includes(k) ? ' m' : '';
     const rows = [['Họ tên', pr.a, pr.b, ''], ['Biz Line nguồn', A.bl, B.bl, ''], ['SĐT', A.phone, B.phone, 'phone'], ['Email', A.email, B.email, 'email'],
-      ['Ngày giao dịch đầu tiên', A.first, B.first, ''], ['Ngày giao dịch gần nhất', A.last, B.last, ''], ['Số lần giao dịch', A.cnt, B.cnt, ''], ['Tổng chi tiêu luỹ kế', A.sum, B.sum, ''], ['Nguồn bản ghi', A.src, B.src, '']];
+      ['Ngày giao dịch đầu tiên', A.first, B.first, ''], ['Ngày giao dịch gần nhất', A.last, B.last, ''], ['Số lần giao dịch', A.cnt, B.cnt, ''], ['Tổng chi tiêu luỹ kế', A.sum, B.sum, ''], ['Nguồn bản ghi', A.src, B.src, ''],
+      ['Thành viên Membership', pairMemText((PAIR_MEM[pr.id] || [])[0]), pairMemText((PAIR_MEM[pr.id] || [])[1]), '']];
     return `${head}
     ${pageHead('So sánh cặp hồ sơ', `Lý do nghi trùng: ${esc(pr.why)} · Tổng chi tiêu hai hồ sơ ${money(pr.spend)} · Tuổi chờ ${pr.age} ngày`,
       `<button class="btn btn-o" data-act="decideOne" data-id="${pr.id}" data-d="notdup">Không phải trùng</button><button class="btn btn-p" data-act="decideOne" data-id="${pr.id}" data-d="merge">Gộp</button>`)}
     ${pr.cross ? `<div class="al w"><b>Cặp giữa hai đơn vị</b>Chỉ GPCN HO và người chuyên trách duyệt. Cặp chờ quá 7 ngày được nhắc GPCN HO và người chuyên trách; quá 21 ngày đánh dấu quá hạn.</div>` : ''}
+    ${pairMemNote(pr)}
     <div class="cmp"><div></div><div>Hồ sơ 1</div><div>Hồ sơ 2</div>
       ${rows.map(r => `<div class="k">${r[0]}</div><div class="${r[3] ? mk(r[3]).trim() : ''}">${esc(r[1])}</div><div class="${r[3] ? mk(r[3]).trim() : ''}">${esc(r[2])}</div>`).join('')}
     </div>
@@ -1103,6 +1184,24 @@ def('K2', {flow:'f2', name:'Soát mẫu tự gộp', src:'SRS FR-crm-hub-031, 03
 });
 
 /* ---- I4 tách hồ sơ ---- */
+/* hạng theo điểm xét hạng trong năm, cùng ngưỡng với Membership (câu 26 của bảng Membership) */
+const tierByPts = n => n >= 200000 ? 'Platinum' : n >= 50000 ? 'Gold' : 'Silver';
+/* ảnh hưởng tới tài khoản thành viên khi tách bản ghi ri ra khỏi hồ sơ c (câu 15 của bảng Membership; câu 38 chờ chốt) */
+function splitMemImpact(c, ri) {
+  if (!c.mem) return null;
+  const out = c.recs[ri], pts = out.pts || 0, unitLeft = !c.recs.some((r, i) => i !== ri && r.bl === out.bl);
+  const tierPts = Math.max(0, c.mem.tierPts - pts), avail = c.mem.avail - pts;
+  return {bl:out.bl, pts, unitLeft, linked:(c.mem.links[out.bl] || [])[0] === 'ok', tierPts, avail, tier:tierByPts(tierPts)};
+}
+function splitMemNote(c, ri) {
+  const x = splitMemImpact(c, ri);
+  if (!x) return '';
+  const lines = [];
+  lines.push(x.unitLeft && x.linked ? `Hồ sơ gốc không còn bản ghi ${esc(x.bl)}: liên kết ${esc(x.bl)} của tài khoản thành viên về <b style="display:inline;font-size:13px">Chưa liên kết</b>.` : `Hồ sơ gốc vẫn còn bản ghi ${esc(x.bl)} nên liên kết ${esc(x.bl)} giữ nguyên.`);
+  lines.push(x.pts ? `Thu lại ${num(x.pts)} điểm cộng từ giao dịch của bản ghi này, như hoàn giao dịch. Điểm khả dụng còn ${x.avail < 0 ? '<b style="display:inline;font-size:13px">' + num(x.avail) + ' điểm (số dư âm, trừ dần vào điểm lần sau)</b>' : num(x.avail) + ' điểm'}; hạng ${esc(c.mem.tier)}${x.tier !== c.mem.tier ? ' xuống ' + esc(x.tier) : ' giữ nguyên'} (điểm xét hạng năm 2026 còn ${num(x.tierPts)}).` : 'Bản ghi này chưa sinh điểm nào cho tài khoản thành viên.');
+  lines.push('Hồ sơ tách ra về Chưa liên kết. Khách nhận thông báo trong app (màn M24b của Membership).');
+  return `<div class="al w mt16"><b>KH là thành viên Membership (${esc(c.mem.tier)})</b>${lines.join(' ')}</div>`;
+}
 const canSplit = c => !!c && c.recs.length >= 2 && (isGpcn() || (isMgr() && c.recs.every(r => r.bl === 'Kite')));
 def('I4', {flow:'f2', name:'Tách hồ sơ', src:'SRS FR-crm-hub-033 đến 035', roleHint:'Manager (hai bản ghi cùng đơn vị) · GPCN HO', role:'manager', nav:'kh',
   base:'I1', baseP:p => p || 'c3', allow:p => canSplit(S.customers[p || 'c3']),
@@ -1119,6 +1218,7 @@ def('I4', {flow:'f2', name:'Tách hồ sơ', src:'SRS FR-crm-hub-033 đến 035'
         <div class="bl-card"><h4>Hồ sơ gốc · giữ mã ${esc(c.code)}</h4>${rest.map(r => `<div class="small">${esc(r.name)} · ${esc(r.bl)}</div>`).join('')}</div>
         <div class="bl-card"><h4>Hồ sơ mới · mã mới</h4><div class="small">${esc(out.name)} · ${esc(out.bl)}</div></div>
       </div>
+      ${splitMemNote(c, ri)}
       ${sameBl && after.length ? `<div class="sec-t" style="font-size:14px;margin-top:18px">Ghi chú tạo sau lúc gộp: chọn hồ sơ giữ từng mục</div>
         ${after.map(([n, i]) => `<div class="row" style="border-top:1px solid var(--border);padding:8px 0"><div class="sp small"><b>${esc(n.by)}</b> · ${esc(n.at)}<br>${esc(n.text)}</div>
           <select class="inp" style="width:190px;height:36px" data-in="splitKeep" data-i="${i}"><option value="goc">Ở lại hồ sơ gốc</option><option value="moi"${S.split.keep[i] === 'moi' ? ' selected' : ''}>Sang hồ sơ mới</option></select></div>`).join('')}
@@ -1132,12 +1232,19 @@ function doSplit(cid) {
   const c = S.customers[cid], ri = S.split.rec, out = c.recs[ri];
   const nid = 'c' + (7 + S.newCust++);
   const moved = c.notes.filter((n, i) => n.afterMerge && S.split.keep[i] === 'moi');
+  const mx = splitMemImpact(c, ri);
   c.notes = c.notes.filter((n, i) => !(n.afterMerge && S.split.keep[i] === 'moi'));
   c.recs = c.recs.filter((_, i) => i !== ri);
   S.customers[nid] = {id:nid, code:'KH-' + String(201 + S.newCust).padStart(6, '0'), from:c.code, name:out.name, phoneM:c.phoneM, emailM:'—', phone:c.phone, email:'', type:'Cá nhân', tags:['Cá nhân'], last:null, cnt:null, spend:null, risk:null, owner:null,
     recs:[out], others:[{bl:'Tiktak', use:false}, {bl:'Resort', use:false}], notes:moved, manual:out.src.startsWith('Thêm tay')};
   S.order.push(nid);
-  addLog('Tách', `Hồ sơ ${c.name} · tách bản ghi ${out.name} (${out.bl})`, null, [['Hồ sơ gốc', c.name + ' · giữ mã ' + c.code], ['Hồ sơ mới', out.name + ' · tách từ ' + c.code], ['Ghi chú chuyển sang hồ sơ mới', moved.length]]);
+  if (mx) {
+    c.mem.avail = mx.avail; c.mem.tierPts = mx.tierPts; c.mem.tier = mx.tier;
+    if (mx.unitLeft && mx.linked) c.mem.links[mx.bl] = ['no', `gỡ khi tách hồ sơ ${nowStr().slice(0, 10)}`];
+    S.customers[nid].memFrom = c.code;
+  }
+  addLog('Tách', `Hồ sơ ${c.name} · tách bản ghi ${out.name} (${out.bl})`, null, [['Hồ sơ gốc', c.name + ' · giữ mã ' + c.code], ['Hồ sơ mới', out.name + ' · tách từ ' + c.code], ['Ghi chú chuyển sang hồ sơ mới', moved.length]]
+    .concat(mx ? [['Thành viên Membership', (mx.pts ? `thu lại ${num(mx.pts)} điểm` : 'không thu điểm') + (mx.unitLeft && mx.linked ? `, liên kết ${mx.bl} về Chưa liên kết` : '')]] : []));
   S.split = {rec:1, keep:{}};
   toast('Đã tách thành hai hồ sơ. Cặp này sẽ không được gợi ý gộp lại.');
 }
@@ -1176,12 +1283,13 @@ function custRows() {
   return S.order.map(id => S.customers[id]).filter(c => matchQ(c, f.q)
     && (f.owner === 'all' || (f.owner === 'none' ? !c.owner : true))
     && (f.tag === 'all' || c.tags.includes(f.tag))
-    && (f.risk === 'all' || (f.risk === 'none' ? !c.risk : c.risk === f.risk)));
+    && (f.risk === 'all' || (f.risk === 'none' ? !c.risk : c.risk === f.risk))
+    && inTxRange(c.last, S.txRange));
 }
 function custBody() {
   const f = S.custFilter, rows = custRows(), mgr = mgrUp();
   const sel = S.sel.cust.filter(id => rows.some(c => c.id === id));
-  const anyF = f.q || f.owner !== 'all' || f.tag !== 'all' || f.risk !== 'all';
+  const anyF = f.q || f.owner !== 'all' || f.tag !== 'all' || f.risk !== 'all' || S.txRange !== 'all';
   let meta;
   if (f.owner === 'none' && !f.q) meta = `${rows.length} KH của Kite chưa gán người phụ trách · đang nhận nhắc việc, cảnh báo thay: Manager Kite`;
   else if (anyF) meta = `${rows.length} KH khớp bộ lọc`;
@@ -1208,7 +1316,7 @@ function custBody() {
   return h;
 }
 function custList() {
-  const f = S.custFilter, mgr = mgrUp(), anyF = f.q || f.owner !== 'all' || f.tag !== 'all' || f.risk !== 'all';
+  const f = S.custFilter, mgr = mgrUp(), anyF = f.q || f.owner !== 'all' || f.tag !== 'all' || f.risk !== 'all' || S.txRange !== 'all';
   const sub = mgr && f.owner === 'none'
     ? 'Lọc KH chưa gán người phụ trách rồi chọn nhiều KH để gán một lượt. Manager xuất được danh sách có SĐT, email; mỗi lần xuất được ghi lại.'
     : (isGpcn() ? 'GPCN HO thấy KH của mọi đơn vị. SĐT và email che bớt trên danh sách; mở hồ sơ để xem đầy đủ.' : 'KH có bản ghi của Kite. SĐT và email che bớt trên danh sách; mở hồ sơ để xem đầy đủ phần của Kite.');
@@ -1221,7 +1329,7 @@ function custList() {
     <div class="srch">${ic('search', 16)}<input class="inp" data-in="custQ" placeholder="Tìm theo tên, SĐT, email, mã KH…" value="${esc(f.q)}"></div>
     ${mgr ? `<select class="inp" data-in="cfOwner">${opt('all', 'Phụ trách: Tất cả', f.owner)}${opt('none', 'Phụ trách: Chưa gán', f.owner)}</select>` : `<select class="inp" data-in="cfTag">${opt('all', 'Nhãn: Tất cả', f.tag)}${['Khách quen','Mới','Cá nhân','Có thể trùng'].map(t => opt(t, 'Nhãn: ' + t, f.tag)).join('')}</select>`}
     <select class="inp" data-in="cfRisk">${opt('all', 'Nguy cơ: Tất cả', f.risk)}${['Active','Thấp','Trung bình','Cao'].map(t => opt(t, 'Nguy cơ: ' + t, f.risk)).join('')}${opt('none', 'Nguy cơ: Chưa có dữ liệu', f.risk)}</select>
-    <div class="dt"><button class="inp" data-todo="Chọn khoảng giao dịch gần nhất">Giao dịch gần nhất: Tất cả</button>${ic('cal', 16)}</div>
+    <div class="dt"><select class="inp" data-in="txRange">${TX_RANGES.map(o => `<option value="${o[0]}"${S.txRange === o[0] ? ' selected' : ''}>Giao dịch gần nhất: ${o[1]}</option>`).join('')}</select>${ic('cal', 16)}</div>
     ${anyF ? '<button class="lk" data-act="clearCF">Xoá lọc</button>' : ''}
   </div>
   <div id="cust-body">${custBody()}</div>`;
@@ -1308,6 +1416,29 @@ def('G4', {flow:'f3', name:'Hộp thoại gán người phụ trách', src:'SRS 
 });
 
 /* ---- I1 hồ sơ 360° ---- */
+/* khối Thành viên Membership (câu 36, chờ chốt): điểm, hạng do Membership tính, CRM Hub chỉ hiện */
+const MEM_APP = 'membership.html';
+const extLink = (href, label) => `<a class="lk" href="${href}" target="_blank" rel="noopener">${esc(label)} ${ic('ext', 13)}</a>`;
+const LINK_ST = {ok:['g', 'Đã liên kết'], wait:['o', 'Chờ xác minh'], no:['', 'Chưa liên kết']};
+function memCard(c) {
+  const m = c.mem;
+  if (!m) return `<div class="card"><h3>Thành viên Membership</h3>
+    <p class="mt0 mb0"><span class="tag">Chưa là thành viên</span></p>
+    <p class="hint mb0">${c.memFrom ? `Bản ghi tách từ hồ sơ thành viên ${esc(c.memFrom)}; liên kết về Chưa liên kết, điểm của bản ghi đã thu lại.` : 'KH chưa đăng ký app Membership, hoặc tài khoản trong app chưa liên kết bản ghi Kite. Mời KH quét mã ở quầy để nhận voucher chào mừng.'}</p></div>`;
+  const used = m.offers.filter(o => o[3].startsWith('Đã dùng')).length;
+  return `<div class="card"><h3 class="row" style="gap:8px">Thành viên Membership <span class="tag v">${esc(m.tier)}</span><span class="sp"></span>${extLink(MEM_APP + '#M22', 'Xem trên app')}</h3>
+    <dl class="dl" style="grid-template-columns:130px 1fr;font-size:13px">
+      <dt>Thành viên từ</dt><dd>${esc(m.since)} · đăng ký tại ${esc(m.at)}</dd>
+      <dt>Hạng</dt><dd>${esc(m.tier)} <span class="small muted">· ${num(m.tierPts)} điểm xét hạng năm 2026</span></dd>
+      <dt>Điểm khả dụng</dt><dd>${m.avail < 0 ? `<span class="tag r">${num(m.avail)} điểm</span> <span class="small muted">số dư âm, trừ dần vào điểm lần sau</span>` : num(m.avail) + ' điểm'}${m.pend ? `<div class="small muted">Chờ đối soát +${num(m.pend)} · dùng được từ ${esc(m.pendAt)}</div>` : ''}</dd>
+      <dt>Nhận ưu đãi</dt><dd>${m.consent.on ? `<span class="tag g">Đã đồng ý</span> <span class="small muted">từ ${esc(m.consent.at)}</span>` : `<span class="tag">Đã rút đồng ý</span> <span class="small muted">${esc(m.consent.at)} · không nhận ưu đãi từ campaign</span>`}</dd>
+    </dl>
+    <div class="sec-t" style="font-size:13px;margin:14px 0 8px">Liên kết theo đơn vị</div>
+    ${['Kite','Tiktak','Resort'].map(b => { const l = m.links[b] || ['no', '']; const s = LINK_ST[l[0]]; return `<div class="row small" style="padding:4px 0"><span style="width:56px">${b}</span><span class="tag ${s[0]}">${s[1]}</span><span class="muted">${esc(l[1])}</span>${l[0] === 'wait' && canMem() ? `<button class="lk" data-go="V1" style="margin-left:auto">Xét yêu cầu</button>` : ''}</div>`; }).join('')}
+    <div class="sec-t" style="font-size:13px;margin:14px 0 8px">Ưu đãi 90 ngày · đã nhận ${m.offers.length} · đã dùng ${used}</div>
+    ${m.offers.map(o => `<div class="note" style="padding:8px 0"><div class="nh">${esc(o[1])} · nhận ${esc(o[2])}</div><p class="small">${esc(o[0])} · <span class="${o[3].startsWith('Đã dùng') ? 'muted' : ''}">${esc(o[3])}</span></p></div>`).join('')}
+    <p class="hint mb0">${m.fresh ? 'Thành viên mới, chưa có giao dịch nào tích điểm. ' : ''}Điểm và hạng do Membership tính, CRM Hub chỉ hiện. Đơn vị khác chỉ thấy hạng.</p></div>`;
+}
 function profile(cid) {
   const c = S.customers[cid] || S.customers.c1, gp = isGpcn(), mgr = mgrUp();
   const otherUnitRec = c.recs.some(r => r.bl !== 'Kite');
@@ -1327,7 +1458,7 @@ function profile(cid) {
       ${gp && o.company ? `<dt>Công ty</dt><dd><button class="lk" data-go="I5">${esc(o.company)}</button></dd>` : ''}</dl>` : '<div class="small muted">KH chưa dùng Biz Line này.</div>'}</div>`).join('');
   return `${crumb('Khách hàng', ['Danh sách khách hàng', 'G1'], 'Hồ sơ KH 360°')}
   <div class="pf-head"><span class="pf-av">${esc(c.name.split(' ').slice(-2).map(w => w[0]).join(''))}</span>
-    <div class="sp"><h1>${esc(c.name)}</h1><div class="pf-tags">${c.tags.map(tagH).join(' ')} ${blTags} <span class="small muted">· ${esc(c.type)} · Mã KH: ${esc(c.code || '—')}${c.from ? ' · tách từ ' + esc(c.from) : ''}</span></div></div>
+    <div class="sp"><h1>${esc(c.name)}</h1><div class="pf-tags">${c.tags.map(tagH).join(' ')} ${blTags}${c.mem ? ` <span class="tag v">Thành viên ${esc(c.mem.tier)}</span>` : ''} <span class="small muted">· ${esc(c.type)} · Mã KH: ${esc(c.code || '—')}${c.from ? ' · tách từ ' + esc(c.from) : ''}</span></div></div>
     <div class="ph-a">${acts}</div></div>
   ${dup}
   <div class="pf-cols"><div>
@@ -1348,6 +1479,7 @@ function profile(cid) {
       ${(c.rems || []).map(r => `<div class="note"><div class="nh">${esc(r.by)} · hẹn ${esc(r.date)}</div><p>${esc(r.text)}</p></div>`).join('')}
     </div>
   </div><div>
+    ${memCard(c)}
     <div class="card"><h3>Chăm sóc tại Kite</h3>
       <dl class="dl" style="grid-template-columns:130px 1fr"><dt>Người phụ trách</dt><dd>${ownerH(c)} ${mgr ? `<button class="lk" data-act="assignOne" data-id="${c.id}" style="margin-left:8px">Đổi</button>` : ''}</dd>
       <dt>Nguy cơ rời bỏ</dt><dd>${noTx ? 'Không xếp mức' : `${riskH(c.risk)} <span class="small muted">từ ${esc(c.riskSince)}</span>`}</dd></dl>
@@ -1458,6 +1590,14 @@ const H1_TODO = [
   {cls:'', n:9, t:'Cặp hồ sơ nghi trùng chờ duyệt', s:'3 cặp đã chờ quá 7 ngày. Quá 14 ngày cặp sẽ chuyển lên GPCN HO.', a:'Mở hàng chờ duyệt →', go:'C1'}
 ];
 const H1_CS = ['x9', 'x10', 'x11', 'x12'];
+/* thêm việc từ app Membership vào khối Cần xử lý hôm nay (câu 46 của bảng Membership, chờ chốt) */
+function h1Todo() {
+  const out = H1_TODO.slice();
+  const lk = memPending('links'), ms = memPending('misses');
+  if (lk.length) { const ov = lk.filter(x => x.over).length; out.push({cls:ov ? 'w' : '', n:lk.length, t:'Yêu cầu xác minh liên kết từ app', s:ov ? `${ov} yêu cầu đã quá 24 giờ, đã báo GPCN HO. Không tự duyệt.` : 'Khách chờ kết quả trong 24 giờ.', a:'Mở hàng chờ xác minh →', go:'V1'}); }
+  if (ms.length) out.push({cls:'', n:ms.length, t:'Khách báo thiếu điểm', s:'Trả lời trong 3 ngày làm việc; tra hoá đơn trong dữ liệu Kite.', a:'Mở danh sách →', go:'V3'});
+  return out;
+}
 
 def('H1', {flow:'f4', fig:true, name:'Tổng quan đơn vị (Manager)', roleHint:'Manager đơn vị · GPCN HO chọn đơn vị ở thanh trên', role:'manager', nav:'dash', allow:() => mgrUp(),
   render() {
@@ -1475,7 +1615,7 @@ def('H1', {flow:'f4', fig:true, name:'Tổng quan đơn vị (Manager)', roleHin
       <div class="card"><div class="h1-t">KH đang hoạt động theo tuần</div><div class="small muted">8 tuần gần nhất · KH có ít nhất 1 giao dịch tại Kite trong 30 ngày tính đến cuối tuần</div>
         <div class="wk-bars">${H1_WEEKS.map((w, i) => `<div class="wk${i === H1_WEEKS.length - 1 ? ' cur' : ''}"><span>${num(w[1])}</span><i style="height:${Math.round(w[1] / max * 150)}px"></i><em>${w[0]}</em></div>`).join('')}</div></div>
       <div class="card"><div class="h1-t" style="margin-bottom:12px">Cần xử lý hôm nay</div>
-        ${H1_TODO.map(x => `<div class="todo ${x.cls}"><b>${x.n}</b><div><div>${esc(x.t)}</div><div class="small muted">${esc(x.s)}</div>${x.go ? `<button class="lk" data-go="${x.go}">${esc(x.a)}</button>` : `<button class="lk" data-todo="${esc(x.todo)}">${esc(x.a)}</button>`}</div></div>`).join('')}</div>
+        ${h1Todo().map(x => `<div class="todo ${x.cls}"><b>${x.n}</b><div><div>${esc(x.t)}</div><div class="small muted">${esc(x.s)}</div>${x.go ? `<button class="lk" data-go="${x.go}">${esc(x.a)}</button>` : `<button class="lk" data-todo="${esc(x.todo)}">${esc(x.a)}</button>`}</div></div>`).join('')}</div>
     </div>
     <div class="card mt16"><div class="row" style="margin-bottom:10px"><div class="h1-t sp">Cơ hội bán chéo · KH tập đoàn chưa đến Kite</div><button class="lk" data-go="J1">Xem tất cả 268 →</button></div>
       <div class="tbl"><table><tr><th style="width:22%">Khách hàng</th><th style="width:12%">Đang dùng</th><th style="width:17%">Giao dịch gần nhất</th><th>Tóm tắt</th><th style="width:120px"></th></tr>
@@ -1581,20 +1721,197 @@ def('E', {flow:'f4', fig:true, name:'Báo cáo Chất lượng nạp (CRM-06)', 
   }
 });
 
+/* ================= LUỒNG 5 · YÊU CẦU TỪ APP MEMBERSHIP ================= */
+/* Màn mới 28/10/2026, chưa có trên Figma; vẽ theo đề xuất chưa chốt: câu 36–38 (bảng này), câu 44, 46 của bảng Membership.
+   Manager và Staff được giao quyền thấy yêu cầu của Kite; GPCN HO thấy mọi đơn vị; xoá tài khoản chỉ GPCN HO. */
+const memScope = x => isGpcn() || x.bl === 'Kite';
+function memPending(kind) { return S[kind].filter(x => memScope(x) && (kind === 'dels' ? x.status === 'dang' : x.status === 'cho')); }
+function memCount(kind) {
+  const p = memPending(kind), ov = kind === 'links' ? p.filter(x => x.over).length : 0;
+  return p.length ? `${p.length} chờ${ov ? ' · ' + ov + ' quá hạn' : ''}` : '';
+}
+const tabBtns = (key, tabs) => `<div class="row" style="margin-bottom:16px">${tabs.map(t => `<button class="btn btn-sm ${S.vtab[key] === t[0] ? 'btn-p' : 'btn-o'}" data-act="vTab" data-k="${key}" data-v="${t[0]}">${esc(t[1])}</button>`).join('')}</div>`;
+const custLink = x => x.cust && S.customers[x.cust] ? `<button class="lk" data-go="I1/${x.cust}">${esc(x.name)}</button>` : esc(x.name);
+const dayLeft = d => { const n = -daysTo(d); return n > 0 ? `còn ${n} ngày` : n === 0 ? 'đến hạn hôm nay' : `quá ${-n} ngày`; };
+const memEmpty = (t, s) => `<div class="empty"><div class="ic">${ic('check', 22)}</div><b>${esc(t)}</b><p>${esc(s)}</p></div>`;
+const reasonBox = (inKey, list, cur, other, sayFn) => `<div class="fld mb0"><label>Lý do từ chối (gửi cho khách)</label>
+    <select class="inp" style="max-width:560px" data-in="${inKey}"><option value="">Chọn lý do</option>${list.map(r => `<option${cur === r ? ' selected' : ''}>${esc(r)}</option>`).join('')}</select>
+    ${other != null && cur === 'Khác' ? `<input class="inp mt8" style="max-width:560px;display:block" data-in="lkOther" placeholder="Nhập lý do" value="${esc(other)}">` : ''}
+    <div class="hp">${cur ? 'Câu khách nhận trong app: “' + esc(sayFn(cur === 'Khác' ? (other || '…') : cur)) + '”' : 'Khách nhận lý do này trong app.'}</div></div>`;
+
+/* ---- V1, V2 xác minh liên kết ---- */
+const LK_REASONS = ['Thông tin gửi kèm không khớp bản ghi nào của Kite', 'Bản ghi đã liên kết với tài khoản thành viên khác', 'Chưa đủ căn cứ xác nhận là cùng một người', 'Khác'];
+const lkSay = r => `Chưa liên kết được: ${r.replace(/của Kite/, 'của đơn vị')}. Bạn có thể thử bằng mã thẻ KH, số điện thoại cũ, hoặc nhờ nhân viên tại quầy.`;
+const LK_DONE = {dongy:['g', 'Đã liên kết'], tuchoi:['r', 'Đã từ chối']};
+function linkQueue() {
+  const all = S.links.filter(memScope), tab = S.vtab.v1, nCho = all.filter(x => x.status === 'cho').length;
+  const rows = all.filter(x => tab === 'cho' ? x.status === 'cho' : x.status !== 'cho');
+  let h = `${crumb('Yêu cầu Membership', 'Xác minh liên kết')}
+  ${pageHead('Xác minh liên kết', `Khách gửi từ app Membership khi không tự liên kết được bản ghi của ${isGpcn() ? 'đơn vị' : 'Kite'} (số điện thoại hoặc tên khác). Xét trong 24 giờ; quá hạn thì báo GPCN HO, không tự duyệt.`, extLink(MEM_APP + '#M25', 'Màn khách đang chờ'))}
+  ${tabBtns('v1', [['cho', `Chờ xử lý (${nCho})`], ['xong', `Đã xử lý (${all.length - nCho})`]])}`;
+  if (!rows.length) return h + memEmpty(tab === 'cho' ? 'Không có yêu cầu nào chờ xác minh' : 'Chưa xử lý yêu cầu nào', 'Yêu cầu mới từ app vào đây; khách thấy trạng thái Chờ xác minh trong app.');
+  h += `<div class="tbl"><table><tr><th>Khách (tên trong app)</th>${isGpcn() ? '<th>Đơn vị cần liên kết</th>' : ''}<th>Thông tin khách gửi kèm</th><th>SĐT đăng ký app</th><th>Gửi lúc</th><th>${tab === 'cho' ? 'Hạn xử lý' : 'Kết quả'}</th><th>Thao tác</th></tr>
+  ${rows.map(x => `<tr class="click" data-go="V2/${x.id}"><td>${esc(x.name)}</td>${isGpcn() ? `<td><span class="tag">${esc(x.bl)}</span></td>` : ''}<td>${esc(x.kind)}: <b style="font-weight:500">${esc(x.val)}</b></td><td>${esc(x.appPhone)}</td><td>${esc(x.at)}</td>
+    <td>${tab === 'cho' ? (x.over ? '<span class="tag r">Quá hạn</span> <span class="small muted">đã báo GPCN HO</span>' : `${esc(x.due)} <span class="small muted">· ${esc(x.left)}</span>`) : `<span class="tag ${LK_DONE[x.status][0]}">${LK_DONE[x.status][1]}</span> <span class="small muted">${esc(x.by)} · ${esc(x.doneAt)}</span>`}</td>
+    <td><button class="lk" data-go="V2/${x.id}">${tab === 'cho' ? 'Xét' : 'Xem'}</button></td></tr>`).join('')}
+  </table></div>
+  <p class="small muted mt16">Khách thấy kết quả trong app ngay khi bấm Đồng ý hoặc Từ chối. Không có yêu cầu nào tự duyệt khi quá hạn.</p>`;
+  return h;
+}
+function linkReview(id) {
+  const x = S.links.find(y => y.id === id) || S.links[0], m = x.match, d = S.lkDraft, c = x.cust ? S.customers[x.cust] : null;
+  const head = crumb('Yêu cầu Membership', ['Xác minh liên kết', 'V1'], x.name);
+  const left = `<div class="card"><h3>Khách gửi từ app</h3><dl class="dl" style="grid-template-columns:150px 1fr">
+      <dt>Tên trong app</dt><dd>${esc(x.name)}</dd><dt>SĐT đăng ký app</dt><dd>${esc(x.appPhone)}</dd><dt>Tài khoản thành viên</dt><dd>${esc(x.joined)}</dd>
+      <dt>Muốn liên kết</dt><dd><span class="tag">${esc(x.bl)}</span></dd><dt>Gửi kèm</dt><dd>${esc(x.kind)}: <b style="font-weight:500">${esc(x.val)}</b></dd><dt>Gửi lúc</dt><dd>${esc(x.at)} · hạn ${esc(x.due)}</dd></dl></div>`;
+  const right = m ? `<div class="card"><h3>Bản ghi của ${esc(x.bl)} khớp nhất</h3><dl class="dl" style="grid-template-columns:150px 1fr">
+      <dt>Họ tên</dt><dd>${esc(m.name)} ${fold(m.name) === fold(x.name) ? '<span class="tag g">khớp</span>' : '<span class="tag o">viết khác</span>'}</dd>
+      <dt>SĐT trên bản ghi</dt><dd>${esc(m.phone)} ${m.phone === x.appPhone ? '<span class="tag g">khớp</span>' : '<span class="tag o">khác số app</span>'}</dd>
+      <dt>${esc(x.kind)}</dt><dd>${esc(m.card)} <span class="tag g">khớp</span></dd>
+      <dt>Bản ghi</dt><dd>${c ? `<button class="lk" data-go="I1/${c.id}">${esc(m.rec)}</button>` : esc(m.rec)}</dd>
+      <dt>Giao dịch 12 tháng</dt><dd>${esc(m.tx12)}</dd></dl></div>`
+    : `<div class="card"><h3>Bản ghi của ${esc(x.bl)} khớp nhất</h3><div class="al e mb0"><b>Không tìm thấy bản ghi khớp</b>Không có bản ghi nào của ${esc(x.bl)} có ${esc(x.kind.toLowerCase())} ${esc(x.val)}. Khách có thể đã dùng email khác hoặc chưa từng để lại email ở ${esc(x.bl)}.</div></div>`;
+  let h = `${head}${pageHead(`Liên kết ${esc(x.bl)} cho ${esc(x.name)}`, `Yêu cầu từ app Membership · gửi lúc ${esc(x.at)}`)}`;
+  if (x.status !== 'cho') {
+    const r = LK_DONE[x.status];
+    return h + `<div class="al ${x.status === 'dongy' ? 'i' : 'e'} form-w"><b>${r[1]}</b>${esc(x.by)} · ${esc(x.doneAt)}${x.reason ? '. Lý do gửi khách: ' + esc(x.reason) : '. Khách đã nhận thông báo trong app.'}</div><div class="grid g2">${left}${right}</div><div class="mt16"><button class="btn btn-o" data-go="V1">Về hàng chờ</button></div>`;
+  }
+  if (x.over) h += `<div class="al w"><b>Đã quá 24 giờ</b>Hệ thống đã báo GPCN HO lúc ${esc(x.due)}. Vẫn xét như bình thường; yêu cầu không tự được duyệt.</div>`;
+  h += `<div class="grid g2">${left}${right}</div>`;
+  if (m) {
+    const tierAfter = tierByPts((c && c.mem ? c.mem.tierPts : 0) + m.tierPts);
+    h += `<div class="al i mt16"><b>Nếu đồng ý</b>Liên kết bản ghi ${esc(x.bl)} với tài khoản thành viên của ${esc(x.name)}; cộng dồn ${esc(m.tx12)}: +${num(m.pts)} điểm (2% số tiền, 1 điểm = 1đ). Điểm xét hạng năm 2026 cộng ${num(m.tierPts)}, hạng sau khi cộng: ${esc(tierAfter)}. Khách nhận thông báo “Đã liên kết ${esc(x.bl)}” trong app (câu 14 của bảng Membership).</div>`;
+  }
+  h += `<div class="card mt16"><h3>Quyết định</h3>${reasonBox('lkReason', LK_REASONS, d.reason, d.other, lkSay)}
+    <div class="row mt16"><span class="sp hint">Mỗi quyết định ghi vào lịch sử thao tác và gửi kết quả về app.</span>
+      <button class="btn btn-o" data-act="lkReject" data-id="${x.id}" ${d.reason && (d.reason !== 'Khác' || d.other.trim()) ? '' : 'disabled'}>Từ chối</button>
+      <button class="btn btn-p" data-act="lkApprove" data-id="${x.id}" ${m && !d.reason ? '' : 'disabled'}>Đồng ý liên kết</button></div></div>`;
+  return h;
+}
+def('V1', {flow:'f6', name:'Hàng chờ xác minh liên kết', src:'đề xuất câu 46 của bảng Membership (chưa chốt); brainstorm Membership Mục 5.1 bước 6', roleHint:'Manager đơn vị · Staff được giao quyền · GPCN HO', role:'manager', nav:'xm', allow:() => canMem(), render:linkQueue});
+def('V2', {flow:'f6', name:'Xét một yêu cầu liên kết', src:'đề xuất câu 46 của bảng Membership (chưa chốt); câu 13, 14 của bảng Membership', roleHint:'Manager đơn vị · Staff được giao quyền · GPCN HO', role:'manager', nav:'xm',
+  allow:p => canMem() && memScope(S.links.find(y => y.id === (p || 'lk2')) || {bl:'Kite'}),
+  enter(p) {
+    const id = p || 'lk2', x = S.links.find(y => y.id === id) || S.links[0];
+    if (S.lkDraft.id !== id) S.lkDraft = {id, reason:x.match ? '' : LK_REASONS[0], other:''};
+  },
+  render:p => linkReview(p || 'lk2')});
+
+/* ---- V3, V4 báo thiếu điểm ---- */
+const MS_REASONS = ['Không tìm thấy hoá đơn', 'Hoá đơn đã được tích điểm', 'Hoá đơn không đủ điều kiện tích điểm (trả bằng điểm hoặc đã huỷ)'];
+const msSay = r => `Chưa cộng được điểm: ${r.charAt(0).toLowerCase() + r.slice(1)}. Kiểm tra lại số hoá đơn in trên phiếu rồi gửi lại.`;
+const msPts = x => Math.round(x.found.amt * 0.02);
+function missQueue() {
+  const all = S.misses.filter(memScope), tab = S.vtab.v3, nCho = all.filter(x => x.status === 'cho').length;
+  const rows = all.filter(x => tab === 'cho' ? x.status === 'cho' : x.status !== 'cho');
+  let h = `${crumb('Yêu cầu Membership', 'Báo thiếu điểm')}
+  ${pageHead('Báo thiếu điểm', `Khách báo trong app kèm số hoá đơn, trong 6 tháng kể từ ngày mua (câu 32 của bảng Membership). Tra hoá đơn trong dữ liệu ${isGpcn() ? 'của đơn vị' : 'Kite'} rồi cộng điểm hoặc từ chối; trả lời trong 3 ngày làm việc.`, extLink(MEM_APP + '#M20', 'Màn khách gửi'))}
+  ${tabBtns('v3', [['cho', `Chờ xử lý (${nCho})`], ['xong', `Đã xử lý (${all.length - nCho})`]])}`;
+  if (!rows.length) return h + memEmpty(tab === 'cho' ? 'Không có báo thiếu điểm nào chờ xử lý' : 'Chưa xử lý báo thiếu điểm nào', 'Yêu cầu khách gửi từ màn Báo thiếu điểm trong app vào đây.');
+  h += `<div class="tbl"><table><tr><th>Khách</th>${isGpcn() ? '<th>Đơn vị</th>' : ''}<th>Số hoá đơn</th><th>Ngày mua</th><th class="num">Số tiền khách khai</th><th>Gửi lúc</th><th>${tab === 'cho' ? 'Hạn trả lời' : 'Kết quả'}</th><th>Thao tác</th></tr>
+  ${rows.map(x => `<tr class="click" data-go="V4/${x.id}"><td>${esc(x.name)}</td>${isGpcn() ? `<td><span class="tag">${esc(x.bl)}</span></td>` : ''}<td>${esc(x.inv)}</td><td>${esc(x.day)}</td><td class="num">${money(x.claim)}</td><td>${esc(x.at)}</td>
+    <td>${tab === 'cho' ? `${esc(x.due)} <span class="small muted">· ${dayLeft(x.due)}</span>` : (x.status === 'cong' ? `<span class="tag g">Đã cộng +${num(x.pts)} điểm</span>` : '<span class="tag r">Đã từ chối</span>') + ` <span class="small muted">${esc(x.by)} · ${esc(x.doneAt)}</span>`}</td>
+    <td><button class="lk" data-go="V4/${x.id}">${tab === 'cho' ? 'Xét' : 'Xem'}</button></td></tr>`).join('')}
+  </table></div>`;
+  return h;
+}
+function missReview(id) {
+  const x = S.misses.find(y => y.id === id) || S.misses[0], f = x.found, d = S.msDraft;
+  const head = crumb('Yêu cầu Membership', ['Báo thiếu điểm', 'V3'], x.inv);
+  const left = `<div class="card"><h3>Khách báo trong app</h3><dl class="dl" style="grid-template-columns:150px 1fr">
+      <dt>Khách</dt><dd>${custLink(x)}</dd><dt>Số hoá đơn</dt><dd>${esc(x.inv)}</dd><dt>Ngày mua</dt><dd>${esc(x.day)} · ${esc(x.bl)}</dd><dt>Số tiền khách khai</dt><dd>${money(x.claim)}</dd>
+      <dt>Ghi chú của khách</dt><dd>${esc(x.note || '—')}</dd><dt>Gửi lúc</dt><dd>${esc(x.at)} · hạn trả lời ${esc(x.due)}</dd></dl></div>`;
+  let look;
+  if (!f) look = `<div class="al e mb0"><b>Không tìm thấy hoá đơn ${esc(x.inv)}</b>Dữ liệu ${esc(x.bl)} tính đến 28/10/2026 không có hoá đơn số này ngày ${esc(x.day)}.</div>`;
+  else if (f.state === 'datich') look = `<div class="al w"><b>Hoá đơn đã được tích điểm</b>Đã tích lúc ${esc(f.tichAt)} cho chính tài khoản này (+${num(f.tichPts)} điểm). Không cộng lại.</div>
+      <dl class="dl" style="grid-template-columns:150px 1fr"><dt>Thời điểm</dt><dd>${esc(f.at)}</dd><dt>Quầy</dt><dd>${esc(f.shop)}</dd><dt>Số tiền</dt><dd>${money(f.amt)}</dd></dl>`;
+  else look = `<div class="al i"><b>Tìm thấy hoá đơn, chưa tích điểm cho tài khoản nào</b>Khớp số hoá đơn và ngày mua.</div>
+      <dl class="dl" style="grid-template-columns:150px 1fr"><dt>Thời điểm</dt><dd>${esc(f.at)}</dd><dt>Quầy</dt><dd>${esc(f.shop)}</dd>
+      <dt>Số tiền theo dữ liệu ${esc(x.bl)}</dt><dd>${money(f.amt)}${f.amt !== x.claim ? ` <span class="tag o">khách khai ${money(x.claim)}</span>` : ''}</dd></dl>`;
+  let h = `${head}${pageHead(`Báo thiếu điểm · hoá đơn ${esc(x.inv)}`, `${esc(x.name)} · ${esc(x.bl)} · gửi lúc ${esc(x.at)}`)}`;
+  const grid = `<div class="grid g2">${left}<div class="card"><h3>Tra trong dữ liệu ${esc(x.bl)}</h3>${look}</div></div>`;
+  if (x.status !== 'cho') return h + `<div class="al ${x.status === 'cong' ? 'i' : 'e'} form-w"><b>${x.status === 'cong' ? `Đã cộng +${num(x.pts)} điểm` : 'Đã từ chối'}</b>${esc(x.by)} · ${esc(x.doneAt)}${x.reason ? '. Lý do gửi khách: ' + esc(x.reason) : '. Khách đã nhận kết quả trong app.'}</div>${grid}<div class="mt16"><button class="btn btn-o" data-go="V3">Về danh sách</button></div>`;
+  h += grid;
+  const canAdd = f && f.state === 'chua';
+  if (canAdd) h += `<div class="al i mt16"><b>Nếu cộng điểm</b>+${num(msPts(x))} điểm, bằng 2% số tiền theo dữ liệu ${esc(x.bl)}${f.amt !== x.claim ? ' (lệch số tiền thì lấy số của đơn vị, câu 25 của bảng Membership)' : ''}. Điểm vào trạng thái chờ đối soát, dùng được từ 12:00 ngày làm việc kế tiếp. Khách nhận kết quả trong app (màn M20c của Membership).</div>`;
+  h += `<div class="card mt16"><h3>Quyết định</h3>${reasonBox('msReason', MS_REASONS, d.reason, null, msSay)}
+    <div class="row mt16"><span class="sp hint">Mỗi quyết định ghi vào lịch sử thao tác và gửi kết quả về app.</span>
+      <button class="btn btn-o" data-act="msReject" data-id="${x.id}" ${d.reason ? '' : 'disabled'}>Từ chối</button>
+      <button class="btn btn-p" data-act="msApprove" data-id="${x.id}" ${canAdd && !d.reason ? '' : 'disabled'}>Cộng ${canAdd ? '+' + num(msPts(x)) + ' ' : ''}điểm</button></div></div>`;
+  return h;
+}
+def('V3', {flow:'f6', name:'Báo thiếu điểm', src:'đề xuất câu 46 của bảng Membership (chưa chốt); câu 32 của bảng Membership', roleHint:'Manager đơn vị · Staff được giao quyền · GPCN HO', role:'manager', nav:'td', allow:() => canMem(), render:missQueue});
+def('V4', {flow:'f6', name:'Xét một báo thiếu điểm', src:'đề xuất câu 46 của bảng Membership (chưa chốt); câu 25, 32 của bảng Membership', roleHint:'Manager đơn vị · Staff được giao quyền · GPCN HO', role:'manager', nav:'td',
+  allow:p => canMem() && memScope(S.misses.find(y => y.id === (p || 'ms1')) || {bl:'Kite'}),
+  enter(p) {
+    const id = p || 'ms1', x = S.misses.find(y => y.id === id) || S.misses[0];
+    if (S.msDraft.id !== id) S.msDraft = {id, reason:!x.found ? MS_REASONS[0] : x.found.state === 'datich' ? MS_REASONS[1] : ''};
+  },
+  render:p => missReview(p || 'ms1')});
+
+/* ---- V5, V6 xoá tài khoản, rút đồng ý (GPCN HO) ---- */
+const delSteps = x => [
+  {k:'lock', t:'Khoá tài khoản thành viên, đăng xuất mọi thiết bị', s:'Tự động lúc khách gửi yêu cầu', auto:true, done:!!x.steps.lock, at:x.steps.lock},
+  {k:'voucher', t:x.vouchers || x.avail ? `Huỷ ${x.vouchers} voucher còn hạn, xoá ${num(x.avail)} điểm khả dụng` : 'Không có voucher còn hạn và điểm khả dụng', s:'Tự động; khách đã được báo trước trên màn xoá tài khoản (câu 17 của bảng Membership)', auto:true, done:!!x.steps.voucher, at:x.steps.voucher},
+  {k:'refund', t:x.neg ? `Trừ số dư âm ${num(x.neg)} điểm vào tiền hoàn: ${money(x.neg)}` : 'Số dư điểm âm: không có', s:x.neg ? `Kế toán ${x.bl} xác nhận đã trừ (câu 24 của bảng Membership)` : 'Không cần làm gì', auto:!x.neg, done:!x.neg || x.steps.refund},
+  {k:'erase', t:'Xoá thông tin cá nhân trong Membership và CRM Hub', s:`Họ tên, SĐT, email, ngày sinh. Giữ dấu vết ${x.invs} hoá đơn đã tích (số hoá đơn, ngày, đơn vị, số điểm) để hoá đơn không được tích lại`, auto:false, done:x.steps.erase},
+  {k:'sms', t:'Gửi SMS báo khách đã hoàn tất', s:'Tự động khi bấm Xác nhận hoàn tất', auto:true, done:x.steps.sms}];
+const delProgress = x => `${delSteps(x).filter(s => s.done).length}/5 bước`;
+function delQueue() {
+  const tab = S.vtab.v5, dang = S.dels.filter(x => x.status === 'dang').length;
+  let h = `${crumb('Yêu cầu Membership', 'Xoá tài khoản, rút đồng ý')}
+  ${pageHead('Xoá tài khoản, rút đồng ý', 'Khách gửi từ app Membership. Xoá tài khoản xử lý trong 30 ngày; rút đồng ý có hiệu lực ngay, chỉ hiện để theo dõi (câu 37, chờ chốt).', extLink(MEM_APP + '#M30', 'Màn khách gửi'))}
+  ${tabBtns('v5', [['xoa', `Yêu cầu xoá tài khoản (${dang} đang xử lý)`], ['rut', `Rút đồng ý nhận ưu đãi (${S.consents.length})`]])}`;
+  if (tab === 'rut') return h + `<div class="al i"><b>Có hiệu lực ngay lúc khách rút</b>Khách không nhận ưu đãi từ campaign và không vào tập gửi của web Re-MKT; vẫn nhận thông báo giao dịch (câu 34 của bảng Membership). Không cần xử lý tay.</div>
+    <div class="tbl"><table><tr><th>Khách</th><th>Đơn vị</th><th>Rút lúc</th><th>Qua</th></tr>
+    ${S.consents.map(x => `<tr><td>${custLink(x)}</td><td><span class="tag">${esc(x.bl)}</span></td><td>${esc(x.at)}</td><td>${esc(x.via)}</td></tr>`).join('')}</table></div>`;
+  return h + `<div class="tbl"><table><tr><th>Khách</th><th>Mã KH</th><th>Đơn vị đăng ký</th><th>Gửi lúc</th><th>Hạn hoàn tất</th><th>Tiến độ</th><th>Trạng thái</th><th>Thao tác</th></tr>
+    ${S.dels.map(x => `<tr class="click${x.status === 'xong' ? ' dim' : ''}" data-go="V6/${x.id}"><td>${esc(x.name)}</td><td>${esc(x.code)}</td><td><span class="tag">${esc(x.bl)}</span></td><td>${esc(x.at)}</td>
+      <td>${esc(x.due)}${x.status === 'dang' ? ` <span class="small muted">· ${dayLeft(x.due)}</span>` : ''}</td><td>${delProgress(x)}</td><td>${x.status === 'xong' ? '<span class="tag g">Hoàn tất</span>' : '<span class="tag o">Đang xử lý</span>'}</td>
+      <td><button class="lk" data-go="V6/${x.id}">${x.status === 'xong' ? 'Xem' : 'Xử lý'}</button></td></tr>`).join('')}</table></div>
+    <p class="small muted mt16">Tên khách hiện tới khi hoàn tất; sau đó chỉ còn mã KH và dấu vết hoá đơn.</p>`;
+}
+function delReview(id) {
+  const x = S.dels.find(y => y.id === id) || S.dels[0], steps = delSteps(x), ready = steps.filter(s => s.k !== 'sms').every(s => s.done);
+  let h = `${crumb('Yêu cầu Membership', ['Xoá tài khoản, rút đồng ý', 'V5'], x.code)}
+  ${pageHead(`Xoá tài khoản ${x.status === 'xong' ? esc(x.code) : esc(x.name)}`, `${esc(x.code)} · đăng ký tại ${esc(x.bl)} · gửi lúc ${esc(x.at)} · hạn hoàn tất ${esc(x.due)}${x.status === 'dang' ? ' (' + dayLeft(x.due) + ')' : ''}`)}`;
+  if (x.status === 'xong') h += `<div class="al i form-w"><b>Đã hoàn tất</b>${esc(x.by)} · ${esc(x.doneAt)}. Đã gửi SMS báo khách. Thông tin cá nhân đã xoá; còn ${x.invs} dấu vết hoá đơn để chặn tích lại.</div>`;
+  h += `<div class="grid g4" style="margin-bottom:16px">
+      <div class="st"><div class="t">Điểm khả dụng bị xoá</div><div class="v">${num(x.avail)}</div><div class="s">Khách được báo trước khi gửi yêu cầu</div></div>
+      <div class="st"><div class="t">Voucher bị huỷ</div><div class="v">${x.vouchers}</div><div class="s">Voucher còn hạn trong Ví</div></div>
+      <div class="st ${x.neg ? 'warn' : ''}"><div class="t">Số dư âm trừ vào tiền hoàn</div><div class="v">${x.neg ? money(x.neg) : '0 đ'}</div><div class="s">1 điểm = 1đ</div></div>
+      <div class="st"><div class="t">Hoá đơn giữ dấu vết</div><div class="v">${x.invs}</div><div class="s">Không chứa thông tin cá nhân</div></div></div>
+    <div class="card"><h3>Các bước</h3>
+    ${steps.map((s, i) => `<div class="row" style="border-top:${i ? '1px solid var(--border)' : '0'};padding:12px 0;align-items:flex-start">
+      <span class="chk${s.done ? ' on' : ''}" ${!s.auto && x.status === 'dang' ? `data-act="delStep" data-id="${x.id}" data-k="${s.k}"` : 'style="cursor:default;opacity:.75"'}></span>
+      <div class="sp"><div style="font-weight:500">${i + 1}. ${esc(s.t)}</div><div class="small muted">${esc(s.s)}${s.at ? ' · ' + esc(s.at) : ''}</div></div>
+      ${s.auto ? '<span class="tag">Tự động</span>' : '<span class="tag b">GPCN HO xác nhận</span>'}</div>`).join('')}
+    </div>`;
+  if (x.status === 'dang') h += `<div class="row mt16"><span class="sp hint">${ready ? 'Đủ bước để hoàn tất.' : 'Đánh dấu các bước GPCN HO xác nhận trước khi hoàn tất.'}</span><button class="btn btn-o" data-go="V5">Để sau</button><button class="btn btn-p" data-act="delDone" data-id="${x.id}" ${ready ? '' : 'disabled'}>Xác nhận hoàn tất</button></div>`;
+  else h += `<div class="mt16"><button class="btn btn-o" data-go="V5">Về danh sách</button></div>`;
+  return h;
+}
+def('V5', {flow:'f6', name:'Yêu cầu xoá tài khoản và rút đồng ý', src:'đề xuất câu 37 (chưa chốt); câu 17, 24 của bảng Membership', roleHint:'GPCN HO', role:'gpcn', nav:'xoa', allow:() => isGpcn(), render:delQueue});
+def('V6', {flow:'f6', name:'Xử lý một yêu cầu xoá tài khoản', src:'đề xuất câu 37 (chưa chốt); câu 17, 24 của bảng Membership', roleHint:'GPCN HO', role:'gpcn', nav:'xoa', allow:() => isGpcn(), render:p => delReview(p || 'dr2')});
+
 /* ================= PHÂN QUYỀN, TRUY VẾT, ĐĂNG NHẬP, NGƯỠNG ================= */
 const permTag = v => v === 'role' ? '<span class="tag tip">Theo vai trò<span class="tipbox">Manager đơn vị được nạp dữ liệu và duyệt cặp trong đơn vị theo vai trò; không ai tự cấp quyền cho mình.</span></span>' : (v ? '<span class="tag g">Có</span>' : '<span class="tag">Không</span>');
+/* vai trò ở web Re-MKT dùng chung tài khoản công ty (câu 39, chờ chốt) */
+const RMKT_APP = 're-mkt.html';
+const rmktTag = v => v ? `<span class="tag b">${esc(v)}</span>` : '<span class="tag">Chưa có</span>';
 function usersScreen(selId) {
   return `${crumb('Quản trị', 'Người dùng và quyền')}
-  ${pageHead('Người dùng và quyền', `Người dùng của đơn vị ${isGpcn() ? esc(S.gpcnUnit) : 'Kite'}: vai trò, quyền nạp dữ liệu và quyền duyệt cặp trong đơn vị.`)}
-  <div class="tbl"><table><tr><th style="width:36%">Người dùng</th><th>Vai trò</th><th>Quyền nạp dữ liệu</th><th>Quyền duyệt cặp trong đơn vị</th><th>Thao tác</th></tr>
+  ${pageHead('Người dùng và quyền', `Người dùng của đơn vị ${isGpcn() ? esc(S.gpcnUnit) : 'Kite'}: vai trò, quyền trong CRM Hub và vai trò ở web Re-MKT. Hai web dùng chung tài khoản công ty.`, extLink(RMKT_APP + '#R-L1', 'Mở web Re-MKT'))}
+  <div class="tbl"><table><tr><th style="width:22%">Người dùng</th><th>Vai trò</th><th>Quyền nạp dữ liệu</th><th>Quyền duyệt cặp<br>trong đơn vị</th><th>Quyền xử lý yêu cầu<br>từ app Membership</th><th>Vai trò ở web Re-MKT</th><th>Thao tác</th></tr>
     ${S.users.map(u => `<tr class="${u.id === selId ? 'sel' : ''}"><td>${esc(u.name)}${u.me && isMgr() ? ' (bạn)' : ''}</td><td>${esc(u.role)}</td>
-      <td>${permTag(u.role === 'Manager' ? 'role' : u.imp)}</td><td>${permTag(u.role === 'Manager' ? 'role' : u.rev)}</td>
+      <td>${permTag(u.role === 'Manager' ? 'role' : u.imp)}</td><td>${permTag(u.role === 'Manager' ? 'role' : u.rev)}</td><td>${permTag(u.role === 'Manager' ? 'role' : u.mem)}</td><td>${rmktTag(u.rmkt)}</td>
       <td>${u.role === 'Staff' ? `<button class="lk" data-go="D2/${u.id}">Sửa quyền</button>` : ''}</td></tr>`).join('')}
-  </table></div>`;
+  </table></div>
+  <p class="small muted mt16">Vai trò ở web Re-MKT: Manager đơn vị cấp BL Admin cho Staff của đơn vị mình; GPCN HO cấp thêm BL Manager. Finance HO, GPCN HO, Phòng MKT cấp cho người dùng thuộc HO (câu 39, chờ chốt).</p>`;
 }
 def('D1', {flow:'f5', fig:true, name:'Người dùng của đơn vị', roleHint:'Manager đơn vị · GPCN HO', role:'manager', nav:'nd', allow:() => mgrUp(), render:() => usersScreen()});
 def('D2', {flow:'f5', fig:true, name:'Cấp hoặc thu hồi quyền', roleHint:'Manager đơn vị · GPCN HO', role:'manager', nav:'nd', base:'D1', baseP:p => p || 'u2', allow:() => mgrUp(),
-  enter(p) { const u = S.users.find(x => x.id === (p || 'u2')); if (S.perm.uid !== u.id || !S.perm.open) S.perm = {uid:u.id, imp:!!u.imp, rev:!!u.rev, cross:!!u.cross, open:true}; },
+  enter(p) { const u = S.users.find(x => x.id === (p || 'u2')); if (S.perm.uid !== u.id || !S.perm.open) S.perm = {uid:u.id, imp:!!u.imp, rev:!!u.rev, cross:!!u.cross, mem:!!u.mem, rmkt:u.rmkt || '', open:true}; },
   overlay(p) {
     const u = S.users.find(x => x.id === (p || 'u2')), d = S.perm;
     return `<div class="ov side"><div class="drw"><div class="drw-h"><h2>Quyền của ${esc(u.name)}</h2><button class="lk" data-act="closePerm">Đóng</button></div>
@@ -1606,7 +1923,13 @@ def('D2', {flow:'f5', fig:true, name:'Cấp hoặc thu hồi quyền', roleHint:
         <div class="sw${d.rev ? ' on' : ''}" data-act="permT" data-k="rev"><i></i>Quyền duyệt cặp trong đơn vị</div>
         ${isGpcn() ? `<div class="sw${d.cross ? ' on' : ''}" data-act="permT" data-k="cross"><i></i>Quyền duyệt cặp giữa hai đơn vị</div>
           <p class="hint">Chỉ GPCN HO cấp, cho người chuyên trách: Staff thuộc Phòng GPCN (FR-crm-hub-073).</p>` : ''}
+        <div class="sw${d.mem ? ' on' : ''}" data-act="permT" data-k="mem"><i></i>Quyền xử lý yêu cầu từ app Membership</div>
+        <p class="hint">Xác minh liên kết và báo thiếu điểm của KH Kite (câu 46 của bảng Membership, chờ chốt).</p>
         <p class="small muted" style="margin:14px 0">Quyền xuất, tách và gỡ không giao lại được.</p>
+        <div style="border-top:1px solid var(--border);margin:18px 0 14px"></div>
+        <div class="row" style="margin-bottom:8px"><span style="font-weight:600" class="sp">Vai trò ở web Re-MKT</span>${extLink(RMKT_APP + '#R-L1', 'Mở web Re-MKT')}</div>
+        <select class="inp" data-in="permRmkt">${['', 'BL Admin'].concat(isGpcn() ? ['BL Manager'] : []).map(v => `<option value="${v}"${d.rmkt === v ? ' selected' : ''}>${v || 'Chưa có'}</option>`).join('')}</select>
+        <p class="hint">Cùng tài khoản công ty đăng nhập web Re-MKT. ${isGpcn() ? 'GPCN HO cấp BL Admin hoặc BL Manager cho người dùng của đơn vị.' : 'Manager đơn vị cấp BL Admin cho Staff của đơn vị mình; BL Manager do GPCN HO cấp.'} Câu 39, chờ chốt.</p>
         <div class="al i"><b>Có hiệu lực từ thao tác kế tiếp</b>Người được cấp không cần đăng nhập lại. Lần nạp đã được xác nhận trước lúc thu hồi quyền vẫn được xử lý.</div>
       </div>
       <div class="drw-f"><button class="btn btn-o" data-act="closePerm">Huỷ</button><button class="btn btn-p" data-act="savePerm">Lưu thay đổi</button></div></div></div>`;
@@ -1616,7 +1939,7 @@ def('D2', {flow:'f5', fig:true, name:'Cấp hoặc thu hồi quyền', roleHint:
 /* ---- F lịch sử thao tác ---- */
 function logRows() {
   const f = S.logFilter, q = fold(f.q);
-  return S.log.map((r, i) => Object.assign({i}, r)).filter(r => (f.op === 'all' || r.op === f.op) && (f.by === 'all' || r.by === f.by) && (!q || fold(r.obj).includes(q)));
+  return S.log.map((r, i) => Object.assign({i}, r)).filter(r => (f.op === 'all' || r.op === f.op) && (f.by === 'all' || r.by === f.by) && (!q || fold(r.obj).includes(q)) && inPeriod(r.at, S.logPeriod));
 }
 function logBody() {
   const rows = logRows(), cur = S.log[S.logSel] || S.log[0];
@@ -1642,7 +1965,7 @@ def('F', {flow:'f5', fig:true, name:'Lịch sử thao tác', roleHint:'Manager (
       <div class="srch">${ic('search', 16)}<input class="inp" data-in="logQ" placeholder="Xem theo hồ sơ" value="${esc(f.q)}"></div>
       <select class="inp" data-in="logOp"><option value="all">Loại thao tác: Tất cả</option>${ops.map(o => `<option${f.op === o ? ' selected' : ''}>${esc(o)}</option>`).join('')}</select>
       <select class="inp" data-in="logBy"><option value="all">Người thực hiện: Tất cả</option>${bys.map(o => `<option${f.by === o ? ' selected' : ''}>${esc(o)}</option>`).join('')}</select>
-      <div class="dt"><button class="inp" data-todo="Chọn khoảng thời gian">Khoảng thời gian</button>${ic('cal', 16)}</div>
+      <div class="dt">${periodSel('logPeriod', S.logPeriod)}${ic('cal', 16)}</div>
     </div>
     <div id="log-body">${logBody()}</div>`;
   }
@@ -1806,7 +2129,7 @@ const ACT = {
   closeNc() { S.nc = null; go('G1'); },
   ncType(el) { S.nc.type = el.dataset.v; render(); },
   saveCust() { saveCust(); },
-  clearCF() { S.custFilter = {q:'', owner:'all', risk:'all', tag:'all'}; render(); },
+  clearCF() { S.custFilter = {q:'', owner:'all', risk:'all', tag:'all'}; S.txRange = 'all'; render(); },
   selCust(el) { const id = el.dataset.id; S.sel.cust = S.sel.cust.includes(id) ? S.sel.cust.filter(x => x !== id) : S.sel.cust.concat(id); render(); },
   selCustAll() { const r = custRows().map(c => c.id); S.sel.cust = r.every(id => S.sel.cust.includes(id)) ? [] : r; render(); },
   selCustNone() { S.sel.cust = []; render(); },
@@ -1865,13 +2188,70 @@ const ACT = {
 
   /* luồng 4 */
 
+  /* luồng 5 · yêu cầu từ app Membership */
+  vTab(el) { S.vtab[el.dataset.k] = el.dataset.v; render(); },
+  lkApprove(el) {
+    const x = S.links.find(y => y.id === el.dataset.id), m = x.match, day = nowStr();
+    x.status = 'dongy'; x.by = ROLES[S.role].name; x.doneAt = day;
+    const c = x.cust ? S.customers[x.cust] : null;
+    if (c) {
+      if (!c.mem) {
+        const since = x.joined.slice(0, 10), at = x.joined.replace(/^.* tại /, '');
+        c.mem = {since, at, tier:'Silver', tierPts:0, avail:0, pend:0, consent:{on:true, at:since}, links:{Kite:['no', ''], Tiktak:['no', ''], Resort:['no', '']},
+          offers:[['Voucher chào mừng giảm 10%', at, since, 'Còn hạn đến 26/11/2026']]};
+      }
+      c.mem.links[x.bl] = ['ok', `${ROLES[S.role].name} xác minh, ${day.slice(0, 10)}`];
+      c.mem.avail += m.pts; c.mem.tierPts += m.tierPts; c.mem.tier = tierByPts(c.mem.tierPts);
+      const r = c.recs.find(y => y.bl === x.bl); if (r) r.pts = (r.pts || 0) + m.pts;
+    }
+    addLog('Duyệt liên kết', `${x.name} · liên kết ${x.bl} từ app Membership`, null, [['Khách gửi kèm', `${x.kind}: ${x.val}`], ['Cộng dồn', `${m.tx12} → +${num(m.pts)} điểm`]]);
+    S.lkDraft = {reason:'', other:''};
+    toast(`Đã liên kết ${x.bl}, cộng +${num(m.pts)} điểm. Khách nhận thông báo trong app.`); go('V1');
+  },
+  lkReject(el) {
+    const x = S.links.find(y => y.id === el.dataset.id), d = S.lkDraft, why = d.reason === 'Khác' ? d.other.trim() : d.reason;
+    if (!why) { toast('Chọn lý do từ chối trước.', 'e'); return; }
+    x.status = 'tuchoi'; x.by = ROLES[S.role].name; x.doneAt = nowStr(); x.reason = why;
+    const c = x.cust ? S.customers[x.cust] : null;
+    if (c && c.mem) c.mem.links[x.bl] = ['no', `yêu cầu bị từ chối ${x.doneAt.slice(0, 10)}`];
+    addLog('Từ chối liên kết', `${x.name} · liên kết ${x.bl} từ app Membership`, null, [['Khách gửi kèm', `${x.kind}: ${x.val}`], ['Lý do gửi khách', why]]);
+    S.lkDraft = {reason:'', other:''};
+    toast('Đã từ chối. Khách nhận lý do trong app.'); go('V1');
+  },
+  msApprove(el) {
+    const x = S.misses.find(y => y.id === el.dataset.id), pts = msPts(x);
+    x.status = 'cong'; x.pts = pts; x.by = ROLES[S.role].name; x.doneAt = nowStr();
+    const c = x.cust ? S.customers[x.cust] : null;
+    if (c && c.mem) { c.mem.pend += pts; c.mem.pendAt = '12:00, 29/10/2026'; }
+    addLog('Cộng điểm báo thiếu', `${x.name} · hoá đơn ${x.inv}`, num(pts), [['Số tiền theo dữ liệu ' + x.bl, money(x.found.amt)], ['Điểm cộng', `+${num(pts)} · chờ đối soát`]]);
+    toast(`Đã cộng +${num(pts)} điểm chờ đối soát. Khách nhận kết quả trong app.`); go('V3');
+  },
+  msReject(el) {
+    const x = S.misses.find(y => y.id === el.dataset.id), why = S.msDraft.reason;
+    if (!why) { toast('Chọn lý do từ chối trước.', 'e'); return; }
+    x.status = 'tuchoi'; x.reason = why; x.by = ROLES[S.role].name; x.doneAt = nowStr();
+    addLog('Từ chối báo thiếu điểm', `${x.name} · hoá đơn ${x.inv}`, null, [['Lý do gửi khách', why]]);
+    toast('Đã từ chối. Khách nhận lý do trong app.'); go('V3');
+  },
+  delStep(el) { const x = S.dels.find(y => y.id === el.dataset.id); x.steps[el.dataset.k] = !x.steps[el.dataset.k]; render(); },
+  delDone(el) {
+    const x = S.dels.find(y => y.id === el.dataset.id);
+    x.status = 'xong'; x.steps.sms = true; x.by = ROLES[S.role].name; x.doneAt = nowStr();
+    addLog('Hoàn tất xoá tài khoản', `${x.code} · yêu cầu từ app Membership`, null, [['Điểm đã xoá', num(x.avail)], ['Voucher đã huỷ', x.vouchers], ['Trừ vào tiền hoàn', money(x.neg)], ['Hoá đơn giữ dấu vết', x.invs]]);
+    toast('Đã hoàn tất. Hệ thống gửi SMS báo khách.'); go('V5');
+  },
+
   /* phân quyền, truy vết */
   permT(el) { const k = el.dataset.k; S.perm[k] = !S.perm[k]; render(); },
   closePerm() { S.perm.open = false; go('D1'); },
   savePerm() {
-    const u = S.users.find(x => x.id === S.perm.uid), names = {imp:'quyền nạp dữ liệu', rev:'quyền duyệt cặp trong đơn vị', cross:'quyền duyệt cặp giữa hai đơn vị'};
-    const ch = ['imp', 'rev', 'cross'].filter(k => !!u[k] !== !!S.perm[k] && (k !== 'cross' || isGpcn()));
+    const u = S.users.find(x => x.id === S.perm.uid), names = {imp:'quyền nạp dữ liệu', rev:'quyền duyệt cặp trong đơn vị', cross:'quyền duyệt cặp giữa hai đơn vị', mem:'quyền xử lý yêu cầu từ app Membership'};
+    const ch = ['imp', 'rev', 'cross', 'mem'].filter(k => !!u[k] !== !!S.perm[k] && (k !== 'cross' || isGpcn()));
     ch.forEach(k => { u[k] = S.perm[k]; addLog(S.perm[k] ? 'Cấp quyền' : 'Thu hồi quyền', `${u.name} · ${names[k]}`, null, [['Quyền', names[k]], ['Thay đổi', S.perm[k] ? 'Không sang Có' : 'Có sang Không']]); });
+    if ((u.rmkt || '') !== S.perm.rmkt) {
+      addLog(S.perm.rmkt ? 'Cấp vai trò Re-MKT' : 'Thu hồi vai trò Re-MKT', `${u.name} · web Re-MKT`, null, [['Vai trò cũ', u.rmkt || 'Chưa có'], ['Vai trò mới', S.perm.rmkt || 'Chưa có']]);
+      u.rmkt = S.perm.rmkt; ch.push('rmkt');
+    }
     S.perm.open = false;
     toast(ch.length ? `Đã lưu quyền của ${u.name}. Có hiệu lực từ thao tác kế tiếp.` : 'Chưa có thay đổi nào.', ch.length ? '' : 'i');
     go('D1');
@@ -1910,7 +2290,14 @@ const IN = {
   logOp(el) { S.logFilter.op = el.value; render(); },
   logBy(el) { S.logFilter.by = el.value; render(); },
   splitKeep(el) { S.split.keep[el.dataset.i] = el.value; },
-  thr(el, ev) { if (ev !== 'change') return; S.thrDraft[el.dataset.bl][+el.dataset.i] = Math.max(1, parseInt(el.value, 10) || 1); render(); }
+  permRmkt(el) { S.perm.rmkt = el.value; },
+  thr(el, ev) { if (ev !== 'change') return; S.thrDraft[el.dataset.bl][+el.dataset.i] = Math.max(1, parseInt(el.value, 10) || 1); render(); },
+  impPeriod(el) { S.impPeriod = el.value; render(); },
+  logPeriod(el) { S.logPeriod = el.value; render(); },
+  txRange(el) { S.txRange = el.value; render(); },
+  lkReason(el) { S.lkDraft.reason = el.value; render(); },
+  lkOther(el, ev) { if (ev !== 'input') return; S.lkDraft.other = el.value; const b = document.querySelector('[data-act=lkReject]'); if (b) b.disabled = !el.value.trim(); },
+  msReason(el) { S.msDraft.reason = el.value; render(); }
 };
 
 /* ================= đưa màn về trạng thái như Figma khi mở từ danh sách ================= */
@@ -1920,14 +2307,16 @@ const FRESH = {
   B2() { S.rbKeep = false; },
   C1() { S.sel.pairs = ['p1', 'p2'].filter(id => !pairById(id).done && !pairById(id).cancelled); },
   D2() { S.perm.open = false; },
-  G1() { S.custFilter = {q:'', owner:'all', risk:'all', tag:'all'}; S.sel.cust = []; },
+  G1() { S.custFilter = {q:'', owner:'all', risk:'all', tag:'all'}; S.txRange = 'all'; S.sel.cust = []; },
   G2() { S.g2init = false; },
   G3() { S.nc = null; },
   G4() { S.sel.cust = []; S.assignBack = null; },
   H3() { S.exportCtx = null; },
   I4() { S.split = {rec:1, keep:{}}; },
   I6() { S.ed = null; },
-  N1() { S.thrDraft = null; }
+  N1() { S.thrDraft = null; },
+  B1() { S.impPeriod = 'all'; }, F() { S.logPeriod = 'all'; },
+  V1() { S.vtab.v1 = 'cho'; }, V2() { S.lkDraft = {reason:'', other:''}; }, V3() { S.vtab.v3 = 'cho'; }, V4() { S.msDraft = {reason:''}; }, V5() { S.vtab.v5 = 'xoa'; }
 };
 Object.keys(FRESH).forEach(id => { SCREENS[id].fresh = FRESH[id]; });
 
@@ -1961,7 +2350,7 @@ $('#file-pick').addEventListener('change', e => {
 /* 35 câu của khung "Cần anh/chị chốt" trên trang "CRM Hub — Luồng màn hình", chốt ngày 26/10/2026 theo đề xuất của BA; câu 1 chọn phương án (b).
    Mỗi câu: n số câu · q câu hỏi · sc màn liên quan · opt các lựa chọn · pro đề xuất của BA · rest phần giải thích · who báo lại cho · dec quyết định khác đề xuất. */
 const DEC_DAY = '26/10/2026';
-const ASK_INTRO = 'Các câu trên Figma đã chốt ngày 26/10/2026 để ra bản MVP, theo đề xuất của BA; câu 1 chọn phương án (b) là bỏ bước chọn căn cứ pháp lý. Màn bị ảnh hưởng đã sửa theo quyết định. Cột cuối là các bên cần được báo lại.';
+const ASK_INTRO = 'Các câu trên Figma đã chốt ngày 26/10/2026 để ra bản MVP, theo đề xuất của BA; câu 1 chọn phương án (b) là bỏ bước chọn căn cứ pháp lý. Màn bị ảnh hưởng đã sửa theo quyết định. Câu 36–39 thêm ngày 28/10/2026 khi nối CRM Hub với app Membership và web Re-MKT, chưa chốt: màn đang vẽ theo đề xuất. Cột cuối là các bên cần được báo lại hoặc trả lời.';
 const ASKS = [
   {g:'Nhóm 1 · Nạp file (A)', rows:[
     {n:1, q:'Danh mục căn cứ pháp lý người nạp phải chọn khi nạp file gồm những mục nào?', sc:['A1','A2','B1'], dec:'Bỏ bước chọn căn cứ pháp lý khi nạp file (phương án b). Người nạp chỉ chọn file; FR-crm-hub-002, BR-crm-hub-017 và lỗi E-crm-hub-005 cần sửa theo trong SRS.', opt:['(a) Ban Pháp chế cấp danh mục trước go-live.', '(b) Chưa có danh mục thì bỏ bước chọn căn cứ.'], pro:'Đề xuất: (a), giữ bước chọn bắt buộc; chưa có danh mục thì chưa nạp dữ liệu thật.', rest:'PM đã chốt giữ bước này ngày 20/10 (Q5); họp 21/10 đề xuất hạn trả lời 06/11/2026 (câu L1, L2).', who:'Ban Pháp chế'},
@@ -2004,9 +2393,17 @@ const ASKS = [
     {n:33, q:'Tại quầy có dùng chung máy và tài khoản không?', sc:['D1'], pro:'Đề xuất: mỗi nhân viên một tài khoản; máy dùng chung thì tự đăng xuất khi không thao tác một khoảng thời gian (IT đặt),', rest:'để quyền và lịch sử ghi đúng người.', who:'Manager các đơn vị, IT'},
     {n:34, q:'Manager thấy gì trong lịch sử khi GPCN HO hoặc đơn vị khác thao tác trên hồ sơ có bản ghi của đơn vị mình?', sc:['F'], pro:'Đề xuất: thấy dòng thao tác (ai, lúc nào, loại thao tác) trên bản ghi của đơn vị mình;', rest:'không thấy chi tiết phần dữ liệu của đơn vị khác.', who:'GPCN HO, IT'}]},
   {g:'Nhóm 7 · Câu chữ trên giao diện', rows:[
-    {n:35, q:'Giữ các từ tiếng Anh trên giao diện (import, template, batch, Dashboard, Active, Churn Risk, Cross-sell) hay đổi sang tiếng Việt?', sc:['A1','A2','B3','E','H1'], pro:'Đề xuất: đổi sang tiếng Việt:', rest:'nạp, mẫu file, lần nạp, Tổng quan, Đang hoạt động, Nguy cơ rời bỏ, Bán chéo; giữ mã báo cáo (CRM-06) để đối chiếu tài liệu. Phần lớn màn đã dùng tiếng Việt.', who:'GPCN HO'}]}
+    {n:35, q:'Giữ các từ tiếng Anh trên giao diện (import, template, batch, Dashboard, Active, Churn Risk, Cross-sell) hay đổi sang tiếng Việt?', sc:['A1','A2','B3','E','H1'], pro:'Đề xuất: đổi sang tiếng Việt:', rest:'nạp, mẫu file, lần nạp, Tổng quan, Đang hoạt động, Nguy cơ rời bỏ, Bán chéo; giữ mã báo cáo (CRM-06) để đối chiếu tài liệu. Phần lớn màn đã dùng tiếng Việt.', who:'GPCN HO'}]},
+  /* câu thêm ngày 28/10/2026 khi nối CRM Hub với app Membership và web Re-MKT: chưa chốt, bản xem thử vẽ theo đề xuất */
+  {g:'Nhóm 8 · Nối với app Membership và web Re-MKT (thêm 28/10/2026, chưa chốt)', rows:[
+    {n:36, open:true, q:'Hồ sơ 360° hiện gì của Membership?', sc:['I1','I2','I3'], pro:'Đề xuất: là thành viên từ ngày nào, hạng, điểm khả dụng và điểm chờ đối soát, trạng thái liên kết từng đơn vị, đã đồng ý nhận ưu đãi chưa (ngày), ưu đãi đã nhận và đã dùng trong 90 ngày.', rest:'Staff và Manager của đơn vị thấy như nhau; đơn vị khác chỉ thấy hạng (câu 27). Điểm, hạng do Membership tính, CRM Hub chỉ hiện (câu 27 của bảng Membership). Câu H7 biên bản 20/10 đã hỏi PM, chưa có trả lời.', who:'PM'},
+    {n:37, open:true, q:'Ai xử lý yêu cầu xoá tài khoản, rút đồng ý khách gửi từ app; trong bao lâu?', sc:['V5','V6'], pro:'Đề xuất: GPCN HO xử lý trên CRM Hub trong 30 ngày; rút đồng ý có hiệu lực ngay, chỉ hiện để theo dõi.', rest:'Giữ dấu vết hoá đơn đã tích để chặn tích lại; số dư điểm âm trừ vào tiền hoàn (câu 17, 24 của bảng Membership). Họp 21/10 câu L8 đã đề xuất xoá trong 30 ngày.', who:'Ban Pháp chế, GPCN HO'},
+    {n:38, open:true, q:'Tách hoặc gộp hồ sơ của khách là thành viên: báo trước những gì?', sc:['K1','I4'], pro:'Đề xuất: trước khi bấm Tách, báo số điểm sẽ thu lại, hạng sau khi thu và đơn vị bị gỡ liên kết; khách nhận thông báo trong app.', rest:'Gộp chỉ liên kết hồ sơ trong CRM Hub, không gộp hai tài khoản thành viên và không tự cộng điểm (câu 15 của bảng Membership đã chốt cách xử lý).', who:'GPCN HO'},
+    {n:39, open:true, q:'Đăng nhập và vai trò của web Re-MKT quản lý ở đâu?', sc:['D1','D2'], pro:'Đề xuất: dùng chung tài khoản công ty với CRM Hub; vai trò Re-MKT cấp ngay ở màn D2.', rest:'Manager đơn vị cấp BL Admin cho Staff của đơn vị mình; GPCN HO cấp thêm BL Manager. Finance HO, GPCN HO, Phòng MKT cấp cho người dùng thuộc HO. Cùng câu 15 của bảng Re-MKT.', who:'IT, GPCN HO'}]}
 ];
-const ASK_COUNT = ASKS.reduce((s, g) => s + g.rows.length, 0);
+const ASK_COUNT = ASKS.reduce((s, g) => s + g.rows.filter(r => !r.open).length, 0);
+const OPEN_COUNT = ASKS.reduce((s, g) => s + g.rows.filter(r => r.open).length, 0);
+const OPEN_ASK = new Set(ASKS.flatMap(g => g.rows.filter(r => r.open).map(r => r.n)));
 /* quyết định ngắn của từng câu, hiện trong ghi chú của màn liên quan */
 const DEC_SHORT = {1:'Bỏ bước chọn căn cứ pháp lý khi nạp file.', 2:'Chỉ đếm dòng có dữ liệu; chỉ đọc trang tính đầu tiên; thiếu cột bắt buộc thì từ chối cả file và nêu tên cột thiếu.',
   3:'Ô Trùng chỉ đếm số điện thoại lặp trong file; số khớp hồ sơ đã có hiện ở kết quả nạp.', 4:'Cùng số, khác tên trong một đơn vị: cập nhật thông tin khác, giữ tên cũ, ghi dòng đó là "tên khác hồ sơ" trong kết quả nạp.',
@@ -2025,19 +2422,24 @@ const DEC_SHORT = {1:'Bỏ bước chọn căn cứ pháp lý khi nạp file.', 
   29:'"Dữ liệu tính đến" đổi khi số liệu đã tính lại.', 30:'Lần nạp bị gỡ được trừ ở tuần đang chạy; các tuần đã qua giữ nguyên.',
   31:'IT tạo tài khoản trong hệ thống tài khoản công ty; GPCN HO gán vai trò và đơn vị trong CRM Hub.', 32:'Người chuyên trách là Staff thuộc Phòng GPCN, được GPCN HO bật quyền "duyệt cặp giữa hai đơn vị".',
   33:'Mỗi nhân viên một tài khoản; máy dùng chung tự đăng xuất khi không thao tác (IT đặt thời gian).', 34:'Manager thấy dòng thao tác (ai, lúc nào, loại thao tác) trên bản ghi của đơn vị mình, không thấy chi tiết dữ liệu đơn vị khác.',
-  35:'Giao diện dùng tiếng Việt: nạp, mẫu file, lần nạp, Tổng quan, Đang hoạt động, Nguy cơ rời bỏ, Bán chéo; giữ mã báo cáo CRM-06.'};
+  35:'Giao diện dùng tiếng Việt: nạp, mẫu file, lần nạp, Tổng quan, Đang hoạt động, Nguy cơ rời bỏ, Bán chéo; giữ mã báo cáo CRM-06.',
+  36:'Đề xuất: hồ sơ hiện thành viên từ ngày nào, hạng, điểm khả dụng và chờ đối soát, liên kết từng đơn vị, đồng ý nhận ưu đãi, ưu đãi 90 ngày.',
+  37:'Đề xuất: GPCN HO xử lý yêu cầu xoá trong 30 ngày; rút đồng ý có hiệu lực ngay, chỉ theo dõi.',
+  38:'Đề xuất: trước khi Tách báo số điểm thu lại, hạng sau khi thu, đơn vị bị gỡ liên kết; gộp không gộp tài khoản thành viên.',
+  39:'Đề xuất: Re-MKT dùng chung tài khoản công ty; vai trò Re-MKT cấp ở màn D2.'};
 const askChips = sc => sc.map(id => `<span class="ak-chip" data-act="askGo" data-id="${id}" title="${esc(SCREENS[id] ? SCREENS[id].name : id)}">${esc(id)}</span>`).join('');
 const boldMd = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
 const decText = r => {
+  if (r.open) return `<span class="wait">chưa chốt</span> Bản xem thử vẽ theo đề xuất: <b>${esc(r.pro.replace(/^Đề xuất: ?/, ''))}</b>${r.rest ? ' ' + boldMd(r.rest) : ''}`;
   if (r.dec) return esc(r.dec);
   const pick = /^Đề xuất: \(([a-c])\)/.exec(r.pro), o = pick && (r.opt || []).find(x => x.startsWith('(' + pick[1] + ')'));
   const head = o ? o.replace(/^\([a-c]\) /, '') : r.pro.replace(/^Đề xuất( giữ như màn đang vẽ)?: ?/, '').replace(/^\w/, c => c.toUpperCase());
   return `<b>${esc(head)}</b>${r.rest ? ' ' + boldMd(r.rest) : ''}`;
 };
 function renderAsks() {
-  let h = `<div class="ak"><div class="ak-h"><div class="row"><div class="sp"><h2>Đã chốt cho MVP (${ASK_COUNT} câu)</h2>
+  let h = `<div class="ak"><div class="ak-h"><div class="row"><div class="sp"><h2>Đã chốt cho MVP (${ASK_COUNT} câu) · ${OPEN_COUNT} câu mới chờ chốt</h2>
     <p>${esc(ASK_INTRO)}</p></div><button class="btn btn-o btn-sm" data-act="askClose">Đóng</button></div></div><div class="ak-b" id="ak-b">
-    <table><tr><th>#</th><th>Câu hỏi</th><th>Màn liên quan</th><th>Đã chốt ngày ${DEC_DAY}</th><th>Báo lại cho</th></tr>`;
+    <table><tr><th>#</th><th>Câu hỏi</th><th>Màn liên quan</th><th>Đã chốt ngày ${DEC_DAY} · câu mới: đề xuất đang vẽ</th><th>Báo lại cho</th></tr>`;
   for (const g of ASKS) {
     h += `<tr class="grp"><td colspan="5">${esc(g.g)}</td></tr>`;
     for (const r of g.rows) h += `<tr id="ask-${r.n}"><td class="n">${r.n}</td><td class="q">${esc(r.q)}</td><td class="sc">${askChips(r.sc)}</td><td class="pro">${decText(r)}</td><td class="who">${esc(r.who)}</td></tr>`;
@@ -2349,6 +2751,65 @@ N('N1', {
   demo:[{t:'Đổi ngưỡng Thấp của Kite từ 30 xuống 20 rồi bấm ra ngoài ô: số KH ở từng mức tính lại. Lưu ngưỡng thì danh sách H2 và hồ sơ dùng ngưỡng mới, màn F có dòng Đổi ngưỡng.'}]
 });
 
+/* ---- ghi chú luồng 5 và phần bổ sung 28/10/2026 (nối với app Membership, web Re-MKT; vẽ theo đề xuất chưa chốt) ---- */
+const MEM46 = 'Người xử lý chờ câu 46 của bảng Membership: bộ phận nào xử lý Chờ xác minh và khiếu nại điểm (OQ-8 của brainstorm Membership, người trả lời Ban HCNS). Đề xuất: Manager đơn vị hoặc Staff được giao quyền xử lý trên CRM Hub.';
+N('V1', {
+  req:['Brainstorm Membership Mục 5.1 bước 6: không xác nhận được thì chuyển "Chờ xác minh", nhân viên đơn vị xử lý trong 24 giờ; quá 24 giờ nhắc Manager, báo GPCN HO, không tự duyệt (Mục 6.5, bảng thời hạn).', 'Bảng phân quyền brainstorm Membership: xử lý "Chờ xác minh" là Manager, Admin Biz Line và GPCN; nhân viên quầy không.', 'Câu 13 của bảng Membership (đã chốt): chỉ tự nối khi SĐT khớp, không phải số dùng chung và họ tên đầy đủ khớp; còn lại khách tự nối bằng mã của đơn vị hoặc nhờ nhân viên xác minh.'],
+  role:['Manager Kite và Staff được giao quyền: yêu cầu liên kết Kite. GPCN HO: mọi đơn vị, có cột Đơn vị. Staff chưa được giao quyền không có mục Yêu cầu Membership (cấp ở D2).'],
+  sample:['Phạm Thu D đổi số, gửi mã thẻ KH Kite khớp bản ghi KH-000104. Ngô Thị G gửi email không có ở Kite, đã quá 24 giờ. Trần Thị B gửi mã booking Tiktak (chỉ GPCN HO thấy). Mạc Thị W đã bị từ chối 26/10.'],
+  prop:[MEM46, 'Yêu cầu nằm ở CRM Hub vì CRM Hub có bản ghi nguồn để đối chiếu (câu 44 của bảng Membership: việc quản trị Membership đặt ở web nào, chờ PO, PM chốt).'],
+  demo:[{t:'Bấm Xét ở dòng Phạm Thu D rồi Đồng ý liên kết: hồ sơ Phạm Thu D thành thành viên Gold, H1 bớt một việc. Dòng Ngô Thị G không có bản ghi khớp nên chỉ Từ chối được. Đổi vai GPCN HO để thấy yêu cầu của Tiktak.', b:[['Xét yêu cầu Phạm Thu D', 'go', 'V2/lk2'], ['Xét yêu cầu Ngô Thị G (quá hạn)', 'go', 'V2/lk3']]}]
+});
+N('V2', {
+  req:['Câu 14 của bảng Membership (đã chốt): liên kết xong cộng giao dịch 12 tháng tính lùi từ ngày nối đơn vị đó; điểm cộng dồn chỉ tính xét hạng của năm hiện tại.', 'Brainstorm Membership Mục 7.3: câu khách thấy khi chờ "Yêu cầu liên kết đang được xử lý, bạn sẽ nhận kết quả trong 24 giờ."', 'Tỉ lệ 2% số tiền (như nhau ở ba đơn vị, cập nhật 28/10), 1 điểm = 1đ; ngưỡng hạng Gold 50.000, Platinum 200.000 điểm (câu 26 của bảng Membership).'],
+  role:['Như V1. Manager mở yêu cầu của đơn vị khác bằng đường dẫn thì gặp màn Không có quyền.'],
+  own:['Bảng đối chiếu tô nhãn khớp hoặc khác cho từng trường; lý do từ chối chọn từ danh sách và xem trước câu khách nhận.', 'Câu khách nhận khi bị từ chối là câu tự viết.'],
+  prop:[MEM46],
+  demo:[{t:'Chọn lý do rồi Từ chối; hoặc Đồng ý (chỉ bật khi có bản ghi khớp và chưa chọn lý do). Mỗi quyết định thêm một dòng ở Lịch sử thao tác (F).', b:[['Yêu cầu Trần Thị B · Tiktak (GPCN HO)', 'go', 'V2/lk1']]}]
+});
+N('V3', {
+  req:['Câu 32 của bảng Membership (đã chốt): khách gửi yêu cầu trong app kèm số hoá đơn, trong 6 tháng kể từ ngày mua.', 'Câu 25 của bảng Membership (đã chốt): lệch số tiền thì lấy số của đơn vị.'],
+  role:['Như V1.'],
+  sample:['Nguyễn Văn A quên đưa mã (tìm thấy, khách khai 90.000 đ, Kite ghi 85.000 đ). Trần Thị B báo hoá đơn đã tích. Võ Thị F gửi số hoá đơn không có. Lý Thu M của Tiktak (chỉ GPCN HO thấy).'],
+  prop:[MEM46, 'Hạn trả lời 3 ngày làm việc (đề xuất, chưa có trong tài liệu).'],
+  demo:[{t:'Xét từng dòng để thấy ba kết quả tra hoá đơn.', b:[['Hoá đơn tìm thấy', 'go', 'V4/ms1'], ['Hoá đơn đã tích', 'go', 'V4/ms2'], ['Không tìm thấy hoá đơn', 'go', 'V4/ms3']]}]
+});
+N('V4', {
+  req:['Câu 25, 32 của bảng Membership (đã chốt). Điểm cộng vào trạng thái chờ đối soát T+1 như điểm tích tại quầy (biên bản 21/10).', 'Khách nhận kết quả trong app ở màn M20c của Membership.'],
+  role:['Như V1.'],
+  own:['Lý do từ chối chọn sẵn theo kết quả tra (không tìm thấy, đã tích); câu khách nhận là câu tự viết.'],
+  prop:[MEM46],
+  demo:[{t:'Hoá đơn tìm thấy: Cộng +8.500 điểm, hồ sơ Nguyễn Văn A có thêm điểm chờ đối soát. Hoá đơn đã tích hoặc không tìm thấy: chỉ Từ chối được.'}]
+});
+N('V5', {
+  req:['Câu 17 của bảng Membership (đã chốt): rút đồng ý nhận ưu đãi ngay trong app; xoá tài khoản thì báo trước sẽ mất điểm và voucher; giữ dấu vết hoá đơn đã tích để không tích lại.', 'Câu 24 của bảng Membership (đã chốt): số dư âm chỉ trừ vào tiền hoàn khi khách xoá tài khoản.', 'Họp 21/10 câu L8: đề xuất xoá trong 30 ngày (Ban Pháp chế xác nhận).'],
+  role:['Chỉ GPCN HO. Manager, Staff không có mục này.'],
+  sample:['Phùng Gia Z, Vũ Hoàng P đang xử lý (Vũ Hoàng P có số dư âm 1.500 điểm); Âu Gia V đã hoàn tất. Tab Rút đồng ý chỉ để theo dõi.'],
+  ask:[37],
+  prop:['Rút đồng ý loại khách khỏi tập gửi của web Re-MKT ngay (câu 3 của bảng Re-MKT: chỉ gửi cho thành viên đã chọn nhận ưu đãi).'],
+  demo:[{t:'Mở Vũ Hoàng P: đánh dấu hai bước GPCN HO xác nhận rồi Xác nhận hoàn tất.', b:[['Xử lý Vũ Hoàng P', 'go', 'V6/dr2'], ['Xem yêu cầu đã hoàn tất', 'go', 'V6/dr0']]}]
+});
+N('V6', {
+  req:['Câu 17, 24 của bảng Membership (đã chốt).', 'Lịch sử thao tác giữ 5 năm (câu 12); dòng Hoàn tất xoá tài khoản chỉ ghi mã KH, không ghi tên.'],
+  role:['Chỉ GPCN HO.'],
+  own:['Năm bước: ba bước tự động, hai bước GPCN HO xác nhận (trừ số dư âm vào tiền hoàn, xoá thông tin cá nhân). Nút Xác nhận hoàn tất bật khi đủ bước.'],
+  ask:[37],
+  prop:['Đơn vị tự xoá dữ liệu khách trong hệ thống bán hàng của mình; CRM Hub chỉ xoá phần CRM Hub và Membership (đề xuất, chờ Ban Pháp chế).'],
+  demo:[{t:'Bấm ô vuông ở bước 3, 4 để đánh dấu đã xong, rồi Xác nhận hoàn tất.'}]
+});
+const addNote = (id, o) => { const n = NOTES[id]; Object.keys(o).forEach(k => { n[k] = (n[k] || []).concat(o[k]); }); };
+addNote('I1', {ask:[36], prop:['Khối Thành viên Membership: Staff và Manager của Kite thấy như nhau; đơn vị khác chỉ thấy hạng. Liên kết đang Chờ xác minh có nút Xét yêu cầu cho người có quyền.'], demo:[{t:'Hồ sơ Trần Thị B: đã rút đồng ý nhận ưu đãi, liên kết Tiktak đang Chờ xác minh. Hồ sơ Phạm Thu D: chưa là thành viên, tới khi duyệt yêu cầu ở V2.', b:[['Hồ sơ Trần Thị B', 'go', 'I1/c2'], ['Hồ sơ Phạm Thu D', 'go', 'I1/c4']]}]});
+addNote('I2', {ask:[36], prop:['Võ Thị F là thành viên mới đăng ký tại Kite, chưa có giao dịch tích điểm; voucher chào mừng chưa dùng.']});
+addNote('I3', {ask:[36], prop:['Hoàng Minh E chưa là thành viên: khối Thành viên Membership mời khách quét mã ở quầy.']});
+addNote('I4', {ask:[38], prop:['Khách là thành viên: báo số điểm thu lại, hạng sau khi thu, đơn vị bị gỡ liên kết ngay trong hộp thoại (câu 15 của bảng Membership đã chốt cách xử lý). Thu nhiều hơn điểm khả dụng thì số dư âm, trừ dần vào điểm lần sau (câu 24).'], demo:[{t:'Vai GPCN HO tách bản ghi Tiktak của Nguyễn Văn A: thu lại 28.000 điểm, hạng Gold xuống Silver, liên kết Tiktak về Chưa liên kết.'}]});
+addNote('K1', {ask:[38], prop:['Thêm dòng Thành viên Membership trong bảng so sánh; gộp không gộp hai tài khoản thành viên và không tự cộng điểm (câu 15 của bảng Membership).']});
+addNote('D1', {ask:[39], prop:['Thêm cột Quyền xử lý yêu cầu từ app Membership (câu 46 của bảng Membership) và Vai trò ở web Re-MKT (câu 15 của bảng Re-MKT). Phòng MKT chỉ xem ở web Re-MKT (câu 16 của bảng Re-MKT).']});
+addNote('D2', {ask:[39], prop:['Công tắc Quyền xử lý yêu cầu từ app Membership; ô Vai trò ở web Re-MKT. Manager cấp BL Admin; GPCN HO cấp thêm BL Manager. Mỗi thay đổi ghi một dòng ở F.']});
+addNote('H1', {prop:['Khối Cần xử lý hôm nay có thêm việc từ app Membership: yêu cầu xác minh liên kết (báo số quá hạn) và báo thiếu điểm, theo câu 46 của bảng Membership.']});
+addNote('B1', {own:['Ô Khoảng thời gian chọn được: Tất cả, Hôm nay, 7 ngày qua, 30 ngày qua (tính đến ngày dữ liệu 28/10/2026). Trước đây báo chưa thiết kế.']});
+addNote('G1', {own:['Ô Giao dịch gần nhất chọn được: Trong 30 ngày, 30 đến 90 ngày, Trên 90 ngày, Chưa có giao dịch. Trước đây báo chưa thiết kế.']});
+addNote('F', {own:['Ô Khoảng thời gian chọn được như ở B1. Thao tác mới ghi ở đây: Duyệt liên kết, Từ chối liên kết, Cộng điểm báo thiếu, Từ chối báo thiếu điểm, Hoàn tất xoá tài khoản, Cấp vai trò Re-MKT.']});
+
 /* ================= vẽ panel ghi chú ================= */
 function renderNotes(sc) {
   const n = NOTES[sc.id] || {};
@@ -2357,8 +2818,13 @@ function renderNotes(sc) {
     <h2>Ghi chú thiết kế · CRM · ${esc(sc.code)}</h2>
     <div class="nt-sub">${esc(sc.name)}<br>${sc.fig ? 'Figma: file 360 Customers, màn ở trang "CRM Hub — Màn hình (nháp)", ghi chú ở trang "CRM Hub — Luồng màn hình"' : 'Dựng từ ' + esc(sc.src || 'SRS CRM Hub')}${sc.later ? ' · đợt bổ sung' : ''}</div>`;
   h += list('Yêu cầu', n.req) + list('Mã lỗi', n.err) + list('Hiển thị theo vai trò', n.role) + list(n.sampleH || 'Dữ liệu mẫu', n.sample) + list('Tự chọn', n.own);
-  if ((n.ask && n.ask.length) || (n.dec && n.dec.length)) {
-    h += `<h4>Đã chốt (${DEC_DAY})</h4>${(n.ask || []).map(k => `<button class="ref" data-act="askRef" data-n="${k}"><b>Câu ${k}</b> · <span>${esc(DEC_SHORT[k])}</span></button>`).join('')}${(n.dec || []).map(x => `<p>${esc(x)}</p>`).join('')}`;
+  const askDone = (n.ask || []).filter(k => !OPEN_ASK.has(k)), askOpen = (n.ask || []).filter(k => OPEN_ASK.has(k));
+  const askBtn = k => `<button class="ref" data-act="askRef" data-n="${k}"><b>Câu ${k}</b> · <span>${esc(DEC_SHORT[k])}</span></button>`;
+  if (askDone.length || (n.dec && n.dec.length)) {
+    h += `<h4>Đã chốt (${DEC_DAY})</h4>${askDone.map(askBtn).join('')}${(n.dec || []).map(x => `<p>${esc(x)}</p>`).join('')}`;
+  }
+  if (askOpen.length || (n.prop && n.prop.length)) {
+    h += `<h4>Chờ chốt · vẽ theo đề xuất</h4>${askOpen.map(askBtn).join('')}${(n.prop || []).map(x => `<p>${esc(x)}</p>`).join('')}`;
   }
   h += list(sc.fig ? 'Bổ sung, chỗ khác Figma' : 'Chỗ lệch với Figma', n.gap);
   if (n.demo && n.demo.length) {

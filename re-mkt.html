@@ -377,6 +377,37 @@ svg{flex:none}
 .toast{background:#1F2328;color:#fff;padding:10px 16px;border-radius:6px;font-size:13.5px;box-shadow:0 6px 20px rgba(0,0,0,.25);max-width:640px}
 .toast.ok{background:#0B5D2A}
 .toast.todo{background:#6A3B00}
+
+/* đăng nhập (R-L1, R-L2): không có thanh bên */
+.app.bare{display:flex;align-items:center;justify-content:center;background:var(--bg-subtle)}
+.login{width:440px;background:#fff;border:1px solid var(--border);border-radius:var(--r-xl);padding:32px;box-shadow:0 8px 28px rgba(0,0,0,.08)}
+.login .lg-logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:16px;margin-bottom:24px}
+.login .lg-logo .v{width:30px;height:30px;border-radius:4px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.login h1{font-size:22px;line-height:30px;margin:0 0 6px;font-weight:600}
+.login>p{margin:0 0 20px;color:var(--text-muted)}
+.login .btn{width:100%}
+.login .lg-ic{width:48px;height:48px;border-radius:50%;background:var(--warning-subtle);color:var(--warning-ink);display:grid;place-items:center;margin-bottom:16px}
+/* chuông thông báo trên thanh trên */
+.bell{position:relative;width:40px;height:40px;border:0;border-radius:4px;background:none;cursor:pointer;color:var(--text-muted);display:grid;place-items:center}
+.bell:hover,.bell.act{background:var(--surface-sunken);color:var(--text)}
+.bell .bdg{position:absolute;top:3px;right:2px;min-width:16px;height:16px;border-radius:8px;background:var(--accent);color:#fff;font-size:10.5px;font-weight:600;display:grid;place-items:center;padding:0 4px}
+/* danh sách thông báo (R-N1) */
+.nt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;padding:14px 16px;border:0;border-bottom:1px solid var(--border);background:#fff;cursor:pointer}
+.nt:last-child{border-bottom:0}
+.nt:hover{background:#F7F9FD}
+.nt.unread{background:var(--primary-subtle)}
+.nt .ndot{width:8px;height:8px;border-radius:50%;margin-top:7px;flex:none}
+.nt.unread .ndot{background:var(--primary)}
+.nt b{display:block;font-weight:500}
+/* ma trận bán chéo (R-G2) */
+.mx th,.mx td{text-align:center}
+.mx td.dg{background:var(--surface-sunken);color:var(--text-subtle)}
+/* xem trước thẻ ưu đãi trên app Membership (R-K2) */
+.ofc{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;max-width:320px;margin:0 auto}
+.ofc .art{height:96px;background:var(--secondary-subtle);color:var(--secondary);display:grid;place-items:center}
+.ofc .art svg{width:40px;height:40px}
+.ofc .ofb{padding:14px 16px}
+.ofc .pts{font-size:20px;font-weight:600;color:#0F766E}
 </style>
 </head>
 <body>
@@ -392,6 +423,9 @@ const vnd = (n) => fmtInt(n) + 'đ'; // cách viết của các màn Tạo campa
 const trieu = (n) => String(Math.round(n * 100) / 100).replace('.', ',') + ' triệu đ';
 const tr = (n, d = 2) => { const v = Math.round(n * Math.pow(10, d)) / Math.pow(10, d); return String(v).replace('.', ',') + ' tr'; };
 const pct1 = (x) => (Math.round(x * 1000) / 10).toString().replace('.', ',') + '%';
+/* Hai bản xem thử cùng dự án, mở ở thẻ mới (đường dẫn tương đối trong docs/) */
+const MEM_URL = 'membership.html';
+const CRM_URL = 'crm-hub.html';
 function pDate(s) { const m = /^(\d{1,2})\/(\d{1,2})\/(\d{4})/.exec(String(s || '')); return m ? new Date(+m[3], +m[2] - 1, +m[1]) : null; }
 function fDate(d) { return String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0') + '/' + d.getFullYear(); }
 function addDays(s, n) { const d = pDate(s); d.setDate(d.getDate() + n); return fDate(d); }
@@ -415,6 +449,9 @@ const IC = {
   bolt: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>',
   check14: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg>',
   user: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>',
+  bell: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>',
+  gift: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M5 12v9h14v-9"/><path d="M12 8C10.5 5 7 4.5 7 7s3 1 5 1c2 0 5 1.5 5-1s-3.5-2-5 1"/></svg>',
+  lock: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>',
 };
 
 /* ================= Vai trò, điều hướng ================= */
@@ -424,32 +461,45 @@ const ROLES = {
   manager: { name: 'BL Manager', av: 'BM', unit: 'Đơn vị Tiktak', home: 'R-B1' },
   finance: { name: 'Finance HO', av: 'FH', unit: 'Toàn tập đoàn', home: 'R-F1' },
   gpcn: { name: 'GPCN HO', av: 'GH', unit: 'Toàn tập đoàn', home: 'R-A2' },
+  /* Phòng MKT chỉ xem (đề xuất câu 16, thêm 28/10/2026, chưa chốt) */
+  mkt: { name: 'Phòng MKT', av: 'MK', unit: 'Toàn tập đoàn · chỉ xem', home: 'R-G1' },
 };
+/* Nhóm Membership và vai Phòng MKT thêm 28/10/2026 (câu 16, 17, chưa chốt) */
+const NAV_MEM_BL = { k: 'mem', t: 'Membership', ic: 'gift', go: 'R-K1', subs: [{ k: 'mem-dm', t: 'Danh mục đổi điểm', go: 'R-K1' }] };
 const NAV = {
   admin: [
     { k: 'lich', t: 'Lịch marketing', ic: 'cal', go: 'R-A1' },
     { k: 'camp', t: 'Campaign', ic: 'mail', go: 'R-C1' },
+    NAV_MEM_BL,
     { k: 'bc', t: 'Báo cáo', ic: 'pulse', go: 'R-E1' },
   ],
   manager: [
     { k: 'lich', t: 'Lịch marketing', ic: 'cal', go: 'R-A1' },
     { k: 'camp', t: 'Campaign', ic: 'mail', go: 'R-C1' },
     { k: 'duyet', t: 'Duyệt', ic: 'check', go: 'R-B1', subs: [{ k: 'duyet-nd', t: 'Duyệt tập KH và nội dung', go: 'R-B1' }] },
+    NAV_MEM_BL,
     { k: 'bc', t: 'Báo cáo', ic: 'pulse', go: 'R-E1' },
   ],
   finance: [
     { k: 'quy', t: 'Quỹ và ngân sách', ic: 'menu', go: 'R-F1', subs: [{ k: 'hanmuc', t: 'Hạn mức quỹ theo quý', go: 'R-F2' }, { k: 'doisoat', t: 'Bảng chi phí cuối tháng', go: 'R-F5' }] },
+    { k: 'mem', t: 'Membership', ic: 'gift', go: 'R-Q1', subs: [{ k: 'mem-quy', t: 'Quỹ điểm thưởng', go: 'R-Q1' }, { k: 'mem-ds', t: 'Đối soát quỹ điểm', go: 'R-Q2' }, { k: 'mem-hm', t: 'Hạn mức đổi điểm theo quý', go: 'R-K3' }] },
     { k: 'bc', t: 'Báo cáo', ic: 'pulse', go: 'R-E3' },
   ],
   gpcn: [
     { k: 'lich', t: 'Lịch marketing', ic: 'cal', go: 'R-A2', subs: [{ k: 'dip', t: 'Các dịp trong năm', go: 'R-A7' }] },
     { k: 'camp', t: 'Campaign', ic: 'mail', go: 'R-C1' },
     { k: 'duyet', t: 'Duyệt', ic: 'check', go: 'R-A5', subs: [{ k: 'duyet-td', t: 'Duyệt thời điểm', go: 'R-A5' }, { k: 'duyet-ns-g', t: 'Duyệt ngân sách', go: 'R-B6' }] },
-    { k: 'tonghop', t: 'Tổng hợp toàn tập đoàn', ic: 'org', go: 'R-G1' },
+    { k: 'tonghop', t: 'Tổng hợp toàn tập đoàn', ic: 'org', go: 'R-G1', subs: [{ k: 'cap', t: 'Bán chéo theo cặp đơn vị', go: 'R-G2' }] },
+    { k: 'mem', t: 'Membership', ic: 'gift', go: 'R-K1', subs: [{ k: 'mem-dm', t: 'Danh mục đổi điểm', go: 'R-K1' }, { k: 'mem-quy', t: 'Quỹ điểm thưởng', go: 'R-Q1' }, { k: 'mem-ch', t: 'Cấu hình điểm và hạng', go: 'R-S1' }] },
+    { k: 'bc', t: 'Báo cáo', ic: 'pulse', go: 'R-E1' },
+  ],
+  mkt: [
+    { k: 'lich', t: 'Lịch marketing', ic: 'cal', go: 'R-A2' },
+    { k: 'tonghop', t: 'Tổng hợp toàn tập đoàn', ic: 'org', go: 'R-G1', subs: [{ k: 'cap', t: 'Bán chéo theo cặp đơn vị', go: 'R-G2' }] },
     { k: 'bc', t: 'Báo cáo', ic: 'pulse', go: 'R-E1' },
   ],
 };
-/* 6 bước theo trang "Re-MKT — Luồng màn hình" trên Figma */
+/* 6 bước theo trang "Re-MKT — Luồng màn hình" trên Figma; f7, f8 thêm 28/10/2026 cho các màn bổ sung (chưa có trên Figma) */
 const FLOWS = [
   { k: 'f1', t: 'Bước 1 · Lịch và đăng ký thời điểm' },
   { k: 'f2', t: 'Bước 2 · Tạo campaign' },
@@ -457,11 +507,13 @@ const FLOWS = [
   { k: 'f4', t: 'Bước 4 · Campaign chạy và theo dõi' },
   { k: 'f5', t: 'Bước 5 · Chốt số và báo cáo' },
   { k: 'f6', t: 'Bước 6 · Tổng hợp toàn tập đoàn' },
+  { k: 'f7', t: 'Membership trên web Re-MKT · danh mục đổi điểm, quỹ điểm, cấu hình, báo cáo (câu 17, chưa chốt)' },
+  { k: 'f8', t: 'Đăng nhập, vai trò và thông báo (câu 15, 16, chưa chốt)' },
 ];
 
-/* ================= Đã chốt cho MVP (14 câu của khung "Cần anh/chị chốt" 289:22034 trên Figma, chốt 26/10/2026) ================= */
+/* ================= Đã chốt cho MVP (14 câu của khung "Cần anh/chị chốt" 289:22034 trên Figma, chốt 26/10/2026; câu 15–17 thêm 28/10/2026, chưa chốt) ================= */
 const DEC_DATE = '26/10/2026';
-const DQ_INTRO = '14 câu của bảng “Cần anh/chị chốt” trên Figma, chốt ngày 26/10/2026 để làm MVP. Câu 6 và câu 10 chốt khác đề xuất của BA; 12 câu còn lại theo đề xuất. Màn và ghi chú của bản xem thử đã làm theo các quyết định này.';
+const DQ_INTRO = '17 câu của bảng “Cần anh/chị chốt” trên Figma. Câu 1 đến 14 chốt ngày 26/10/2026 để làm MVP: câu 6 và câu 10 chốt khác đề xuất của BA, 12 câu còn lại theo đề xuất. Câu 15 đến 17 thêm ngày 28/10/2026 khi bổ sung màn còn thiếu, chưa chốt: màn liên quan vẽ theo đề xuất của BA, cột “Anh/chị chốt” để trống.';
 /* q, scr, prop, rest, who: chép nguyên văn Figma · pick: quyết định ghi ở cột "Anh/chị chốt" */
 const DQ = [
   { g: 'Nhóm 1 · Lịch và mức ưu tiên' },
@@ -482,8 +534,13 @@ const DQ = [
   { n: 12, q: 'Hệ thống nào giữ bộ đếm trần (2 campaign mỗi khách mỗi tháng, tính chung thông báo ưu đãi và pop-up quà)?', scr: 'R-E4', prop: 'Đề xuất: Membership giữ bộ đếm,', rest: 'vì Membership là nơi gửi push và hiện pop-up; Re-MKT hỏi bộ đếm khi chốt tập gửi; báo cáo MKT-06 đọc từ đó.', who: 'PO, IT', pick: 'Theo đề xuất: Membership giữ bộ đếm' },
   { n: 13, q: 'Số đo tổng hợp: tần suất đăng nhập đếm theo ngày mở app hay theo lần mở; “cơ hội bán chéo” là khách vào danh sách hay voucher đã gửi?', scr: 'R-G1', prop: 'Đề xuất: đăng nhập đếm theo ngày có mở app (như DAU); cơ hội bán chéo là voucher đã gửi tới khách chưa từng dùng đơn vị phát voucher.', rest: '', who: 'Phòng GPCN, Phòng MKT', pick: 'Theo đề xuất: đếm theo ngày có mở app; cơ hội bán chéo là voucher đã gửi' },
   { n: 14, q: 'Điểm khách chưa tiêu ghi nhận là khoản nợ khách thế nào trên sổ sách?', scr: 'R-G1', prop: 'Đề xuất: ghi là khoản phải trả khách tại Quỹ điểm thưởng VNGroup,', rest: 'bằng đúng số dư quỹ, theo mô hình quỹ chung ngày 23/10 (tiền trong quỹ luôn bằng tổng điểm khách đang giữ).', who: 'Ban Kế toán', pick: 'Theo đề xuất: khoản phải trả khách tại Quỹ điểm thưởng VNGroup' },
+  { g: 'Nhóm 5 · Đăng nhập, vai trò và Membership trên web Re-MKT (thêm 28/10/2026, chưa chốt)' },
+  { n: 15, q: 'Đăng nhập và vai trò của web Re-MKT quản lý ở đâu?', scr: 'R-L1, R-L2, R-N1', prop: 'Đề xuất: dùng chung tài khoản công ty với CRM Hub; Manager đơn vị và GPCN HO cấp vai trò Re-MKT ngay ở màn Người dùng và quyền (D2) của CRM Hub.', rest: 'Một tài khoản cho hai web nội bộ, người nghỉ việc chỉ khoá ở một chỗ. Vai trong đơn vị (BL Admin, BL Manager) do Manager đơn vị cấp; vai toàn tập đoàn (Finance HO, GPCN HO, Phòng MKT) do GPCN HO cấp. Google Workspace, Microsoft 365 đều cho đăng nhập một lần bằng tài khoản công ty vào các ứng dụng nội bộ. Cùng câu 39 của bảng CRM Hub.', who: 'IT, GPCN HO', pick: '' },
+  { n: 16, q: 'Phòng MKT có vai gì trên web Re-MKT?', scr: 'R-A2, R-E1 đến R-E6, R-G1, R-G2', prop: 'Đề xuất: chỉ xem lịch toàn tập đoàn, báo cáo, Tổng hợp toàn tập đoàn và bán chéo theo cặp đơn vị; không tạo, không duyệt campaign.', rest: 'Theo đề xuất câu P4 của buổi chốt 21/10 (Phòng MKT chỉ xem báo cáo, không nằm trong chuỗi duyệt). HubSpot cũng tách quyền xem báo cáo khỏi quyền tạo và gửi chiến dịch.', who: 'Phòng MKT, GPCN HO', pick: '' },
+  { n: 17, q: 'Danh mục đổi điểm, quỹ điểm và cấu hình điểm, hạng của Membership đặt ở web nào, chạy thế nào?', scr: 'R-K1, R-K2, R-K3, R-Q1, R-Q2, R-S1, R-E5, R-E6', prop: 'Đề xuất: đặt ở web Re-MKT, nhóm menu Membership. BL Admin soạn ưu đãi, BL Manager cho hiện trên app trong hạn mức chi đổi điểm theo quý; Finance HO nhập hạn mức Ban TCKT đã duyệt ngoài hệ thống.', rest: 'Re-MKT đã có bộ hình thức ưu đãi, quỹ, hạn mức quý và vai Finance HO. Cùng câu 44 của bảng Membership (việc quản trị Membership đặt ở web nào) và theo câu 35 (Manager đơn vị đề xuất, Ban TCKT duyệt hạn mức chi theo quý). Quỹ điểm trả đơn vị đúng số điểm khách đã đổi; phần giá trị ưu đãi vượt số điểm do đơn vị bù, tính vào hạn mức. Đối soát quỹ điểm: bù trừ cuối tháng, mỗi đơn vị chỉ chuyển phần chênh, hạn ngày 10 tháng sau. VinClub, Lotte Members đều để các công ty thành viên đưa ưu đãi lên chung một danh mục của chương trình tập đoàn.', who: 'PO, PM, Ban TCKT', pick: '' },
 ];
 const DQN = DQ.filter((r) => r.n).length;
+const DQN_OK = DQ.filter((r) => r.n && r.pick).length;
 /* Quy tắc đã chốt, viết thẳng trên thẻ ghi chú của màn liên quan */
 const DEC = {
   1: 'Mức ưu tiên có ba mức Cao, Thường, Thấp: Cao cho dịp chiến lược toàn tập đoàn do GPCN HO đặt và campaign dùng quỹ cross-sell; Thường là mặc định; Thấp cho dịp riêng Biz Line tự đề xuất. Cùng mức thì campaign duyệt trước được gửi.',
@@ -502,6 +559,13 @@ const DEC = {
   14: 'Điểm khách chưa tiêu ghi là khoản phải trả khách tại Quỹ điểm thưởng VNGroup, bằng đúng số dư quỹ.',
 };
 const D = (n) => DEC[n];
+/* Câu 15–17 (thêm 28/10/2026, chưa chốt): màn vẽ theo đề xuất, thẻ ghi chú ghi rõ là đề xuất */
+const PEND = {
+  15: 'Đăng nhập bằng tài khoản công ty dùng chung với CRM Hub; vai trò Re-MKT cấp ở màn Người dùng và quyền (D2) của CRM Hub.',
+  16: 'Phòng MKT chỉ xem lịch toàn tập đoàn, báo cáo, Tổng hợp toàn tập đoàn và bán chéo theo cặp đơn vị; không tạo, không duyệt.',
+  17: 'Danh mục đổi điểm, hạn mức chi đổi điểm, Quỹ điểm thưởng VNGroup, cấu hình điểm và hạng, báo cáo Membership ở web Re-MKT (nhóm menu Membership). BL Admin soạn, BL Manager cho hiện trong hạn mức quý; phần giá trị ưu đãi vượt số điểm do đơn vị bù; đối soát quỹ điểm bù trừ cuối tháng.',
+};
+const PD = (n) => 'Vẽ theo đề xuất câu ' + n + ' (chưa chốt): ' + PEND[n];
 
 /* ================= Trạng thái ================= */
 const BF = 'Tiktak Black Friday 2026 — Flash Deal';
@@ -535,6 +599,8 @@ function initState() {
     nextQuarter: { tiktak: '', kite: '', resort: '', chung: '', cross: '' },
     ui: { b1tab: 'wait', b6tab: 'wait', c1chip: 'all', a2tab: 'tl', showOld: false, dlg: null, f2saved: false },
     newOcc: { name: '', date: '', end: '', note: '' },
+    read: {}, // thông báo đã đọc (R-N1)
+    mem: memState(), // Membership trên web Re-MKT (câu 17, chưa chốt)
   };
   Object.defineProperty(st, 'camp', { get() { return this.camps[this.cid]; }, set(v) { this.camps[this.cid] = v; }, enumerable: false, configurable: true });
   return st;
@@ -705,12 +771,12 @@ function sidebar(sc) {
   }).join('');
   const r = ROLES[S.role];
   return '<aside class="sb"><div class="sb-logo"><span class="v">V</span>VNG 360 · Re-MKT</div><nav class="sb-nav">' + items + '</nav>' +
-    '<div class="sb-foot"><span class="av">' + r.av + '</span><div><b>' + r.name + '</b><span>' + r.unit + '</span></div></div></aside>';
+    '<div class="sb-foot"><span class="av">' + r.av + '</span><div style="flex:1;min-width:0"><b>' + r.name + '</b><span>' + r.unit + '</span></div><button class="lnk xs" data-go="R-L1" title="Đăng xuất">Đăng xuất</button></div></aside>';
 }
 function topbar() {
-  if (S.role === 'admin' || S.role === 'manager') return '<div class="topbar"><span class="lbl">Đơn vị:</span><b style="font-weight:500">Tiktak</b></div>';
+  if (S.role === 'admin' || S.role === 'manager') return '<div class="topbar"><span class="lbl">Đơn vị:</span><b style="font-weight:500">Tiktak</b><span class="sp"></span>' + notifBell() + '</div>';
   const o = [['all', 'Tất cả đơn vị'], ['Tiktak', 'Tiktak'], ['Kite', 'Kite'], ['Resort', 'Resort']].map((x) => '<option value="' + x[0] + '"' + (S.unitView === x[0] ? ' selected' : '') + '>' + x[1] + '</option>').join('');
-  return '<div class="topbar"><span class="lbl">Xem dữ liệu của</span><select data-model="unitView" data-rerender="1">' + o + '</select></div>';
+  return '<div class="topbar"><span class="lbl">Xem dữ liệu của</span><select data-model="unitView" data-rerender="1">' + o + '</select><span class="sp"></span>' + notifBell() + '</div>';
 }
 const unitOk = (bl) => S.unitView === 'all' || !bl || S.unitView === bl;
 function crumb(parts) { return '<div class="crumb">' + parts.map((p, i) => (i === parts.length - 1 ? '<b>' + esc(p[0]) + '</b>' : (p[1] ? '<a data-go="' + p[1] + '">' + esc(p[0]) + '</a>' : esc(p[0])))).join(' &nbsp;/&nbsp; ') + '</div>'; }
@@ -729,9 +795,10 @@ function render() {
   const v = sc.view(S) || {};
   const html = typeof v === 'string' ? v : v.html;
   const ov = typeof v === 'string' ? '' : (v.overlay || '');
-  $('#app').innerHTML = sidebar(sc) + '<div class="main">' + topbar() + '<div class="content" id="content">' + html + '</div></div>' + ov;
+  const app = $('#app'); app.classList.toggle('bare', !!sc.bare); // bare: màn đăng nhập, không có thanh bên
+  app.innerHTML = sc.bare ? html + ov : sidebar(sc) + '<div class="main">' + topbar() + '<div class="content" id="content">' + html + '</div></div>' + ov;
   if (sc.bind) sc.bind();
-  $('#content').scrollTop = ctTop;
+  if ($('#content')) $('#content').scrollTop = ctTop;
   if (fm) { const el = document.querySelector('[data-model="' + fm + '"]'); if (el) { el.focus(); try { if (selS != null && el.setSelectionRange) el.setSelectionRange(selS, selS); } catch (e) { /* bỏ qua */ } } }
   renderToolbar(); renderNotes(); renderSL();
 }
@@ -747,7 +814,7 @@ function renderToolbar() {
 }
 let notesOn = false;
 /* Thẻ ghi chú: Figma có ở trang "Re-MKT — Luồng màn hình" (theo bước); màn chưa có trên Figma ghi nguồn dựng.
-   decided: quy tắc đã chốt cho MVP (26/10/2026) · own: chỗ tài liệu chưa nói, bản xem thử tự chốt cho MVP · diff: chỗ bản xem thử khác Figma */
+   decided: quy tắc đã chốt cho MVP (26/10/2026) · pending: vẽ theo đề xuất câu 15–17, chưa chốt · own: chỗ tài liệu chưa nói, bản xem thử tự chốt cho MVP · diff: chỗ bản xem thử khác Figma */
 function renderNotes() {
   const np = $('#np'); np.classList.toggle('open', notesOn); if (!notesOn) return;
   const sc = SCR[cur]; const n = sc.notes || {};
@@ -756,19 +823,19 @@ function renderNotes() {
   np.innerHTML = '<div class="np-in"><button class="np-close" data-act="notesOff">Đóng ✕</button><h2>Ghi chú thiết kế · ' + esc(sc.id) + '</h2>' +
     '<div class="np-src">' + esc(sc.name) + (fl ? ' · ' + esc(fl.t) : '') + (sc.figma ? '<br>Theo thẻ ghi chú trên trang “Re-MKT — Luồng màn hình”.' : '') + '</div>' +
     (sc.figma ? '' : '<div class="np-new">Chưa có trên Figma · dựng từ ' + esc(n.src || 'tài liệu') + '</div>') +
-    sec('Quy tắc, số liệu và nguồn', n.rules) + sec('Đã chốt cho MVP (' + DEC_DATE + ')', n.decided) + sec('Hiển thị theo vai trò', n.roles) + sec('Tự chọn (tài liệu chưa nói)', n.self) +
+    sec('Quy tắc, số liệu và nguồn', n.rules) + sec('Đã chốt cho MVP (' + DEC_DATE + ')', n.decided) + sec('Vẽ theo đề xuất, chưa chốt', n.pending) + sec('Hiển thị theo vai trò', n.roles) + sec('Tự chọn (tài liệu chưa nói)', n.self) +
     sec('Bản xem thử tự chốt cho MVP', n.own) + sec('Bản xem thử khác Figma', n.diff) + sec('Cách xem nhánh lỗi', n.demo) + '</div>';
 }
 /* ================= Bảng Đã chốt cho MVP (toàn màn hình, bên phải) ================= */
 const dp = { on: false, hl: '' };
-function chipify(t) { return esc(t).replace(/R-[A-G]\d+[a-z]?/g, (m) => (SCR[m] ? '<span class="scr-chip" data-screen="' + m + '" title="Mở màn ' + m + '">' + m + '</span>' : m)); }
+function chipify(t) { return esc(t).replace(/R-[A-Z]\d+[a-z]?/g, (m) => (SCR[m] ? '<span class="scr-chip" data-screen="' + m + '" title="Mở màn ' + m + '">' + m + '</span>' : m)); }
 function renderDP() {
   const body = '<table class="dq"><colgroup><col style="width:40px"><col style="width:19%"><col style="width:14%"><col><col style="width:10%"><col style="width:16%"></colgroup>' +
     '<thead><tr><th>#</th><th>Câu hỏi</th><th>Màn liên quan</th><th>Lựa chọn và đề xuất của BA</th><th>Người trả lời</th><th>Anh/chị chốt</th></tr></thead><tbody>' +
     DQ.map((r) => (r.g ? '<tr class="grp"><td colspan="6">' + esc(r.g) + '</td></tr>'
-      : '<tr id="dq-' + r.n + '"' + (dp.hl === 'q' + r.n ? ' class="hl"' : '') + '><td class="b">' + r.n + '</td><td class="q">' + esc(r.q) + '</td><td>' + chipify(r.scr) + '</td><td><div class="prop">' + esc(r.prop) + '</div>' + (r.rest ? '<div class="rest">' + esc(r.rest) + '</div>' : '') + '</td><td>' + esc(r.who) + '</td><td><div class="b" style="font-weight:500">' + esc(r.pick) + '</div><div class="xs muted mt8" style="margin-top:4px">' + DEC_DATE + '</div></td></tr>')).join('') +
+      : '<tr id="dq-' + r.n + '"' + (dp.hl === 'q' + r.n ? ' class="hl"' : '') + '><td class="b">' + r.n + '</td><td class="q">' + esc(r.q) + '</td><td>' + chipify(r.scr) + '</td><td><div class="prop">' + esc(r.prop) + '</div>' + (r.rest ? '<div class="rest">' + esc(r.rest) + '</div>' : '') + '</td><td>' + esc(r.who) + '</td>' + (r.pick ? '<td><div class="b" style="font-weight:500">' + esc(r.pick) + '</div><div class="xs muted mt8" style="margin-top:4px">' + DEC_DATE + '</div></td></tr>' : '<td><div class="nochot">Chưa chốt · màn vẽ theo đề xuất</div><div class="xs muted" style="margin-top:4px">Thêm 28/10/2026</div></td></tr>'))).join('') +
     '</tbody></table>';
-  $('#dp').innerHTML = '<div class="dp-head" style="padding-bottom:12px"><div class="row" style="align-items:flex-start"><div style="flex:1"><h2>Đã chốt cho MVP (' + DQN + ')</h2><p style="margin:0">' + esc(DQ_INTRO) + '</p></div><button class="lnk" data-act="dpClose">Đóng ✕</button></div></div><div class="dp-body" id="dpBody">' + body + '</div>';
+  $('#dp').innerHTML = '<div class="dp-head" style="padding-bottom:12px"><div class="row" style="align-items:flex-start"><div style="flex:1"><h2>Đã chốt cho MVP (' + DQN_OK + ')' + (DQN > DQN_OK ? ' · ' + (DQN - DQN_OK) + ' câu chờ chốt' : '') + '</h2><p style="margin:0">' + esc(DQ_INTRO) + '</p></div><button class="lnk" data-act="dpClose">Đóng ✕</button></div></div><div class="dp-body" id="dpBody">' + body + '</div>';
 }
 function openDP(hl) {
   dp.on = true; dp.hl = hl || ''; renderDP();
@@ -780,10 +847,11 @@ function closeDP() { dp.on = false; const b = $('#dp'); if (!b) return; b.classL
 function renderSL() {
   const intro = '<div class="sl-intro"><b>Cách đọc</b><ul>' +
     '<li>Màn xếp theo 6 bước của quy trình như trang “Re-MKT — Luồng màn hình” trên Figma; trong mỗi bước đọc từ trên xuống.</li>' +
-    '<li>Bảng <button class="qref" data-act="openQ" data-arg="q1">Đã chốt cho MVP</button> ghi ' + DQN + ' quyết định ngày ' + DEC_DATE + '; nút Ghi chú mở thẻ ghi chú của màn đang xem, viết thẳng quy tắc đã chốt.</li>' +
+    '<li>Bảng <button class="qref" data-act="openQ" data-arg="q1">Đã chốt cho MVP</button> ghi ' + DQN_OK + ' quyết định ngày ' + DEC_DATE + ' và ' + (DQN - DQN_OK) + ' câu thêm 28/10/2026 chưa chốt; nút Ghi chú mở thẻ ghi chú của màn đang xem, viết thẳng quy tắc đã chốt.</li>' +
     '<li>Chuỗi duyệt: BL Manager duyệt tập khách và nội dung; GPCN HO duyệt thêm khi chi phí trên 50 triệu đồng hoặc dùng quỹ cross-sell. Tài chính duyệt ngân sách ngoài hệ thống, BL Admin ghi số và ngày văn bản khi gửi duyệt; Finance HO chỉ xem chi phí và quỹ.</li>' +
     '<li>Campaign mẫu Tiktak Black Friday 2026 — Flash Deal đi một mạch: 12.480 khớp, 8.236 gửi được (824 đối chứng, 7.412 nhận tin), 80 lượt, 40.000.000đ, Quỹ MKT Tiktak.</li>' +
-    '<li>Thời điểm minh hoạ: R-A 12/10/2026; R-D 16/11/2026; R-B 16 đến 25/11/2026; R-C 16 đến 29/11/2026.</li></ul></div>';
+    '<li>Thời điểm minh hoạ: R-A 12/10/2026; R-D 16/11/2026; R-B 16 đến 25/11/2026; R-C 16 đến 29/11/2026.</li>' +
+    '<li>Hai nhóm cuối thêm 28/10/2026, chưa có trên Figma: Membership trên web Re-MKT (danh mục đổi điểm, quỹ điểm, cấu hình, báo cáo MEM-01, MEM-02) và đăng nhập, thông báo. Vẽ theo đề xuất câu 15 đến 17, chưa chốt.</li></ul></div>';
   const body = intro + FLOWS.map((fl) => '<div class="sl-flow">' + fl.t + '</div>' + ORDER.filter((id) => SCR[id].flow === fl.k).map((id) => {
     const s = SCR[id];
     return '<button class="sl-item' + (id === cur ? ' cur' : '') + '" data-screen="' + id + '"><span class="code">' + id + '</span><span class="nm">' + esc(s.name) + '<br><span class="subtle xs">' + s.roles.map((r) => ROLES[r].name).join(', ') + '</span></span>' +
@@ -1131,30 +1199,32 @@ def('R-A4', { name: 'Đăng ký bị từ chối vì còn dưới 14 ngày', flo
 function tlPos(ds) { const d = pDate(ds); const q0 = new Date(2026, 9, 1); return Math.max(0, Math.min(1, (d - q0) / 86400000 / 92)); }
 const SLOT_BAR = { 'Chờ duyệt': ['#FFF3EA', '#914D00'], 'Đã duyệt': ['#DFEAFF', '#1443AB'], 'Đã có campaign': ['#EAFBEC', '#007631'], 'Bị từ chối': ['#FFF2F0', '#B80411'], 'Tự nhả': ['#F4F4F4', '#525252'] };
 def('R-A2', {
-  name: 'Lịch timeline toàn tập đoàn (GPCN HO)', flow: 'f1', figma: true, roles: ['gpcn'], role: 'gpcn', nav: 'lich',
+  name: 'Lịch timeline toàn tập đoàn (GPCN HO)', flow: 'f1', figma: true, roles: ['gpcn', 'mkt'], role: 'gpcn', nav: 'lich',
   snap: () => snap('slot'),
   view: (s) => {
     const pend = s.slots.filter((x) => x.status === 'Chờ duyệt').length;
+    const ro = s.role === 'mkt'; // Phòng MKT chỉ xem (đề xuất câu 16)
     const lanes = ['Tiktak', 'Kite', 'Resort'].filter(unitOk);
     /* thanh hai dòng như Figma: tên ở dòng trên, ngày (và quy mô) ở dòng dưới; thanh sát cuối quý neo mép phải để đọc được tên */
     const bar = (left, label, sub, bg, fg, act) => '<button class="tl-bar" style="' + (left > 0.78 ? 'right:0;max-width:24%' : 'left:' + (left * 100).toFixed(2) + '%;max-width:' + ((1 - left) * 100).toFixed(2) + '%') + ';background:' + bg + ';color:' + fg + '"' + act + '><b>' + esc(label) + '</b>' + (sub ? '<span>' + esc(sub) + '</span>' : '') + '</button>';
     const short = (d) => d.slice(0, 5);
-    let rows = '<div class="tl-row"><div class="tl-name"><b>Dịp chung</b><span>do GPCN HO nhập</span></div><div class="tl-lane">' + s.occasions.filter((o) => { const d = pDate(o.date); return d >= new Date(2026, 9, 1) && d <= new Date(2026, 11, 31); }).map((o) => { const dt = o.end ? short(o.date).slice(0, 2) + '–' + short(o.end) : short(o.date); return bar(tlPos(o.date), o.name, dt === o.name ? '' : dt, '#F8F3FF', '#9B3EE5', ' data-go="R-A7"'); }).join('') + '</div></div>';
-    rows += lanes.map((bl) => '<div class="tl-row"><div class="tl-name"><b>' + bl + '</b></div><div class="tl-lane">' + s.slots.filter((x) => x.bl === bl).map((x) => { const c = SLOT_BAR[x.status] || SLOT_BAR['Tự nhả']; return bar(tlPos(x.date), x.short || x.name, (x.dateLabel || x.date).replace('/2026', '') + ' · ' + (x.id === 'bf' ? 'khoảng ' : '') + fmtInt(x.scale) + ' KH', c[0], c[1], x.status === 'Chờ duyệt' ? ' data-act="calSlot" data-arg="' + x.id + '"' : ''); }).join('') + '</div></div>').join('');
+    let rows = '<div class="tl-row"><div class="tl-name"><b>Dịp chung</b><span>do GPCN HO nhập</span></div><div class="tl-lane">' + s.occasions.filter((o) => { const d = pDate(o.date); return d >= new Date(2026, 9, 1) && d <= new Date(2026, 11, 31); }).map((o) => { const dt = o.end ? short(o.date).slice(0, 2) + '–' + short(o.end) : short(o.date); return bar(tlPos(o.date), o.name, dt === o.name ? '' : dt, '#F8F3FF', '#9B3EE5', ro ? '' : ' data-go="R-A7"'); }).join('') + '</div></div>';
+    rows += lanes.map((bl) => '<div class="tl-row"><div class="tl-name"><b>' + bl + '</b></div><div class="tl-lane">' + s.slots.filter((x) => x.bl === bl).map((x) => { const c = SLOT_BAR[x.status] || SLOT_BAR['Tự nhả']; return bar(tlPos(x.date), x.short || x.name, (x.dateLabel || x.date).replace('/2026', '') + ' · ' + (x.id === 'bf' ? 'khoảng ' : '') + fmtInt(x.scale) + ' KH', c[0], c[1], x.status === 'Chờ duyệt' && !ro ? ' data-act="calSlot" data-arg="' + x.id + '"' : ''); }).join('') + '</div></div>').join('');
     const tbody = s.slots.filter((x) => unitOk(x.bl)).map((x) => {
       const campSt = x.id === 'bf' ? s.camps.bf.status : x.camp;
       return '<tr><td>' + esc(x.name) + '</td><td><span class="chip-bl">' + x.bl + '</span></td><td>' + esc(x.dateLabel || x.date) + '</td><td class="num">' + (x.id === 'bf' ? 'khoảng ' : '') + fmtInt(x.scale) + '</td><td>' + tag(x.status) + '</td><td>' + (campSt === 'Chưa tạo' ? '<span class="muted">Chưa tạo</span>' : tag(campSt)) + '</td><td>' + (x.priority || '—') + '</td></tr>';
     }).join('');
     return crumb([['Lịch marketing', 'R-A2'], ['Timeline Q4/2026']]) +
-      '<div class="tabs"><button class="tab" data-go="R-A1">Dạng tháng</button><button class="tab act">Timeline</button></div>' +
+      (ro ? '' : '<div class="tabs"><button class="tab" data-go="R-A1">Dạng tháng</button><button class="tab act">Timeline</button></div>') +
       pageHead('Lịch marketing toàn tập đoàn', 'Mọi dịp và thời điểm các Biz Line đã đăng ký trong quý. Nhiều Biz Line cùng một dịp được phép; KH trùng do trần 2 campaign mỗi tháng xử lý.',
-        '<button class="btn btn-s" data-go="R-A7">Nhập dịp</button><button class="btn btn-p" data-go="R-A5">Duyệt thời điểm (' + pend + ')</button>') +
+        ro ? '' : '<button class="btn btn-s" data-go="R-A7">Nhập dịp</button><button class="btn btn-p" data-go="R-A5">Duyệt thời điểm (' + pend + ')</button>') +
       '<div class="tl"><div class="tl-head"><span>Biz Line</span><span>Tháng 10/2026</span><span>Tháng 11/2026</span><span>Tháng 12/2026</span></div>' + rows + '</div>' +
       '<div class="row mb8 sm muted" style="gap:14px">Thẻ thời điểm: ' + ['Chờ duyệt', 'Đã duyệt', 'Đã có campaign', 'Bị từ chối', 'Tự nhả'].map((t) => tag(t)).join(' ') + '</div>' +
       '<table class="tbl"><thead><tr><th>Campaign</th><th>Biz Line</th><th>Ngày chạy</th><th class="num">Quy mô dự kiến</th><th>Thời điểm</th><th>Campaign</th><th>Mức ưu tiên</th></tr></thead><tbody>' + tbody + '</tbody></table>';
   },
   notes: { rules: ['GPCN HO xem toàn cảnh lịch toàn tập đoàn, duyệt và gán mức ưu tiên (brainstorm: tính năng bắt buộc Mục 4, luồng lịch Mục 5.1 bước 4).', 'Nhiều Biz Line cùng một dịp được phép; KH trùng do trần 2 campaign mỗi KH mỗi tháng xử lý (brainstorm: trường hợp khác Mục 6.5, giới hạn Mục 7.2; quyết định chốt 2026-10-10). Không có cảnh báo trùng lịch chặn duyệt.', 'Thẻ Thời điểm theo các trạng thái trong brainstorm (Mục 6.3): Chờ duyệt, Đã duyệt, Đã có campaign, Bị từ chối, Tự nhả. Cột Campaign dùng trạng thái của campaign.', 'Dữ liệu mẫu từ file concept (HO Master View): Halloween Weekend Resort 580 KH, Black Friday Flash Tiktak 1.200 KH, Noel Combo Set Kite 8.000 KH; dịp 20/10, Halloween, Black Friday, Noel.', 'Nút Duyệt thời điểm (1) dẫn tới R-A5. Trang Các dịp trong năm (GPCN nhập dịp) không nằm trong đợt vẽ này.'],
-    roles: ['Chỉ GPCN HO có chế độ Timeline toàn tập đoàn và chọn Xem dữ liệu của mọi đơn vị.', 'Không vai trò nào thấy danh tính KH (phân quyền của brainstorm, Mục 6.2).'],
+    roles: ['Chỉ GPCN HO có chế độ Timeline toàn tập đoàn và chọn Xem dữ liệu của mọi đơn vị.', 'Phòng MKT: cùng màn, chỉ xem; không có tab Dạng tháng, nút Nhập dịp, Duyệt thời điểm, không bấm được thanh.', 'Không vai trò nào thấy danh tính KH (phân quyền của brainstorm, Mục 6.2).'],
+    pending: [PD(16)],
     self: ['Timeline chia theo tháng, mỗi Biz Line một làn, thay vì theo ngày: campaign mẫu chỉ chạy 1–2 ngày, vạch theo ngày quá hẹp để đọc tên.', 'Campaign Halloween Weekend ghi Đã duyệt, suy từ nhãn Approved của file concept.'],
     decided: [D(1)],
     diff: ['Thanh và bảng ghi quy mô Black Friday khoảng 8.200 KH (Figma: khoảng 1.200) cho khớp tập gửi ở bước Tạo campaign.', 'Cột Mức ưu tiên ghi Cao cho Halloween Weekend và Noel Combo Set (thời điểm đã duyệt trên dịp chung, theo câu 1); Figma ghi —.', 'Dòng chú giải "Thẻ thời điểm" dưới timeline và việc bấm thanh đang Chờ duyệt để mở ngăn kéo R-A5 là thêm của bản xem thử.', 'Nút Nhập dịp và các thanh dịp chung mở màn R-A7 (chưa có trên Figma).', 'Chọn đơn vị ở ô Xem dữ liệu của thì lọc làn và bảng (Figma chưa vẽ trạng thái lọc).'],
@@ -1423,7 +1493,7 @@ function d1View(s) {
     '<div class="grid2"><div class="fld"><label>Ngày gửi *</label><div class="inp-ic">' + IC.calSm + '<input class="inp' + (dok ? '' : ' err') + '" data-model="camp.m.date" data-rerender="1" value="' + esc(m.date) + '"></div></div>' +
     '<div class="fld"><label>Giờ gửi *</label><div class="inp-ic">' + IC.clock + '<input class="inp' + (ok ? '' : ' err') + '" data-model="camp.m.time" data-rerender="1" value="' + esc(m.time) + '"></div></div></div>' +
     (ok ? '<div class="help" style="margin-top:-8px">Chỉ hẹn được giờ gửi trong khoảng 8 đến 21 giờ. Kênh gửi: App Push của Membership.</div>' : '<div class="errt" style="margin-top:-8px">Chỉ hẹn được giờ gửi trong khoảng 8 đến 21 giờ.</div>') + '</div>';
-  const prev = '<div class="wiz-side"><h3>Xem trước App Push</h3><div class="push" style="margin:0 auto"><div class="ph2"><span class="v">V</span>Membership<span class="sp"></span>bây giờ</div><b>' + esc(m.title) + '</b><p>' + esc(m.body) + '</p><button class="btn btn-s btn-sm" data-todo="Ví voucher (app Membership)">Mở ví voucher</button></div><p class="xs muted" style="margin:16px 0 0">Thông báo trên app Membership của KH. Voucher đã nằm trong Ví voucher, nút mở thẳng ví.</p></div>';
+  const prev = '<div class="wiz-side"><h3>Xem trước App Push</h3><div class="push" style="margin:0 auto"><div class="ph2"><span class="v">V</span>Membership<span class="sp"></span>bây giờ</div><b>' + esc(m.title) + '</b><p>' + esc(m.body) + '</p><a class="btn btn-s btn-sm" href="' + MEM_URL + '#PA-B1" target="_blank" rel="noopener" title="Mở bản xem thử Membership ở thẻ mới">Mở ví voucher</a></div><p class="xs muted" style="margin:16px 0 0">Thông báo trên app Membership của KH. Bấm tin mở app, khách bấm nhận ưu đãi rồi voucher vào Ví (Membership câu 40, phương án B). Nút ở đây mở màn PA-B1 của bản xem thử Membership.</p></div>';
   const ready = ok && dok && m.title.trim() && m.body.trim();
   return wizHead(s, 3) + '<div class="wiz"><div>' + form + '</div>' + prev + '</div>' +
     '<div class="wiz-foot"><button class="btn btn-s" data-act="toStep" data-arg="2">Quay lại: Voucher</button><button class="btn btn-p" data-act="nextStep" data-arg="4"' + (ready ? '' : ' disabled') + '>Tiếp: Quỹ và gửi duyệt</button></div>';
@@ -1903,7 +1973,7 @@ function c3View(s) {
   return crumb([['Campaign', 'R-C1'], [c.name]]) + pageHead(esc(c.name), (c.status === 'Đang chạy' || c.status === 'Tạm dừng' ? 'Đang chạy từ ' : 'Chạy ') + c.m.time + ' · ' + c.m.date + ' · App Push', acts) +
     fresh('Số liệu cập nhật lúc ' + (s.time || '10:00') + ' · ' + s.today) +
     '<div class="mb16">' + tag(c.status) + ' <span class="sm">' + stLine + '</span></div>' + warn +
-    '<div class="kpis">' + kpi('Đã gửi', fmtInt(sent), 'KH nhận tin, đã trừ nhóm đối chứng') + kpi('Đã mở', c.opened != null ? fmtInt(c.opened) : '—', c.opened != null && sent ? Math.round(c.opened / sent * 100) + '% số đã gửi' : 'chưa có số') + kpi('Đã dùng voucher', fmtInt(used), 'Quét QR tại quầy qua app nhân viên') + kpi('Tỉ lệ chuyển đổi', pct1(conv), 'Mục tiêu: dùng hết ' + fmtInt(total) + ' lượt') + '</div>' +
+    '<div class="kpis">' + kpi('Đã gửi', fmtInt(sent), 'KH nhận tin, đã trừ nhóm đối chứng') + kpi('Đã mở', c.opened != null ? fmtInt(c.opened) : '—', c.opened != null && sent ? Math.round(c.opened / sent * 100) + '% số đã gửi' : 'chưa có số') + kpi('Đã dùng voucher', fmtInt(used), 'Quét tại quầy: iPOS ở Kite, trang nhân viên quầy ở Tiktak, Resort') + kpi('Tỉ lệ chuyển đổi', pct1(conv), 'Mục tiêu: dùng hết ' + fmtInt(total) + ' lượt') + '</div>' +
     bn('bn-info', 'var(--primary)', exclTxt, (c.excl ? 'Trong đó ' + fmtInt(c.excl) + ' KH chạm trần sau khi chốt tập gửi, trước giờ gửi. ' : 'Các KH này đã nhận 2 ưu đãi khác trong tháng trước khi chốt tập gửi (bộ đếm của Membership, tính cả pop-up quà). ') + 'Thông báo giao dịch không tính vào trần. <button class="lnk" data-go="R-C6">Xem kết quả gửi</button>') +
     '<div class="rv"><div class="card card-pad"><h3>Thông tin chạy</h3><dl class="kv"><dt>Giờ gửi</dt><dd>' + esc(c.m.date) + ' · ' + esc(c.m.time) + '</dd><dt>Kênh</dt><dd>App Push của Membership</dd><dt>Hạn dùng voucher</dt><dd>' + esc(c.wv.expiry) + '</dd><dt>Nhóm đối chứng</dt><dd>' + (st.ctrl ? '10% tập gửi không nhận tin, để tính phần doanh thu tăng thêm' : 'Không có, vì tập gửi dưới 1.000 KH') + '</dd><dt>Khi gửi lỗi</dt><dd>Tự gửi lại phần còn lại một lần; vẫn lỗi thì báo BL Admin</dd><dt>Lượt dùng</dt><dd>' + fmtInt(used) + ' / ' + fmtInt(total) + ' lượt' + (c.soldRej ? ' · ' + fmtInt(c.soldRej) + ' lượt bị từ chối vì hết suất' : '') + '<div class="prog-line mt8"><span style="width:' + Math.min(100, used / total * 100).toFixed(1) + '%;' + (c.soldout ? 'background:var(--error)' : (c.warn80 ? 'background:var(--warning)' : '')) + '"></span></div></dd></dl></div><div>' + historyCard(c) + '</div></div>';
 }
@@ -2006,26 +2076,27 @@ function barChartPct(data, w, h) {
   return '<svg viewBox="0 0 ' + w + ' ' + h + '" width="100%" height="' + h + '" role="img">' + g + '</svg>';
 }
 def('R-G1', {
-  name: 'Tổng hợp toàn tập đoàn (GPCN HO, Phòng MKT)', flow: 'f6', figma: true, roles: ['gpcn'], role: 'gpcn', nav: 'tonghop',
+  name: 'Tổng hợp toàn tập đoàn (GPCN HO, Phòng MKT)', flow: 'f6', figma: true, roles: ['gpcn', 'mkt'], role: 'gpcn', nav: 'tonghop',
   snap: () => snap('approved'),
   view: () => {
+    const gp = S.role === 'gpcn', camp = gp ? 'R-C1' : 'R-E1'; // Phòng MKT không mở danh sách campaign: dẫn sang báo cáo
     const lk = (t, go) => '<button class="lnk sm" ' + (go ? 'data-go="' + go + '"' : 'data-todo="' + esc(t.replace(' →', '').replace('Xem ', '')) + '"') + '>' + t + '</button>';
     const kpi = (dot, l, v, cap, link) => '<div class="kpi"><div class="kl"><i style="background:' + dot + ';border-radius:50%"></i>' + l + '</div><div class="kv2">' + v + '</div><div class="kd">' + cap + '</div><div class="mt8" style="margin-top:4px">' + link + '</div></div>';
     const tile = (bg, col, n, t, d, link) => '<div class="row" style="align-items:flex-start;gap:12px;background:' + bg + ';border-radius:4px;padding:12px;margin-bottom:12px"><b style="font-weight:500;color:' + col + ';min-width:22px;white-space:nowrap">' + n + '</b><div class="sm"><div style="font-size:14px">' + t + '</div><div class="xs muted mt8" style="margin-top:2px">' + d + '</div><div style="margin-top:2px">' + link + '</div></div></div>';
     const chart = barChartPct([['Kite → Tiktak', '160 / 1.200', 13.3, '13,3%'], ['Resort → Tiktak', '26 / 250', 10.4, '10,4%'], ['Kite → Resort', '58 / 760', 7.6, '7,6%'], ['Tiktak → Resort', '16 / 220', 7.3, '7,3%'], ['Tiktak → Kite', '44 / 280', 15.7, '15,7%'], ['Resort → Kite', '8 / 80', 10.0, '10,0%']], 680, 230);
     const rows = [['Tiktak', '1.120', '186 / 1.450 · 12,8%', '96 tr đ', '+41 tr đ'], ['Resort', '820', '74 / 980 · 7,6%', '212 tr đ', '+88 tr đ'], ['Kite', '200', '52 / 360 · 14,4%', '18 tr đ', '+6 tr đ']];
     return crumb([['Re-MKT'], ['Tổng hợp toàn tập đoàn']]) + pageHead('Tổng hợp toàn tập đoàn', 'Bốn chỉ số hiệu quả của chương trình thành viên và bán chéo giữa Kite, Tiktak, Resort, tháng 10. Bấm một chỉ số để xem chi tiết.') + fresh('Dữ liệu tính đến: 3 đơn vị 28/10/2026') +
-      '<div class="kpis">' + kpi('#00913E', 'Thành viên hoạt động 30 ngày', '41%', '5.117 thành viên có ngày mở app trong 30 ngày · mở app hằng ngày (DAU/MAU) 14%', lk('Xem theo đơn vị →')) +
-      kpi('#2563EB', 'Tỉ lệ chuyển đổi bán chéo', '11,2%', '312 trên 2.790 voucher, điểm do đơn vị khác phát đã được dùng', lk('Xem theo cặp đơn vị →')) +
-      kpi('#00913E', 'Doanh thu bán chéo thực tế', '326 tr đ', 'Hoá đơn có dùng voucher, điểm của đơn vị khác · tăng thêm 135 tr đ so với nhóm đối chứng 10%', lk('Xem từng campaign →', 'R-C1')) +
-      kpi('#9B3EE5', 'Tỉ lệ tiêu điểm', '28%', 'Điểm đã tiêu trên điểm đã phát, 12 tháng · cảnh báo khi dưới 20%', lk('Xem điểm chưa tiêu →')) + '</div>' +
+      '<div class="kpis">' + kpi('#00913E', 'Thành viên hoạt động 30 ngày', '41%', '5.117 thành viên có ngày mở app trong 30 ngày · mở app hằng ngày (DAU/MAU) 14%', lk('Xem theo đơn vị →', 'R-E5')) +
+      kpi('#2563EB', 'Tỉ lệ chuyển đổi bán chéo', '11,2%', '312 trên 2.790 voucher, điểm do đơn vị khác phát đã được dùng', lk('Xem theo cặp đơn vị →', 'R-G2')) +
+      kpi('#00913E', 'Doanh thu bán chéo thực tế', '326 tr đ', 'Hoá đơn có dùng voucher, điểm của đơn vị khác · tăng thêm 135 tr đ so với nhóm đối chứng 10%', lk('Xem từng campaign →', camp)) +
+      kpi('#9B3EE5', 'Tỉ lệ tiêu điểm', '28%', 'Điểm đã tiêu trên điểm đã phát, 12 tháng · cảnh báo khi dưới 20%', lk('Xem điểm chưa tiêu →', gp ? 'R-Q1' : 'R-E6')) + '</div>' +
       '<div class="grid2 mb16" style="grid-template-columns:1fr 400px;align-items:start"><div class="ch-card"><h3 style="font-weight:500">Tỉ lệ chuyển đổi bán chéo theo cặp đơn vị</h3><p class="xs muted" style="margin:-6px 0 8px">Voucher, điểm do đơn vị bên trái phát ra, được dùng ở đơn vị bên phải · tháng 10</p>' + chart + '</div>' +
       '<div class="ch-card"><h3 style="font-weight:500">Campaign, quỹ và ưu đãi</h3>' +
       tile('var(--primary-subtle)', 'var(--primary)', '6', 'Campaign đang chạy', 'Kite 3 · Tiktak 2 · Resort 1. Thêm 2 campaign đang chờ duyệt.', lk('Xem lịch campaign →', 'R-A2')) +
       tile('var(--surface-sunken)', 'var(--text)', '62%', 'Quỹ marketing quý 4 đã dùng', 'Đã giữ 180 tr, thực chi 130 tr trên hạn mức 500 tr. Cảnh báo khi chạm 80%.', lk('Xem ngân sách và quỹ →', 'R-E3')) +
-      tile('var(--warning-subtle)', 'var(--warning-ink)', '412 tr', 'Điểm khách còn giữ, chưa tiêu', 'Quy ra tiền theo 1 điểm = 1đ. Ghi là khoản phải trả khách tại Quỹ điểm thưởng VNGroup, bằng số dư quỹ.', lk('Xem theo đơn vị phát điểm →')) +
-      tile('var(--surface-sunken)', 'var(--text)', '63%', 'Voucher chào mừng đã dùng', '7.862 trên 12.480 voucher giảm 10%. Chi phí chỉ phát sinh khi khách dùng.', lk('Xem chi phí ưu đãi →')) + '</div></div>' +
-      '<div class="ch-card"><div class="row mb8"><h3 style="font-weight:500;margin:0">Bán chéo theo đơn vị nhận khách · tháng 10</h3><span class="sp"></span>' + lk('Xem từng campaign →', 'R-C1') + '</div>' +
+      tile('var(--warning-subtle)', 'var(--warning-ink)', '82,4 tr', 'Điểm khách còn giữ, chưa tiêu', 'Quy ra tiền theo 1 điểm = 1đ. Ghi là khoản phải trả khách tại Quỹ điểm thưởng VNGroup, bằng số dư quỹ.', lk('Xem theo đơn vị phát điểm →', 'R-E6')) +
+      tile('var(--surface-sunken)', 'var(--text)', '63%', 'Voucher chào mừng đã dùng', '7.862 trên 12.480 voucher giảm 10%. Chi phí chỉ phát sinh khi khách dùng.', lk('Xem chi phí ưu đãi →', 'R-E6')) + '</div></div>' +
+      '<div class="ch-card"><div class="row mb8"><h3 style="font-weight:500;margin:0">Bán chéo theo đơn vị nhận khách · tháng 10</h3><span class="sp"></span>' + lk('Xem từng campaign →', camp) + '</div>' +
       '<table class="tbl" style="border:0"><thead><tr><th>Đơn vị nhận khách</th><th>Cơ hội phát sinh</th><th style="white-space:normal">Voucher, điểm của đơn vị khác dùng tại đây</th><th style="white-space:normal">Doanh thu hoá đơn có dùng voucher, điểm của đơn vị khác</th><th style="white-space:normal">Tăng thêm so với nhóm đối chứng</th></tr></thead><tbody>' +
       rows.map((r) => '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[2] + '</td><td>' + r[3] + '</td><td style="color:var(--success-ink);font-weight:500" class="xs">' + r[4] + '</td></tr>').join('') +
       '<tr><td class="b">Cả tập đoàn</td><td class="b">2.140</td><td class="b">312 / 2.790 · 11,2%</td><td class="b">326 tr đ</td><td class="b" style="color:var(--success-ink)">+135 tr đ</td></tr></tbody></table></div>';
@@ -2035,8 +2106,9 @@ def('R-G1', {
     self: ['Số hội viên, điểm chưa tiêu, voucher chào mừng lấy từ Membership; không phải số của campaign nhưng MKT cần xem cùng để biết chương trình có đang sống không.'],
     own: ['BL Admin, BL Manager, Finance HO không mở màn này; số của đơn vị mình xem ở các báo cáo R-E2 đến R-E4 theo phân quyền của Re-MKT (câu 10).', 'Ngưỡng cảnh báo: hội viên hoạt động dưới 25%, tiêu điểm dưới 20% (mức ngành); GPCN HO đổi được sau 3 campaign thí điểm, cùng lúc xem lại ngưỡng 50 triệu đồng (câu 7).'],
     decided: [D(13), D(14), D(9), D(10)],
-    diff: ['Ô Điểm khách còn giữ ghi theo câu 14: khoản phải trả khách tại Quỹ điểm thưởng VNGroup, bằng số dư quỹ (Figma: "khoản tập đoàn còn nợ khách, kế toán cần theo dõi"). Chú thích ô Thành viên hoạt động đếm theo ngày có mở app (câu 13; Figma: "mở app hoặc giao dịch").', 'Các liên kết "Xem … →" chưa có màn đích trên Figma: Xem lịch campaign mở R-A2, Xem ngân sách và quỹ mở R-E3, Xem từng campaign mở R-C1; các liên kết khác báo chưa thiết kế.', 'Ô Xem dữ liệu của chưa lọc số trên màn này (Figma chưa vẽ trạng thái lọc). Bản xem thử chưa có vai Phòng MKT nên màn chỉ mở ở vai GPCN HO.'],
-    demo: ['Bấm Xem lịch campaign → hoặc Xem ngân sách và quỹ → để sang R-A2, R-E3.'] },
+    diff: ['Ô Điểm khách còn giữ ghi theo câu 14: khoản phải trả khách tại Quỹ điểm thưởng VNGroup, bằng số dư quỹ (Figma: "khoản tập đoàn còn nợ khách, kế toán cần theo dõi"). Chú thích ô Thành viên hoạt động đếm theo ngày có mở app (câu 13; Figma: "mở app hoặc giao dịch").', 'Các liên kết "Xem … →" chưa có màn đích trên Figma. Bản xem thử nối: Xem theo đơn vị mở R-E5, Xem theo cặp đơn vị mở R-G2, Xem từng campaign mở R-C1 (Phòng MKT: R-E1), Xem điểm chưa tiêu mở R-Q1 (Phòng MKT: R-E6), Xem theo đơn vị phát điểm và Xem chi phí ưu đãi mở R-E6, Xem lịch campaign mở R-A2, Xem ngân sách và quỹ mở R-E3 (nối thêm 28/10/2026).', 'Ô Xem dữ liệu của chưa lọc số trên màn này (Figma chưa vẽ trạng thái lọc).'],
+    pending: [PD(16), PD(17)],
+    demo: ['Bấm Xem lịch campaign → hoặc Xem ngân sách và quỹ → để sang R-A2, R-E3.', 'Bấm Xem điểm chưa tiêu → để mở Quỹ điểm thưởng VNGroup (R-Q1); Xem theo cặp đơn vị → để mở R-G2.', 'Đổi vai Phòng MKT: cùng màn, chỉ xem.'] },
 });
 /* ================= Quỹ và ngân sách (R-F1, R-F2, R-F3, R-F5) — câu 6: Finance HO chỉ xem, không duyệt ================= */
 def('R-F1', {
@@ -2159,8 +2231,8 @@ def('R-F5', {
 });
 ACT.exportX = () => toast('Bản xem thử không tạo file Excel thật.', 'todo');
 /* ================= Báo cáo (R-E1 … R-E4) ================= */
-/* Tab báo cáo theo vai (góp ý 27/10/2026). BL Admin, BL Manager chỉ có Hiệu quả campaign nên không hiện thanh tab */
-const RPT_TABS = [['R-E1', 'Hiệu quả campaign', ['admin', 'manager', 'finance', 'gpcn']], ['R-E3', 'Ngân sách và quỹ', ['finance', 'gpcn']], ['R-E4', 'Số lần KH nhận ưu đãi', ['gpcn']]];
+/* Tab báo cáo theo vai (góp ý 27/10/2026). Thêm 28/10/2026: hai tab Membership R-E5, R-E6 (câu 17) và vai Phòng MKT chỉ xem (câu 16), chưa chốt */
+const RPT_TABS = [['R-E1', 'Hiệu quả campaign', ['admin', 'manager', 'finance', 'gpcn', 'mkt']], ['R-E3', 'Ngân sách và quỹ', ['finance', 'gpcn', 'mkt']], ['R-E4', 'Số lần KH nhận ưu đãi', ['gpcn', 'mkt']], ['R-E5', 'Tăng trưởng thành viên', ['admin', 'manager', 'finance', 'gpcn', 'mkt']], ['R-E6', 'Tích và đổi điểm', ['admin', 'manager', 'finance', 'gpcn', 'mkt']]];
 function rptTabs(s, cur) {
   const t = RPT_TABS.filter((x) => x[2].includes(s.role));
   return t.length < 2 ? '' : '<div class="tabs">' + t.map((x) => '<button class="tab' + (x[0] === cur ? ' act' : '') + '"' + (x[0] === cur ? '' : ' data-go="' + x[0] + '"') + '>' + x[1] + '</button>').join('') + '</div>';
@@ -2232,7 +2304,7 @@ function e1Trend(cur, prev, txt, goodUp) {
   return '<br><span class="dlt ' + (same ? '' : (up === goodUp ? 'up' : 'dn')) + '">' + (same ? '=' : up ? '▲' : '▼') + '</span> ' + txt;
 }
 def('R-E1', {
-  name: 'Hiệu quả remarketing (BL Manager)', flow: 'f5', figma: true, roles: ['admin', 'manager', 'finance', 'gpcn'], role: 'manager', nav: 'bc',
+  name: 'Hiệu quả remarketing (BL Manager)', flow: 'f5', figma: true, roles: ['admin', 'manager', 'finance', 'gpcn', 'mkt'], role: 'manager', nav: 'bc',
   snap: () => snap('approved', (s) => { s.today = '21/11/2026'; }),
   view: (s) => {
     const per = s.ui.e1p || 'q4', fin = s.role === 'finance', own = s.role === 'admin' || s.role === 'manager';
@@ -2271,7 +2343,7 @@ def('R-E1', {
       rptTabs(s, 'R-E1') + kpis + tbl;
   },
   notes: { rules: ['Chỉ số chính là ROI tăng thêm = doanh thu tăng thêm so với nhóm đối chứng chia chi phí thực (brainstorm Mục 5.4 bước 5). ROI theo doanh thu voucher chỉ ghi phụ, vì nó tính cả khách đằng nào cũng mua nên luôn cao hơn thực tế. Chốt ngày 27/10/2026.', 'Sáu ô: ROI tăng thêm, Doanh thu tăng thêm, Chi phí thực (so với dự kiến), Đã gửi, Tỉ lệ dùng voucher, Tắt nhận ưu đãi (mục tiêu dưới 2% mỗi campaign, brainstorm Mục 10). Mỗi ô so với kỳ trước: mũi tên xanh khi tốt lên, đỏ khi xấu đi.', 'Ba ô tiền và ROI chỉ tính campaign đã chốt số có nhóm đối chứng (gửi từ 1.000 KH, Mục 7.2). Đã gửi, Tỉ lệ dùng, Tắt nhận tính cả campaign đang chạy.', 'Kỳ báo cáo theo ngày gửi: quý (so với quý trước) hoặc tháng (so với tháng liền trước). Ô Kỳ thay cho hai báo cáo MKT-03 ROI theo campaign và MKT-08 tổng hợp quý của file concept.', 'Bảng campaign xếp theo ROI tăng thêm; bấm campaign đã chốt số mở Tổng kết (R-E2), campaign đang chạy hoặc đã duyệt mở màn theo dõi (R-C3).', 'Số Halloween Weekend theo R-E2, Back-to-Work T10 lấy chi phí và ROI 2,3x theo R-E3; lượt dùng, doanh thu tăng thêm của Back-to-Work, campaign Kite, Resort và số quý 3 là minh hoạ.'],
-    roles: ['BL Admin, BL Manager: campaign của đơn vị mình (Tiktak), không có thanh tab. BL Admin không bấm được campaign đã chốt số có Tổng kết (R-E2 chỉ mở cho BL Manager, Finance HO, GPCN HO).', 'Finance HO: có thêm tab Ngân sách và quỹ (R-E3, mục Báo cáo mở vào tab này); ở tab này chỉ thấy ba ô tiền và các cột tiền, chỉ bấm được campaign có Tổng kết.', 'GPCN HO: cả tập đoàn, ba tab; lọc đơn vị bằng ô Xem dữ liệu của trên thanh trên, bảng có thêm nhãn Biz Line.'],
+    roles: ['BL Admin, BL Manager: campaign của đơn vị mình (Tiktak); thanh tab có thêm hai báo cáo Membership R-E5, R-E6 (thêm 28/10/2026). BL Admin không bấm được campaign đã chốt số có Tổng kết (R-E2 chỉ mở cho BL Manager, Finance HO, GPCN HO).', 'Finance HO: có thêm tab Ngân sách và quỹ (R-E3, mục Báo cáo mở vào tab này); ở tab này chỉ thấy ba ô tiền và các cột tiền, chỉ bấm được campaign có Tổng kết.', 'GPCN HO: cả tập đoàn, năm tab; lọc đơn vị bằng ô Xem dữ liệu của trên thanh trên, bảng có thêm nhãn Biz Line.', 'Phòng MKT: như GPCN HO, chỉ xem (đề xuất câu 16, chưa chốt).'],
     self: ['Bỏ cột Mã MKT-0x và Đợt P0/P1 khỏi màn; danh mục 8 báo cáo của file concept vẫn ở tài liệu. MKT-01 là R-C3, MKT-07 là R-A2 (mục Lịch marketing), MKT-04 hiệu quả theo hạng nằm ở bảng của R-E2.', 'Bỏ nút Lịch gửi báo cáo của bản trước: brainstorm Re-MKT không có.'],
     decided: [D(10), D(11)],
     diff: ['Figma R-E1 đã vẽ lại ngày 27/10/2026 theo màn này (trước đó là bảng danh sách 8 báo cáo); R-E3, R-E4 trên Figma thêm thanh tab cùng ngày.'],
@@ -2287,11 +2359,11 @@ function barChartV(data, w, h) {
 }
 const kpiBox = (l, v, d, c) => '<div class="kpi"><div class="kl"><i' + (c ? ' style="background:' + c + '"' : '') + '></i>' + l + '</div><div class="kv2">' + v + '</div><div class="kd">' + d + '</div></div>';
 def('R-E2', {
-  name: 'Tổng kết campaign đã chốt số, MKT-02 (BL Manager)', flow: 'f5', figma: true, roles: ['manager', 'finance', 'gpcn'], role: 'manager', nav: 'bc',
+  name: 'Tổng kết campaign đã chốt số, MKT-02 (BL Manager)', flow: 'f5', figma: true, roles: ['manager', 'finance', 'gpcn', 'mkt'], role: 'manager', nav: 'bc',
   snap: () => snap('approved', (s) => { s.today = '21/11/2026'; }),
   view: (s) => {
     const fin = s.role === 'finance';
-    const row1 = '<div class="kpis">' + kpiBox('Đã gửi', '1.008', '1.120 KH khớp bộ lọc · giữ 112 KH (10%) làm nhóm đối chứng') + kpiBox('Nhóm đối chứng', '112', 'KH không nhận tin, để tính doanh thu tăng thêm') + kpiBox('Đã dùng voucher', '268', 'Tỉ lệ dùng 26,6% trên đã gửi') + kpiBox('Thời gian từ nhận đến dùng', '3 ngày', 'Trung vị, tính từ lúc voucher vào ví · 80% lượt dùng trong 5 ngày đầu') + '</div>';
+    const row1 = '<div class="kpis">' + kpiBox('Đã gửi', '1.008', '1.120 KH khớp bộ lọc · giữ 112 KH (10%) làm nhóm đối chứng') + kpiBox('Đã nhận voucher', '712', 'Tỉ lệ nhận 70,6% trên đã gửi · khách bấm nhận ở pop-up quà (câu 40 Membership)') + kpiBox('Đã dùng voucher', '268', 'Tỉ lệ dùng 26,6% trên đã gửi · 37,6% trên đã nhận') + kpiBox('Thời gian từ nhận đến dùng', '3 ngày', 'Trung vị, tính từ lúc khách bấm nhận · 80% lượt dùng trong 5 ngày đầu') + '</div>';
     const row2 = '<div class="kpis">' + kpiBox('Doanh thu hoá đơn có voucher', '156 tr', 'Sau khi trừ giao dịch bị hoàn') + kpiBox('Chi phí thực', '38 tr', 'Dự kiến 45 tr · lệch −15,6%, dưới ngưỡng cảnh báo 20% · trả 7 tr về quỹ') + kpiBox('ROI theo doanh thu voucher', '4,1x', '156 tr doanh thu trên 38 tr chi phí · mục tiêu từ 3x') + kpiBox('ROI tăng thêm so với nhóm đối chứng', '1,5x', 'Nhóm gửi 155 nghìn/KH, nhóm đối chứng 98 nghìn/KH · tăng thêm 57,5 tr') + '</div>';
     const chart = '<div class="ch-card"><h3>Lượt dùng voucher theo ngày</h3>' + barChartV([['31/10', 92], ['01/11', 61], ['02/11', 38], ['03/11', 27], ['04/11', 19], ['05/11', 14], ['06/11', 10], ['07/11', 7]], 560, 220) + '<p class="xs muted" style="margin:6px 0 0">Tổng 268 lượt trong 8 ngày voucher còn hạn. Trục dọc: số lượt dùng mỗi ngày.</p></div>';
     const tbl = '<table class="tbl"><thead><tr><th>Nhóm KH</th>' + (fin ? '' : '<th class="num">Đã gửi</th><th class="num">Đã dùng</th><th class="num">Tỉ lệ dùng</th>') + '<th class="num">Chi phí</th><th class="num">Doanh thu</th></tr></thead><tbody>' +
@@ -2302,16 +2374,16 @@ def('R-E2', {
   },
   notes: { rules: ['Chốt số 7 ngày sau khi voucher hết hạn: trừ giao dịch bị hoàn, ghi chi phí thực, trả ngân sách giữ thừa về quỹ (brainstorm Mục 5.4 bước 4). ROI theo doanh thu hoá đơn có voucher và ROI tăng thêm so với nhóm đối chứng (bước 5).', 'Campaign Halloween Weekend: chi phí dự kiến 45 tr, thực 38 tr, ROI 4,1x lấy từ file concept (bảng Báo cáo quỹ MKT Tiktak Q4/2026). Các số còn lại (1.008 gửi, 268 dùng, 156 tr doanh thu, trung vị 3 ngày, bảng theo hạng) là minh hoạ, tự tính cho khớp ROI 4,1x.', 'Nhóm đối chứng 10% chỉ có khi tập gửi từ 1.000 KH (Mục 7.2); tập nhỏ hơn thì ô ROI tăng thêm ghi Không có nhóm đối chứng.', 'Cảnh báo khi chi phí lệch dự kiến quá 20% (Mục 7.2); campaign này lệch −15,6% nên không cảnh báo.', 'Các số PM nêu ngày 20/10: tỉ lệ dùng voucher, thời gian từ nhận đến dùng, hiệu quả từng campaign, ngân sách theo nhóm KH đều có trên màn.'],
     roles: ['BL Manager: campaign của đơn vị mình. Finance HO: cùng màn, chỉ khối tiền và bảng chi phí. GPCN HO: mọi campaign.'],
-    self: ['Thời gian từ nhận đến dùng: trung vị tính từ lúc voucher vào ví (giờ gửi) đến lượt dùng, kèm tỉ lệ dùng trong 5 ngày đầu.', 'Bảng theo nhóm KH chia theo hạng thành viên (Silver, Gold, Platinum), cùng cách chia ở bước Tập khách hàng.', 'Biểu đồ dùng voucher theo ngày: một dãy, màu chính, không trục kép.'],
-    own: ['Voucher vào Ví voucher của khách ngay khi gửi, tin chỉ có nút Mở ví voucher (câu 5), nên không có bước bấm nhận và không đo tỉ lệ nhận.'],
+    self: ['Thời gian từ nhận đến dùng: trung vị tính từ lúc khách bấm nhận ở pop-up quà đến lượt dùng, kèm tỉ lệ dùng trong 5 ngày đầu.', 'Bảng theo nhóm KH chia theo hạng thành viên (Silver, Gold, Platinum), cùng cách chia ở bước Tập khách hàng.', 'Biểu đồ dùng voucher theo ngày: một dãy, màu chính, không trục kép.'],
+    own: ['Khách nhận ưu đãi theo phương án B (câu 40 của bảng Membership, đã chốt): pop-up quà, khách bấm nhận thì voucher mới vào Ví; tin push chỉ có nút Mở ví voucher (câu 5). Tỉ lệ nhận = đã nhận / đã gửi.'],
     decided: [D(11), D(5)],
-    diff: ['Bỏ ô Đã nhận voucher (Figma: 712, tỉ lệ nhận 70,6%) vì không có bước bấm nhận; thay bằng ô Nhóm đối chứng 112 KH (1.120 khớp − 1.008 đã gửi).'],
+    diff: ['Ô Đã nhận voucher giữ như Figma (712, tỉ lệ nhận 70,6%) theo phương án B; nhóm đối chứng 112 KH (1.120 khớp − 1.008 đã gửi) ghi ở ô Đã gửi.'],
     demo: ['Đổi vai Finance HO: chỉ còn khối tiền và bảng chi phí.'] },
 });
 
 /* ---------- R-E3 ngân sách và quỹ ---------- */
 def('R-E3', {
-  name: 'Ngân sách và quỹ MKT, MKT-05 (Finance HO)', flow: 'f5', figma: true, roles: ['finance', 'gpcn'], role: 'finance', nav: 'bc',
+  name: 'Ngân sách và quỹ MKT, MKT-05 (Finance HO)', flow: 'f5', figma: true, roles: ['finance', 'gpcn', 'mkt'], role: 'finance', nav: 'bc',
   snap: () => snap('approved'),
   view: (s) => {
     const t = fundById('tiktak'); const sp = spentNow(t); const rs = reserved(t); const av = avail(t);
@@ -2335,7 +2407,7 @@ def('R-E3', {
 
 /* ---------- R-E4 số lần KH nhận ưu đãi ---------- */
 def('R-E4', {
-  name: 'Số lần KH nhận ưu đãi, MKT-06 (GPCN HO)', flow: 'f5', figma: true, roles: ['gpcn'], role: 'gpcn', nav: 'bc',
+  name: 'Số lần KH nhận ưu đãi, MKT-06 (GPCN HO)', flow: 'f5', figma: true, roles: ['gpcn', 'mkt'], role: 'gpcn', nav: 'bc',
   snap: () => snap('running', (s) => { s.today = '30/11/2026'; }),
   view: (s) => {
     const st = sendStats(s.camps.bf); const cut = 420 + 1720 + st.capped;
@@ -2352,6 +2424,490 @@ def('R-E4', {
     diff: ['Số theo campaign mẫu xuyên suốt (Figma: 8.420 đồng ý nhận; 5.960 nhận ít nhất 1 = 70,8%; 1.310 chạm trần = 15,6%; 2.140 lượt bị loại; 67 tắt nhận; cột biểu đồ 2.460 / 4.650 / 1.310). Black Friday ghi đã gửi 7.412, bị loại 312. Mức ưu tiên Thường thay cho Trung bình (câu 1).', 'Bỏ nút Đổi trần gửi của Figma (trần cố định theo câu 4).', 'Bấm tên campaign trong bảng mở màn Kết quả gửi và phân xử trần (R-C6, chưa có trên Figma). BL Manager không mở màn này (tab Số lần KH nhận ưu đãi chỉ có ở GPCN HO).'],
     demo: ['Đổi ô Xem dữ liệu của sang Kite để lọc bảng.', 'Bấm tên một campaign trong bảng để mở màn Kết quả gửi và phân xử trần (R-C6).'] },
 });
+/* ================= Đăng nhập, vai trò, thông báo (R-L1, R-L2, R-N1) — câu 15, 16, thêm 28/10/2026, chưa chốt ================= */
+function loginLogo() { return '<div class="lg-logo"><span class="v">V</span>VNG 360 · Re-MKT</div>'; }
+const ALL_ROLES = ['admin', 'manager', 'finance', 'gpcn', 'mkt'];
+def('R-L1', {
+  name: 'Đăng nhập bằng tài khoản công ty', flow: 'f8', figma: false, bare: true, roles: ALL_ROLES, role: 'admin', nav: '',
+  snap: () => snap('slot'),
+  view: (s) => '<div class="login">' + loginLogo() + '<h1>Đăng nhập</h1><p>Dùng tài khoản công ty VNGroup, cùng tài khoản đăng nhập CRM Hub. Re-MKT không có tự đăng ký.</p>' +
+    '<button class="btn btn-p" data-act="login">Đăng nhập bằng tài khoản công ty</button>' +
+    '<p class="sm muted" style="margin:16px 0 0">Tài khoản do IT cấp. Vai trò ở Re-MKT do Manager đơn vị hoặc GPCN HO cấp ở CRM Hub, mục Người dùng và quyền. Máy dùng chung tự đăng xuất khi không thao tác.</p>' +
+    '<div class="hr"></div><div class="xs muted">Bản xem thử vào thẳng theo vai đang chọn trên thanh công cụ: ' + esc(ROLES[s.role].name) + '. <button class="lnk xs" data-go="R-L2">Xem tài khoản chưa có vai trò</button></div></div>',
+  notes: { src: 'đề xuất câu 15 (thêm 28/10/2026, chưa chốt); màn M1 của CRM Hub (đăng nhập bằng tài khoản công ty, SRS FR-crm-hub-071)',
+    rules: ['Một tài khoản công ty cho hai web nội bộ CRM Hub và Re-MKT; người nghỉ việc chỉ khoá ở một chỗ.', 'Câu chữ theo màn M1 của CRM Hub để hai web giống nhau.'],
+    pending: [PD(15)],
+    roles: ['Mọi người dùng nội bộ của Re-MKT: BL Admin, BL Manager, Finance HO, GPCN HO, Phòng MKT.'],
+    own: ['Đăng nhập xong vào trang đầu của vai: BL Admin vào Lịch marketing, BL Manager vào Duyệt, Finance HO vào Quỹ và ngân sách, GPCN HO vào Lịch toàn tập đoàn, Phòng MKT vào Tổng hợp toàn tập đoàn.'],
+    demo: ['Đổi vai trên thanh công cụ rồi bấm Đăng nhập bằng tài khoản công ty.', 'Bấm Xem tài khoản chưa có vai trò để mở R-L2.', 'Trong app, bấm Đăng xuất ở chân thanh bên để quay lại màn này.'] },
+});
+ACT.login = () => { toast('Đã đăng nhập với vai ' + ROLES[S.role].name + '.', 'ok'); go(ROLES[S.role].home); };
+def('R-L2', {
+  name: 'Tài khoản chưa có vai trò ở Re-MKT', flow: 'f8', figma: false, bare: true, roles: ALL_ROLES, role: 'admin', nav: '',
+  snap: () => snap('slot'),
+  view: () => '<div class="login"><div class="lg-ic">' + IC.lock + '</div><h1>Tài khoản chưa có vai trò ở Re-MKT</h1><p>Tài khoản <b>minh.tran@vngroup.vn</b> đã đăng nhập được nhưng chưa được cấp vai trò nào ở web Re-MKT nên chưa dùng được.</p>' +
+    '<div class="card card-pad mb16" style="background:var(--bg-subtle)"><div class="b mb8">Nhờ ai cấp vai trò</div><div class="sm">Vai trò trong đơn vị (BL Admin, BL Manager): Manager đơn vị cấp.<br>Vai trò toàn tập đoàn (Finance HO, GPCN HO, Phòng MKT): GPCN HO cấp.<br>Cả hai cấp ở CRM Hub, mục Người dùng và quyền.</div></div>' +
+    '<a class="btn btn-p" href="' + CRM_URL + '#D1" target="_blank" rel="noopener">Mở CRM Hub · Người dùng và quyền</a><button class="btn btn-s mt12" data-go="R-L1">Đăng nhập bằng tài khoản khác</button></div>',
+  notes: { src: 'đề xuất câu 15 (thêm 28/10/2026, chưa chốt); màn M2 của CRM Hub (tài khoản chưa có vai trò, SRS E-crm-hub-019)',
+    rules: ['Tài khoản công ty đăng nhập được nhưng chưa có vai trò Re-MKT thì không vào được màn nào, chỉ thấy hướng dẫn nhờ cấp vai trò.'],
+    pending: [PD(15)],
+    roles: ['Người có tài khoản công ty, chưa được cấp vai trò Re-MKT.'],
+    own: ['Nút Mở CRM Hub mở màn Người dùng và quyền (D1) của bản xem thử CRM Hub ở thẻ mới; màn D2 của CRM Hub có phần Vai trò ở web Re-MKT.'],
+    demo: ['Bấm Mở CRM Hub · Người dùng và quyền: mở bản xem thử CRM Hub ở thẻ mới.'] },
+});
+
+/* Thông báo theo vai, tính từ trạng thái của bản xem thử; chỉ hiện thông báo có ngày từ mốc xem thử trở về trước */
+function notifs(s) {
+  const c = s.camps.bf, slot = slotById('bf'), L = [];
+  const add = (id, roles, when, t, d, to) => { if (roles.indexOf(s.role) >= 0 && pDate(when) <= pDate(s.today)) L.push({ id, when, t, d, to }); };
+  const after = ['Đã duyệt', 'Đang chạy', 'Tạm dừng', 'Đã kết thúc', 'Đã chốt số'];
+  if (slot.status === 'Chờ duyệt') add('slot-wait', ['gpcn'], '12/10/2026 · 10:05', 'Tiktak đăng ký thời điểm Black Friday 29/11/2026', 'Chờ GPCN HO duyệt và gán mức ưu tiên.', 'R-A5');
+  if (['Đã duyệt', 'Đã có campaign'].includes(slot.status)) add('slot-ok', ['admin', 'manager'], '13/10/2026 · 09:12', 'GPCN HO đã duyệt thời điểm Black Friday 29/11/2026', 'Mức ưu tiên ' + (slot.priority || 'Cao') + '. Hạn chót gửi duyệt campaign: ' + c.deadline + '.', 'R-A1');
+  if (slot.status === 'Tự nhả') add('slot-free', ['admin', 'manager'], s.today, 'Thời điểm Black Friday 29/11/2026 của Tiktak đã tự nhả', 'Campaign chưa đủ các cấp duyệt trước hạn. Muốn chạy phải đăng ký lại.', 'R-A1');
+  if (c.status === 'Chờ BL Manager duyệt') add('c-blm', ['manager'], (c.sentAt || s.today) + ' · 16:40', 'BL Admin gửi duyệt ' + c.name, 'Duyệt Tập KH và Nội dung trong 2 ngày làm việc.', 'R-B1');
+  if (c.status === 'Chờ GPCN duyệt') add('c-gpcn', ['gpcn'], (c.appr.blm || s.today) + ' · 15:20', 'BL Manager đã duyệt ' + c.name + ', cần GPCN HO duyệt thêm', gpcnWhy(c) + '.', 'R-B6');
+  if (c.returned) add('c-ret', ['admin'], c.returned.date + ' · 11:30', c.returned.by + ' trả ' + c.name + ' về Nháp', c.returned.reason || 'Xem lý do ở chi tiết campaign.', 'R-C2');
+  if (c.appr.blm && after.includes(c.status)) add('c-ok', ['admin'], (c.appr.gpcn || c.appr.blm) + ' · 14:05', c.name + ' đã được duyệt', 'Hệ thống tự gửi lúc ' + c.m.time + ' · ' + c.m.date + '.', 'R-C2');
+  if (c.warn80 && !c.soldout) add('c-80', ['admin', 'manager', 'finance'], s.today + ' · 15:00', c.name + ' đã dùng 80% tổng lượt', 'Đã dùng ' + fmtInt(c.used) + '/' + fmtInt(totalUses(c)) + ' lượt.', s.role === 'finance' ? 'R-F1' : 'R-C3');
+  if (c.soldout) add('c-100', ['admin', 'manager', 'finance'], s.today + ' · 17:00', c.name + ' đã dùng hết lượt', 'Tại quầy, lượt tiếp theo nhận “Ưu đãi này đã hết suất.” BL Manager xin tăng lượt được.', s.role === 'finance' ? 'R-F1' : 'R-C3');
+  s.funds.forEach((f) => { if (avail(f) < f.limit * 0.2) add('f-' + f.id, ['finance'], s.today + ' · 08:00', f.name + ' còn dưới 20% hạn mức quý', 'Còn khả dụng ' + money(avail(f) * 1e6) + ' trên hạn mức ' + money(f.limit * 1e6) + '.', 'R-F1'); });
+  /* Membership (câu 17, chưa chốt) */
+  s.mem.offers.filter((o) => o.bl === 'Tiktak' && o.status === 'Chờ BL Manager').forEach((o) => add('k-wait-' + o.id, ['manager'], (o.sentAt || s.today) + ' · 10:20', 'BL Admin gửi ưu đãi đổi điểm “' + o.name + '”', 'Chờ BL Manager cho hiện trên app.', 'R-K1'));
+  const lp = memHeld(s, 'Tiktak') / s.mem.limits.Tiktak;
+  if (lp >= 0.5) add('k-lim', ['admin', 'manager'], '27/10/2026 · 08:00', 'Hạn mức chi đổi điểm Q4/2026 của Tiktak đã dùng ' + Math.round(lp * 100) + '%', 'Đã giữ ' + vnd(memHeld(s, 'Tiktak')) + ' trên ' + vnd(s.mem.limits.Tiktak) + '. Ưu đãi mới phải nằm trong phần còn lại.', 'R-K1');
+  if (!s.mem.nextSaved) add('k-next', ['finance'], '28/10/2026 · 08:00', 'Chưa nhập hạn mức chi đổi điểm Q1/2027', 'Nhập trước 31/12/2026 theo số Ban TCKT đã duyệt.', 'R-K3');
+  const open = s.mem.settle['10/2026'].filter((r) => r.st !== 'Đã chuyển').length;
+  if (open) add('q-settle', ['finance', 'gpcn'], '01/11/2026 · 07:00', 'Đối soát quỹ điểm tháng 10/2026 đã có số', open + ' đơn vị chưa xong: chờ xác nhận hoặc chờ chuyển tiền.', 'R-Q2');
+  add('m-month', ['mkt', 'gpcn'], '01/11/2026 · 07:00', 'Số liệu tháng 10/2026 đã chốt', 'Tổng hợp toàn tập đoàn và báo cáo Membership đã có số tháng 10.', 'R-G1');
+  add('m-hw', ['mkt', 'manager'], '14/11/2026 · 00:05', 'Halloween Weekend đã chốt số', 'ROI tăng thêm 1,5x; thực chi 38 tr trên dự kiến 45 tr.', 'R-E2');
+  return L.sort((a, b) => pDate(b.when) - pDate(a.when));
+}
+const unreadN = (s) => notifs(s).filter((n) => !s.read[n.id]).length;
+function notifBell() { const n = unreadN(S); return '<button class="bell' + (cur === 'R-N1' ? ' act' : '') + '" data-go="R-N1" title="Thông báo" aria-label="Thông báo' + (n ? ', ' + n + ' chưa đọc' : '') + '">' + IC.bell + (n ? '<span class="bdg">' + n + '</span>' : '') + '</button>'; }
+def('R-N1', {
+  name: 'Thông báo', flow: 'f8', figma: false, roles: ALL_ROLES, role: 'manager', nav: '',
+  snap: () => snap('blm'),
+  view: (s) => {
+    const all = notifs(s), only = s.ui.ntUnread, list = all.filter((n) => !only || !s.read[n.id]), nU = unreadN(s);
+    const item = (n) => '<button class="nt' + (s.read[n.id] ? '' : ' unread') + '" data-act="ntOpen" data-arg="' + n.id + '"><span class="ndot"></span><span style="flex:1"><b>' + esc(n.t) + '</b><span class="sm muted" style="display:block;margin-top:2px">' + esc(n.d) + '</span></span><span class="xs subtle" style="white-space:nowrap">' + esc(n.when) + '</span></button>';
+    return newMark('đề xuất câu 15 (thêm 28/10/2026); file concept Re-MKT (Notification & Reminder: báo khi HO duyệt hoặc từ chối, nhắc trước dịp); brainstorm Re-MKT D13, D14 (cảnh báo 80% lượt, quỹ dưới 20%)') + crumb([['Thông báo']]) +
+      pageHead('Thông báo', 'Việc cần làm và cảnh báo gửi tới ' + ROLES[s.role].name + ' trên web Re-MKT.', '<button class="btn btn-s" data-act="ntAll"' + (nU ? '' : ' disabled') + '>Đánh dấu đã đọc tất cả</button>') +
+      '<div class="chips"><button class="chipf' + (only ? '' : ' act') + '" data-act="setUi" data-arg="ntUnread:">Tất cả (' + all.length + ')</button><button class="chipf' + (only ? ' act' : '') + '" data-act="setUi" data-arg="ntUnread:1">Chưa đọc (' + nU + ')</button></div>' +
+      (list.length ? '<div class="card" style="overflow:hidden">' + list.map(item).join('') + '</div>' : '<div class="card card-pad" style="text-align:center;padding:40px 16px"><b>Không có thông báo nào' + (only ? ' chưa đọc' : '') + '</b><p class="sm muted" style="margin:6px 0 0">Thông báo mới hiện ở đây và trên chuông của thanh trên.</p></div>');
+  },
+  notes: { src: 'file concept Re-MKT (Notification & Reminder); brainstorm Re-MKT Mục 5, D13, D14; đề xuất câu 15 (thêm 28/10/2026, chưa chốt)',
+    rules: ['Chuông trên thanh trên ở mọi màn, có số thông báo chưa đọc.', 'Mỗi vai nhận đúng việc của mình: BL Admin (kết quả duyệt, trả về Nháp, hạn mức đổi điểm), BL Manager (campaign và ưu đãi đổi điểm chờ duyệt), Finance HO (quỹ dưới 20%, 80% lượt, hạn mức đổi điểm quý sau, đối soát quỹ điểm), GPCN HO (thời điểm và ngân sách chờ duyệt, đối soát quỹ điểm), Phòng MKT (số liệu tháng đã chốt, campaign đã chốt số).', 'Cảnh báo 80% lượt và quỹ dưới 20% theo D13, D14 của brainstorm Re-MKT.'],
+    pending: [PD(15), PD(16)],
+    roles: ['Mọi vai; danh sách khác nhau theo vai.'],
+    self: ['Bấm một thông báo thì đánh dấu đã đọc và mở màn liên quan.', 'Thông báo chỉ ở trong web; tài liệu chưa nói có gửi email công ty hay không.'],
+    demo: ['Mở R-N1 ở vai BL Manager: có thông báo BL Admin gửi duyệt Black Friday.', 'Đổi vai Finance HO: có thông báo chưa nhập hạn mức chi đổi điểm Q1/2027 và đối soát quỹ điểm tháng 10.', 'Chọn Chưa đọc để lọc; bấm Đánh dấu đã đọc tất cả để tắt số trên chuông.'] },
+});
+ACT.ntOpen = (id) => { const n = notifs(S).find((x) => x.id === id); S.read[id] = true; if (n) go(n.to); };
+ACT.ntAll = () => { notifs(S).forEach((n) => { S.read[n.id] = true; }); toast('Đã đánh dấu đã đọc tất cả.'); render(); };
+
+/* ================= Membership trên web Re-MKT (R-K1 … R-S1, R-E5, R-E6) — câu 17, thêm 28/10/2026, chưa chốt ================= */
+const MEM_UNITS = ['Tiktak', 'Kite', 'Resort'];
+const memOwn = (s) => s.role === 'admin' || s.role === 'manager';
+const memOk = (s, bl) => (memOwn(s) ? bl === 'Tiktak' : unitOk(bl));
+/* Danh mục đổi điểm: tên, số điểm, số suất còn lấy đúng danh mục M5 của bản xem thử Membership; giá trị ưu đãi, ưu đãi Nháp, Hết suất, Đã ẩn là minh hoạ */
+function memState() {
+  const all = { Silver: true, Gold: true, Platinum: true };
+  const o = (x) => Object.assign({ pct: '', cap: '', amount: '', minOrder: '', gift: '', giftValue: '', tiers: Object.assign({}, all), per: '1', days: '30', from: '01/10/2026', to: '31/12/2026', redeemed: 0, used: 0, sentAt: '' }, x);
+  return {
+    offers: [
+      o({ id: 'tiktakday', bl: 'Tiktak', name: '1 ngày làm việc tại Tiktak', form: 'gift', gift: '1 ngày làm việc', giftValue: '250.000', pts: '200.000', total: '30', redeemed: 10, used: 7, place: 'Tiktak, mọi cơ sở', status: 'Đang hiện', by: 'BL Manager Tiktak · 28/09/2026' }),
+      o({ id: 'hop', bl: 'Tiktak', name: '1 giờ phòng họp nhỏ', form: 'gift', gift: '1 giờ phòng họp nhỏ', giftValue: '150.000', pts: '120.000', total: '20', redeemed: 5, used: 3, place: 'Tiktak, mọi cơ sở', status: 'Đang hiện', by: 'BL Manager Tiktak · 28/09/2026' }),
+      o({ id: 'goi20', bl: 'Tiktak', name: 'Giảm 20% gói tháng', form: 'pct', pct: '20', cap: '500.000', pts: '300.000', tiers: { Silver: false, Gold: true, Platinum: true }, total: '10', from: '', place: 'Tiktak, mọi cơ sở', status: 'Nháp', by: 'BL Admin Tiktak · 27/10/2026' }),
+      o({ id: 'ngay100', bl: 'Tiktak', name: 'Giảm 100.000đ thuê chỗ theo ngày', form: 'amount', amount: '100.000', minOrder: '200.000', pts: '80.000', total: '25', redeemed: 25, used: 22, place: 'Tiktak, mọi cơ sở', status: 'Hết suất', by: 'BL Manager Tiktak · 28/09/2026' }),
+      o({ id: 'cafe', bl: 'Kite', name: 'Cà phê miễn phí', form: 'gift', gift: '1 ly đồ uống bất kỳ', giftValue: '55.000', pts: '50.000', total: '180', redeemed: 144, used: 131, place: 'Kite Coffee, mọi chi nhánh', status: 'Đang hiện', by: 'BL Manager Kite · 29/09/2026' }),
+      o({ id: 'bacxiu', bl: 'Kite', name: 'Bạc xỉu miễn phí', form: 'gift', gift: '1 ly bạc xỉu', giftValue: '45.000', pts: '60.000', total: '44', redeemed: 20, used: 18, place: 'Kite Coffee, mọi chi nhánh', status: 'Đang hiện', by: 'BL Manager Kite · 29/09/2026' }),
+      o({ id: 'giam30', bl: 'Kite', name: 'Giảm 30% đồ uống', form: 'pct', pct: '30', cap: '30.000', pts: '40.000', total: '40', redeemed: 39, used: 35, place: 'Kite Coffee, mọi chi nhánh', status: 'Đang hiện', by: 'BL Manager Kite · 29/09/2026' }),
+      o({ id: 'breakfast', bl: 'Resort', name: 'Bữa sáng cho 2 người tại Resort', form: 'gift', gift: 'Bữa sáng cho 2 người', giftValue: '300.000', pts: '246.000', total: '20', redeemed: 10, used: 8, place: 'Hospitality Resort', status: 'Đang hiện', by: 'BL Manager Resort · 30/09/2026' }),
+      o({ id: 'resort250', bl: 'Resort', name: 'Voucher 250.000đ tại Resort', form: 'amount', amount: '250.000', minOrder: '', pts: '250.000', total: '10', redeemed: 5, used: 4, place: 'Hospitality Resort', status: 'Đang hiện', by: 'BL Manager Resort · 30/09/2026' }),
+    ],
+    draft: null,
+    /* Hạn mức chi đổi điểm Q4/2026 (đồng): phần đơn vị bù cho ưu đãi đổi điểm; minh hoạ */
+    limits: { Tiktak: 5000000, Kite: 8000000, Resort: 10000000 },
+    next: { Tiktak: '', Kite: '', Resort: '', doc: '', docDate: '' }, nextSaved: false,
+    /* Đối soát quỹ điểm theo tháng (triệu đồng): rev = khách trả bằng tiền, pay = nộp quỹ 2%, recv = quỹ trả cho điểm khách tiêu tại đơn vị */
+    settle: {
+      '10/2026': [{ bl: 'Kite', rev: 360, pay: 7.2, recv: 2.2, st: 'Đã chuyển', at: '05/11/2026' }, { bl: 'Tiktak', rev: 260, pay: 5.2, recv: 2.4, st: 'Đã xác nhận', at: '' }, { bl: 'Resort', rev: 160, pay: 3.2, recv: 1.6, st: 'Chờ đơn vị xác nhận', at: '' }],
+      '09/2026': [{ bl: 'Kite', rev: 300, pay: 6, recv: 1.2, st: 'Đã chuyển', at: '06/10/2026' }, { bl: 'Tiktak', rev: 210, pay: 4.2, recv: 2.8, st: 'Đã chuyển', at: '07/10/2026' }, { bl: 'Resort', rev: 120, pay: 2.4, recv: 2.6, st: 'Đã chuyển', at: '08/10/2026' }],
+    },
+    cfg: cfgBase(), cfgDraft: cfgBase(), cfgNext: null,
+    cfgLog: ['28/10/2026 · GPCN HO · Tỉ lệ tích đổi từ 10% sang 2%, như nhau ở Kite, Tiktak, Resort (thông tin 28/10/2026)', '27/10/2026 · GPCN HO · Hạn điểm đổi từ “12 tháng, tự gia hạn” sang “12 tháng theo từng đợt tích” (Membership câu 28)', '26/10/2026 · GPCN HO · Đặt cấu hình ra mắt theo bảng chốt Membership: tích 10%, Gold từ 50.000, Platinum từ 200.000 điểm (câu 26); thưởng lần đầu 5.000 điểm (câu 33); xác nhận trên app từ 200.000 điểm (câu 21)'],
+  };
+}
+function cfgBase() { return { rate: '2', gold: '50.000', plat: '200.000', months: '12', remind: '30', first: '5.000', firstMin: '100.000', bday: '2', confirmAt: '200.000', eff: '' }; }
+
+/* ---------- Danh mục đổi điểm: phần đơn vị bù = giá trị ưu đãi − số điểm khách trả (1 điểm = 1đ) ---------- */
+const K_ST = { 'Nháp': 't-neu', 'Chờ BL Manager': 't-warn', 'Đang hiện': 't-ok', 'Hết suất': 't-err', 'Đã ẩn': 't-neu' };
+const K_FORMS = [['pct', 'Giảm %'], ['amount', 'Giảm số tiền'], ['gift', 'Tặng món']];
+function kValue(o) { return o.form === 'pct' ? num(o.cap) : o.form === 'amount' ? num(o.amount) : num(o.giftValue); }
+function kGap(o) { return Math.max(0, kValue(o) - num(o.pts)); }
+/* Đang hiện, Hết suất: giữ phần bù cho mọi suất; Đã ẩn: chỉ giữ cho suất khách đã đổi; Nháp, Chờ BL Manager: chưa giữ */
+function kHeldOf(o) { return o.status === 'Đang hiện' || o.status === 'Hết suất' ? kGap(o) * num(o.total) : (o.status === 'Đã ẩn' ? kGap(o) * o.redeemed : 0); }
+function memHeld(s, bl, exceptId) { return s.mem.offers.filter((o) => o.bl === bl && o.id !== exceptId).reduce((a, o) => a + kHeldOf(o), 0); }
+function kOfferText(o) { return o.form === 'pct' ? 'Giảm ' + num(o.pct) + '%, tối đa ' + vnd(num(o.cap)) : o.form === 'amount' ? 'Giảm ' + vnd(num(o.amount)) + (num(o.minOrder) ? ' cho đơn từ ' + vnd(num(o.minOrder)) : '') : 'Tặng ' + o.gift; }
+function kTiers(o) { const t = TIERS3.filter((x) => o.tiers[x]); return t.length === 3 ? 'Mọi hạng' : t.join(', ') || '—'; }
+function kEdit(s, id) { const o = s.mem.offers.find((x) => x.id === id); s.mem.draft = o ? JSON.parse(JSON.stringify(o)) : kBlank(); }
+function kBlank() { return { id: '', bl: 'Tiktak', name: '', form: 'amount', pct: '', cap: '', amount: '', minOrder: '', gift: '', giftValue: '', pts: '', tiers: { Silver: true, Gold: true, Platinum: true }, total: '', per: '1', days: '30', from: '', to: '31/12/2026', place: 'Tiktak, mọi cơ sở', redeemed: 0, used: 0, status: 'Nháp', by: '', sentAt: '' }; }
+function kMissing(d) {
+  const m = [];
+  if (!d.name.trim()) m.push('tên ưu đãi');
+  if (d.form === 'pct' && (!(num(d.pct) > 0 && num(d.pct) <= 90) || !num(d.cap))) m.push('mức giảm và mức giảm tối đa');
+  if (d.form === 'amount' && !num(d.amount)) m.push('số tiền giảm');
+  if (d.form === 'gift' && (!d.gift.trim() || !num(d.giftValue))) m.push('món tặng và giá trị món');
+  if (!num(d.pts)) m.push('số điểm cần');
+  if (!TIERS3.some((t) => d.tiers[t])) m.push('hạng được đổi');
+  if (!num(d.total)) m.push('tổng số suất');
+  if (!num(d.per)) m.push('số lần mỗi thành viên');
+  if (!num(d.days)) m.push('hạn dùng sau khi đổi');
+  if (!pDate(d.to)) m.push('ngày ngừng hiện');
+  return m;
+}
+def('R-K1', {
+  name: 'Danh mục đổi điểm của đơn vị', flow: 'f7', figma: false, roles: ['admin', 'manager', 'gpcn'], role: 'admin', nav: 'mem-dm',
+  snap: () => snap('approved', (s) => { s.today = '28/10/2026'; }),
+  view: (s) => {
+    const own = memOwn(s), ch = s.ui.kchip || 'all';
+    const list = s.mem.offers.filter((o) => memOk(s, o.bl));
+    const rows = list.filter((o) => ch === 'all' || o.status === ch);
+    const units = own ? ['Tiktak'] : MEM_UNITS.filter(unitOk);
+    const live = list.filter((o) => o.status === 'Đang hiện');
+    const red = list.reduce((a, o) => a + o.redeemed, 0), used = list.reduce((a, o) => a + o.used, 0), pts = list.reduce((a, o) => a + o.redeemed * num(o.pts), 0);
+    const limBox = (bl) => { const lim = s.mem.limits[bl], held = memHeld(s, bl), pc = held / lim; return '<div class="kpi"><div class="kl"><i></i>Hạn mức chi đổi điểm Q4 · ' + bl + '</div><div class="kv2">' + vnd(lim - held) + '</div><div class="kd">còn lại · đã giữ ' + vnd(held) + ' trên ' + vnd(lim) + ' (' + Math.round(pc * 100) + '%)</div><div class="prog-line mt8"><span style="width:' + Math.min(100, pc * 100).toFixed(1) + '%' + (pc >= 0.8 ? ';background:var(--warning)' : '') + '"></span></div></div>'; };
+    const boxes = [kpiBox('Đang hiện trên app', fmtInt(live.length), 'ưu đãi trong danh mục đổi điểm', '#00913E'), kpiBox('Đã đổi', fmtInt(red), fmtInt(used) + ' voucher khách đã dùng tại quầy'), kpiBox('Điểm khách đã đổi', fmtInt(pts), 'Quỹ điểm trả đơn vị số điểm này khi khách dùng voucher (1 điểm = 1đ)')].concat(units.map(limBox));
+    const near = list.filter((o) => o.status === 'Đang hiện' && num(o.total) - o.redeemed <= num(o.total) * 0.2);
+    const warn = near.length ? '<div class="banner bn-warn"><span class="dot" style="background:var(--warning)"></span><div><div class="bt">' + near.length + ' ưu đãi sắp hết suất</div><p class="sm">' + near.map((o) => esc(o.name) + ' còn ' + fmtInt(num(o.total) - o.redeemed) + ' suất').join(' · ') + '. Hết suất thì app hiện “Đã hết suất”; muốn thêm suất thì BL Manager sửa tổng số suất trong hạn mức còn lại.</p></div></div>' : '';
+    const cnt = (k) => list.filter((o) => o.status === k).length;
+    const chips = '<div class="chips">' + [['all', 'Tất cả', list.length]].concat(Object.keys(K_ST).map((k) => [k, k, cnt(k)])).map((c) => '<button class="chipf' + (ch === c[0] ? ' act' : '') + '" data-act="setUi" data-arg="kchip:' + (c[0] === 'all' ? '' : c[0]) + '">' + c[1] + ' (' + c[2] + ')</button>').join('') + '</div>';
+    const tbl = rows.length ? '<table class="tbl"><thead><tr><th>Ưu đãi</th>' + (own ? '' : '<th>Đơn vị</th>') + '<th class="num">Điểm cần</th><th>Hạng được đổi</th><th class="num">Đã đổi / tổng suất</th><th class="num">Đã dùng</th><th>Hiện trên app</th><th class="num">Đơn vị bù mỗi suất</th><th>Trạng thái</th></tr></thead><tbody>' +
+      rows.map((o) => '<tr class="clk" data-act="kOpen" data-arg="' + o.id + '"><td><span class="lnk">' + esc(o.name) + '</span><div class="xs muted">' + esc(kOfferText(o)) + ' · ' + esc(o.place) + '</div></td>' + (own ? '' : '<td><span class="chip-bl">' + o.bl + '</span></td>') +
+        '<td class="num">' + fmtInt(num(o.pts)) + '</td><td>' + kTiers(o) + '</td><td class="num">' + fmtInt(o.redeemed) + ' / ' + fmtInt(num(o.total)) + '</td><td class="num">' + fmtInt(o.used) + '</td><td class="sm">' + (o.from ? o.from.slice(0, 5) + ' – ' : 'đến ') + esc(o.to) + '</td><td class="num">' + (kGap(o) ? vnd(kGap(o)) : '<span class="muted">0đ</span>') + '</td><td>' + tag(o.status, K_ST[o.status]) + '</td></tr>').join('') +
+      '</tbody></table><div class="tbl-note">Đơn vị bù mỗi suất = giá trị ưu đãi − số điểm khách trả (1 điểm = 1đ). Khi khách dùng voucher, Quỹ điểm thưởng VNGroup trả đơn vị đúng số điểm khách đã đổi; phần bù do đơn vị chịu, giữ trong hạn mức chi đổi điểm theo quý từ lúc ưu đãi được cho hiện. Hết suất hoặc ẩn: khách đã đổi vẫn dùng voucher đến hạn.</div>'
+      : '<div class="card card-pad" style="text-align:center;padding:40px 16px"><b>Không có ưu đãi nào ở trạng thái này</b><p class="sm muted" style="margin:6px 0 0">Chọn Tất cả để xem lại danh mục.</p></div>';
+    return newMark('đề xuất câu 17 (thêm 28/10/2026, chưa chốt); Membership câu 35 (3 đến 5 ưu đãi mỗi đơn vị, Manager đơn vị đề xuất, Ban TCKT duyệt hạn mức theo quý); brainstorm Membership P0 (công cụ để Biz Line tự cập nhật ưu đãi, số lượng, giới hạn); danh mục M5 của bản xem thử Membership') + crumb([['Membership'], ['Danh mục đổi điểm']]) +
+      pageHead('Danh mục đổi điểm', own ? 'Ưu đãi Tiktak đưa lên danh mục đổi điểm của app Membership. BL Admin soạn, BL Manager cho hiện trên app trong hạn mức chi đổi điểm của quý.' : 'Ưu đãi các đơn vị đưa lên danh mục đổi điểm của app Membership. GPCN HO xem mọi đơn vị, ẩn được ưu đãi khi cần.',
+        '<a class="btn btn-s" href="' + MEM_URL + '#M5" target="_blank" rel="noopener">Xem danh mục trên app (M5)</a>' + (own ? '<button class="btn btn-p" data-act="kNew">Tạo ưu đãi đổi điểm</button>' : '')) +
+      '<div class="kpis" style="grid-template-columns:repeat(' + Math.min(boxes.length, 6) + ',1fr)">' + boxes.join('') + '</div>' + warn + chips + tbl;
+  },
+  notes: { src: 'đề xuất câu 17 (thêm 28/10/2026, chưa chốt); Membership câu 35; brainstorm Membership Mục 4 (P0: công cụ để Biz Line tự cập nhật ưu đãi, đặt tổng số lượng và giới hạn mỗi thành viên), bảng phân quyền; danh mục M5 của bản xem thử Membership',
+    rules: ['Mỗi đơn vị đưa 3 đến 5 ưu đãi lên danh mục lúc ra mắt; ba hình thức: giảm %, giảm số tiền, tặng món (Membership câu 35).', 'Tên, số điểm và số suất còn của các ưu đãi đang hiện lấy đúng danh mục M5 của bản xem thử Membership (1 ngày làm việc tại Tiktak 200.000 điểm, còn 20 suất; 1 giờ phòng họp nhỏ 120.000 điểm, còn 15 suất…).', 'Trạng thái: Nháp, Chờ BL Manager, Đang hiện, Hết suất (tự chuyển khi đổi hết suất), Đã ẩn.', 'Cảnh báo khi một ưu đãi đang hiện còn từ 20% số suất trở xuống.'],
+    decided: [D(2), D(9)],
+    pending: [PD(17)],
+    roles: ['BL Admin, BL Manager: ưu đãi của đơn vị mình; BL Admin tạo và soạn, BL Manager cho hiện, sửa số suất, ẩn.', 'GPCN HO: mọi đơn vị (lọc bằng ô Xem dữ liệu của), chỉ ẩn được ưu đãi đang hiện. Finance HO không có mục này; nhập hạn mức ở R-K3.'],
+    self: ['Cột Đơn vị bù mỗi suất và ô hạn mức là cách bản xem thử hiểu “hạn mức chi” của câu 35 theo mô hình quỹ chung 23/10; ghi trong đề xuất câu 17 để anh/chị chốt.', 'Giá trị ưu đãi (250.000đ một ngày làm việc, 150.000đ một giờ phòng họp…) là minh hoạ.'],
+    demo: ['Bấm một dòng để mở R-K2.', 'Bấm Tạo ưu đãi đổi điểm để mở biểu mẫu trống.', 'Đổi vai GPCN HO để thấy cả Kite, Resort và ba ô hạn mức.'] },
+});
+ACT.kOpen = (id) => { kEdit(S, id); go('R-K2'); };
+ACT.kNew = () => { S.mem.draft = kBlank(); go('R-K2'); };
+function kStatusOf(s, d) { const o = s.mem.offers.find((x) => x.id === d.id); return o ? o.status : 'Nháp'; }
+/* Kiểm phần bù khi ưu đãi sẽ hiện trên app */
+function kCheck(s, d) {
+  const need = kGap(d) * num(d.total), left = s.mem.limits[d.bl] - memHeld(s, d.bl, d.id);
+  return { need, left, over: need > left, under: d.redeemed > 0 && num(d.total) < d.redeemed };
+}
+def('R-K2', {
+  name: 'Tạo hoặc sửa ưu đãi đổi điểm', flow: 'f7', figma: false, roles: ['admin', 'manager', 'gpcn'], role: 'admin', nav: 'mem-dm',
+  snap: () => snap('approved', (s) => { s.today = '28/10/2026'; kEdit(s, 'goi20'); }),
+  view: (s) => {
+    if (!s.mem.draft) kEdit(s, 'goi20');
+    const d = s.mem.draft, st = kStatusOf(s, d), live = ['Đang hiện', 'Hết suất', 'Đã ẩn'].includes(st);
+    const lockAll = s.role === 'gpcn' || (s.role === 'admin' && st !== 'Nháp');
+    const lockLive = live && s.role === 'manager';
+    const dis = (k) => (lockAll || (lockLive && k !== 'total' && k !== 'to') ? ' disabled' : '');
+    const inp = (label, k, ph, help, req) => '<div class="fld"><label>' + label + (req === false ? '' : ' <span class="req">*</span>') + '</label><input class="inp" data-model="mem.draft.' + k + '" data-rerender="1" placeholder="' + (ph || '') + '" value="' + esc(d[k]) + '"' + dis(k) + '>' + (help ? '<div class="help">' + help + '</div>' : '') + '</div>';
+    const formFlds = d.form === 'pct' ? '<div class="grid2" style="gap:12px">' + inp('Mức giảm (%)', 'pct', 'Ví dụ: 20') + inp('Mức giảm tối đa (đồng)', 'cap', 'Ví dụ: 500.000', 'Bắt buộc với giảm % (Re-MKT câu 2).') + '</div>'
+      : d.form === 'amount' ? '<div class="grid2" style="gap:12px">' + inp('Số tiền giảm (đồng)', 'amount', 'Ví dụ: 100.000') + inp('Giá trị đơn tối thiểu (đồng)', 'minOrder', 'Không bắt buộc', '', false) + '</div>'
+      : '<div class="grid2" style="gap:12px">' + inp('Món tặng', 'gift', 'Ví dụ: 1 ngày làm việc') + inp('Giá trị món tặng (đồng)', 'giftValue', 'Ví dụ: 250.000', 'Dùng để tính phần đơn vị bù.') + '</div>';
+    const miss = kMissing(d), k = kCheck(s, d), val = kValue(d);
+    const form = '<div class="card card-pad"><div class="fld"><span class="lb">Đơn vị</span><div>' + d.bl + ' · ' + esc(d.place) + '</div></div>' + inp('Tên ưu đãi', 'name', 'Tên khách thấy trên app') +
+      '<div class="fld"><span class="lb">Hình thức <span class="req">*</span></span><div class="radios">' + K_FORMS.map((x) => '<label class="rd' + (dis('form') ? ' dis' : '') + '"><input type="radio" name="kform" value="' + x[0] + '" data-model="mem.draft.form" data-rerender="1"' + (d.form === x[0] ? ' checked' : '') + dis('form') + '>' + x[1] + '</label>').join('') + '</div><div class="help">Danh mục đổi điểm không có hình thức điểm thưởng (Membership câu 35).</div></div>' + formFlds +
+      inp('Số điểm cần để đổi', 'pts', 'Ví dụ: 200.000', '1 điểm = 1đ. Quỹ điểm trả ' + d.bl + ' đúng số điểm này khi khách dùng voucher.') +
+      '<div class="fld"><span class="lb">Hạng được đổi <span class="req">*</span></span><div class="radios">' + TIERS3.map((t) => '<label class="ck' + (dis('tiers') ? ' dis' : '') + '"><input type="checkbox" data-model="mem.draft.tiers.' + t + '" data-rerender="1"' + (d.tiers[t] ? ' checked' : '') + dis('tiers') + '>' + t + '</label>').join('') + '</div></div>' +
+      '<div class="grid3">' + inp('Tổng số suất', 'total', 'Ví dụ: 10', d.redeemed ? 'Đã đổi ' + fmtInt(d.redeemed) + ' suất.' : '') + inp('Lượt mỗi thành viên', 'per', '1', 'Số lần một khách đổi được.') + inp('Hạn dùng (ngày)', 'days', '30', 'Tính từ lúc đổi.') + '</div>' +
+      '<div class="grid2" style="gap:12px">' + '<div class="fld"><span class="lb">Hiện trên app từ</span><div class="sm" style="padding-top:10px">' + (d.from ? esc(d.from) : 'Ngày BL Manager cho hiện') + '</div></div>' + inp('Ngừng hiện ngày', 'to', 'dd/mm/yyyy') + '</div>' +
+      '<div class="fld"><span class="lb">Ảnh ưu đãi</span><button class="card card-pad sm muted" style="width:100%;border-style:dashed;cursor:pointer" data-act="kImg"' + dis('img') + '>Kéo ảnh vào đây hoặc bấm để chọn · JPG, PNG, tối đa 2 MB · ảnh món thật của đơn vị</button></div></div>';
+    const prev = '<div class="ofc"><div class="art">' + IC.gift + '</div><div class="ofb"><div class="xs muted">' + d.bl + ' · ' + esc(d.place) + '</div><div class="b" style="font-size:16px;margin:4px 0">' + esc(d.name || 'Tên ưu đãi') + '</div><div class="sm muted">' + esc(kOfferText(d)) + '</div><div class="row mt12" style="justify-content:space-between"><span class="pts">' + (num(d.pts) ? fmtInt(num(d.pts)) + ' điểm' : '— điểm') + '</span><span class="xs muted">Còn ' + fmtInt(Math.max(0, num(d.total) - d.redeemed)) + ' suất</span></div><div class="xs muted mt8">' + kTiers(d) + ' · mỗi thành viên đổi ' + fmtInt(num(d.per)) + ' lần · dùng trong ' + fmtInt(num(d.days)) + ' ngày sau khi đổi</div></div></div>' +
+      '<p class="xs muted" style="text-align:center;margin:10px 0 0"><a href="' + MEM_URL + '#M6" target="_blank" rel="noopener">Mở màn Chi tiết ưu đãi (M6) trên bản xem thử Membership</a></p>';
+    const cost = '<div class="card card-pad mt16"><h3>Chi phí của ' + d.bl + '</h3>' + rrow('Giá trị mỗi suất', val ? vnd(val) : '—') + rrow('Khách trả bằng điểm (quỹ trả ' + d.bl + ')', num(d.pts) ? vnd(num(d.pts)) : '—') + rrow(d.bl + ' bù mỗi suất', vnd(kGap(d))) + rrow('Phần bù cho ' + fmtInt(num(d.total)) + ' suất', '<b>' + vnd(k.need) + '</b>') + rrow('Hạn mức chi đổi điểm Q4/2026 còn lại', vnd(k.left)) +
+      (k.over ? '<div class="errt">Phần bù vượt hạn mức chi đổi điểm còn lại của quý. Giảm số suất, tăng số điểm cần, hoặc nhờ Finance HO xem hạn mức quý sau.</div>' : '') + (k.under ? '<div class="errt">Tổng số suất không được nhỏ hơn số khách đã đổi (' + fmtInt(d.redeemed) + ').</div>' : '') +
+      (num(d.pts) > val && val ? '<div class="help">Số điểm cần lớn hơn giá trị ưu đãi: khách đổi không có lợi, cân nhắc giảm số điểm.</div>' : '') + '</div>';
+    const ok = !miss.length && !k.over && !k.under;
+    const B = (cls, act, t, en) => '<button class="btn ' + cls + '" data-act="' + act + '"' + (en === false ? ' disabled' : '') + '>' + t + '</button>';
+    let acts = '<button class="btn btn-s" data-go="R-K1">' + (lockAll && s.role !== 'gpcn' ? 'Về danh mục' : 'Huỷ') + '</button>';
+    let info = '';
+    if (s.role === 'admin') {
+      if (st === 'Nháp') acts += B('btn-s', 'kSave', 'Lưu nháp', !!d.name.trim()) + B('btn-p', 'kSend', 'Gửi BL Manager', ok);
+      else if (st === 'Chờ BL Manager') { acts += B('btn-s', 'kRecall', 'Rút về sửa'); info = 'Đang chờ BL Manager cho hiện trên app. Rút về sửa thì ưu đãi về Nháp.'; }
+      else info = 'Ưu đãi đã ' + (st === 'Đã ẩn' ? 'ẩn' : 'lên app') + ': chỉ BL Manager sửa số suất, ngày ngừng hiện hoặc ẩn.';
+    } else if (s.role === 'manager') {
+      if (st === 'Nháp' || st === 'Chờ BL Manager') acts += (st === 'Chờ BL Manager' ? B('btn-s', 'kBack', 'Trả về BL Admin') : '') + B('btn-s', 'kSave', 'Lưu', !!d.name.trim()) + B('btn-p', 'kPublish', 'Cho hiện trên app', ok);
+      else if (st === 'Đã ẩn') acts += B('btn-p', 'kPublish', 'Cho hiện lại', ok);
+      else { acts += B('btn-s', 'kHide', 'Ẩn khỏi app') + B('btn-p', 'kSave', 'Lưu thay đổi', ok); info = 'Ưu đãi đang trên app: chỉ sửa được tổng số suất và ngày ngừng hiện.'; }
+    } else { if (st === 'Đang hiện' || st === 'Hết suất') acts += B('btn-s', 'kHide', 'Ẩn khỏi app'); info = 'GPCN HO xem mọi đơn vị và ẩn được ưu đãi khi cần; đơn vị tự soạn và cho hiện.'; }
+    const head = (d.id ? esc(d.name) : 'Tạo ưu đãi đổi điểm');
+    return newMark('đề xuất câu 17 (thêm 28/10/2026, chưa chốt); Membership câu 35; màn M6 của bản xem thử Membership (thẻ chi tiết ưu đãi); Re-MKT câu 2 (giảm % bắt buộc có mức giảm tối đa)') + crumb([['Membership'], ['Danh mục đổi điểm', 'R-K1'], [d.id ? d.name : 'Tạo ưu đãi']]) +
+      pageHead(head, (d.id ? tag(st, K_ST[st]) + ' &nbsp;' + esc(d.by) : 'Ưu đãi mới của ' + d.bl + ' cho danh mục đổi điểm trên app Membership.')) +
+      (info ? '<div class="banner bn-info"><span class="dot" style="background:var(--primary)"></span><div><p class="sm" style="margin:0">' + info + '</p></div></div>' : '') +
+      '<div class="wiz"><div>' + form + (miss.length && !lockAll ? '<p class="help">Còn thiếu: ' + miss.join(', ') + '.</p>' : '') + '<div class="wiz-foot">' + acts + '</div></div><div><div class="wiz-side"><h3>Xem trước trên app Membership</h3>' + prev + '</div>' + cost + '</div></div>';
+  },
+  notes: { src: 'đề xuất câu 17 (thêm 28/10/2026, chưa chốt); Membership câu 35; brainstorm Membership Mục 4 P0 (Biz Line tự cập nhật ưu đãi, đặt tổng số lượng và giới hạn mỗi thành viên); file concept Membership (voucher có giá trị 30 ngày sau khi đổi); màn M6 của bản xem thử Membership',
+    rules: ['Ba hình thức theo Membership câu 35: giảm %, giảm số tiền, tặng món. Giảm % bắt buộc có mức giảm tối đa (Re-MKT câu 2).', 'Thông số: số điểm cần, hạng được đổi, tổng số suất, số lần mỗi thành viên, hạn dùng sau khi đổi (mặc định 30 ngày theo file concept), ngày ngừng hiện, ảnh món thật.', 'Phần đơn vị bù = (giá trị ưu đãi − số điểm) × tổng số suất; phải nằm trong hạn mức chi đổi điểm còn lại của quý.', 'Khung bên phải xem trước thẻ ưu đãi như màn M6 của app.'],
+    decided: [D(2), D(9)],
+    pending: [PD(17)],
+    roles: ['BL Admin: tạo, sửa Nháp, gửi BL Manager; rút về sửa khi còn chờ.', 'BL Manager: sửa, trả về BL Admin, cho hiện trên app; ưu đãi đang hiện chỉ sửa tổng số suất, ngày ngừng hiện, hoặc ẩn.', 'GPCN HO: xem mọi đơn vị, ẩn được ưu đãi đang hiện.'],
+    self: ['Ẩn ưu đãi đang hiện: khách đã đổi vẫn dùng voucher đến hạn; phần bù chỉ còn giữ cho suất đã đổi.', 'Số điểm lớn hơn giá trị ưu đãi chỉ nhắc, không chặn.'],
+    demo: ['Ở vai BL Admin, giữ Giảm 20% gói tháng (10 suất, phần bù 2.000.000đ) rồi Gửi BL Manager; đổi vai BL Manager để Cho hiện trên app.', 'Sửa Tổng số suất thành 13: phần bù 2.600.000đ vượt hạn mức còn lại 2.400.000đ, nút gửi tắt.', 'Đổi hình thức sang Tặng món: ô món tặng và giá trị món hiện ra.'] },
+});
+function kCommit(status, msg) {
+  const d = JSON.parse(JSON.stringify(S.mem.draft));
+  if (!d.id) d.id = 'k' + (S.mem.offers.length + 1);
+  if (status === 'Đang hiện' && num(d.total) <= d.redeemed) status = 'Hết suất';
+  if (status === 'Đang hiện' && !d.from) d.from = S.today;
+  if (status === 'Chờ BL Manager') d.sentAt = S.today;
+  d.status = status; d.by = ROLES[S.role].name + ' ' + d.bl + ' · ' + S.today;
+  const i = S.mem.offers.findIndex((o) => o.id === d.id);
+  if (i >= 0) S.mem.offers[i] = d; else S.mem.offers.unshift(d);
+  S.mem.draft = null; toast(msg, 'ok'); go('R-K1');
+}
+ACT.kSave = () => { const st = kStatusOf(S, S.mem.draft); kCommit(st === 'Hết suất' ? 'Đang hiện' : st, 'Đã lưu ưu đãi đổi điểm.'); };
+ACT.kSend = () => kCommit('Chờ BL Manager', 'Đã gửi BL Manager. Ưu đãi hiện trên app sau khi BL Manager cho hiện.');
+ACT.kRecall = () => kCommit('Nháp', 'Đã rút về Nháp để sửa.');
+ACT.kBack = () => kCommit('Nháp', 'Đã trả về BL Admin.');
+ACT.kPublish = () => kCommit('Đang hiện', 'Ưu đãi đã hiện trong danh mục đổi điểm của app Membership; phần bù đã giữ trong hạn mức quý.');
+ACT.kHide = () => kCommit('Đã ẩn', 'Đã ẩn khỏi app. Khách đã đổi vẫn dùng voucher đến hạn.');
+ACT.kImg = () => toast('Bản xem thử không tải ảnh thật.', 'todo');
+
+/* ---------- R-K3 hạn mức chi đổi điểm theo quý (cùng mẫu R-F2) ---------- */
+def('R-K3', {
+  name: 'Hạn mức chi đổi điểm theo quý (Finance HO)', flow: 'f7', figma: false, roles: ['finance'], role: 'finance', nav: 'mem-hm',
+  snap: () => snap('approved', (s) => { s.today = '28/10/2026'; }),
+  view: (s) => {
+    const q = s.mem.next; const ok = MEM_UNITS.every((u) => num(q[u]) > 0) && q.doc.trim() && pDate(q.docDate);
+    const cur = MEM_UNITS.map((u) => { const lim = s.mem.limits[u], held = memHeld(s, u); return '<tr><td>' + u + '</td><td class="num">' + vnd(lim) + '</td><td class="num">' + vnd(held) + '</td><td class="num">' + vnd(lim - held) + '</td></tr>'; }).join('');
+    const form = s.mem.nextSaved
+      ? '<table class="tbl"><thead><tr><th>Đơn vị</th><th class="num">Hạn mức Q1/2027</th></tr></thead><tbody>' + MEM_UNITS.map((u) => '<tr><td>' + u + '</td><td class="num">' + vnd(num(q[u])) + '</td></tr>').join('') + '</tbody></table><p class="sm muted mt8">Văn bản Ban TCKT ' + esc(q.doc) + ' ngày ' + esc(q.docDate) + ' · đã lưu ' + s.today + ' · Finance HO. Áp dụng từ 01/01/2027.</p><button class="btn btn-s btn-sm" data-act="k3edit">Sửa hạn mức Q1/2027</button>'
+      : MEM_UNITS.map((u) => '<div class="fld"><label>' + u + ' (đồng) <span class="req">*</span></label><input class="inp" data-model="mem.next.' + u + '" data-rerender="1" placeholder="Ví dụ: 5.000.000" value="' + esc(q[u]) + '"></div>').join('') +
+        '<div class="grid2" style="gap:12px"><div class="fld"><label>Số văn bản Ban TCKT duyệt <span class="req">*</span></label><input class="inp" data-model="mem.next.doc" data-rerender="1" placeholder="Ví dụ: TC-2026/140" value="' + esc(q.doc) + '"></div><div class="fld"><label>Ngày văn bản <span class="req">*</span></label><input class="inp" data-model="mem.next.docDate" data-rerender="1" placeholder="dd/mm/yyyy" value="' + esc(q.docDate) + '"></div></div>' +
+        '<button class="btn btn-p" data-act="k3save"' + (ok ? '' : ' disabled') + '>Lưu hạn mức Q1/2027</button>';
+    return newMark('đề xuất câu 17 (thêm 28/10/2026, chưa chốt); Membership câu 35 (Ban TCKT duyệt hạn mức chi theo quý); cùng mẫu R-F2 (Finance HO nhập hạn mức quỹ theo quý)') + crumb([['Membership'], ['Hạn mức chi đổi điểm theo quý']]) +
+      pageHead('Hạn mức chi đổi điểm theo quý', 'Finance HO nhập hạn mức từng đơn vị theo số Ban TCKT đã duyệt ngoài hệ thống. Hạn mức giữ phần đơn vị bù cho ưu đãi đổi điểm: giá trị ưu đãi trừ số điểm khách trả.') +
+      '<div class="grid2"><div class="card card-pad"><h3>Q4/2026 · đang áp dụng</h3><table class="tbl"><thead><tr><th>Đơn vị</th><th class="num">Hạn mức</th><th class="num">Đã giữ</th><th class="num">Còn lại</th></tr></thead><tbody>' + cur + '</tbody></table><p class="sm muted mt8">Quý đang chạy không sửa được hạn mức. Đã giữ: phần bù của ưu đãi đang hiện, hết suất, hoặc đã ẩn nhưng có khách đã đổi.</p></div>' +
+      '<div class="card card-pad"><h3>Q1/2027</h3>' + form + '</div></div>';
+  },
+  notes: { src: 'đề xuất câu 17 (thêm 28/10/2026, chưa chốt); Membership câu 35; cùng mẫu R-F2',
+    rules: ['Ban TCKT duyệt hạn mức chi theo quý ngoài hệ thống; Finance HO nhập số đã duyệt kèm số và ngày văn bản (cùng cách Re-MKT câu 6).', 'Hạn mức của đơn vị giữ phần bù của ưu đãi đổi điểm; BL Manager không cho hiện được ưu đãi vượt phần còn lại (R-K2).'],
+    decided: [D(6), D(8)],
+    pending: [PD(17)],
+    roles: ['Chỉ Finance HO. GPCN HO, BL Manager thấy phần còn lại ở R-K1.'],
+    self: ['Hạn mức Q4/2026 Tiktak 5.000.000đ, Kite 8.000.000đ, Resort 10.000.000đ là minh hoạ.', 'Quý đang chạy không sửa trên hệ thống, cùng quy tắc R-F2.'],
+    demo: ['Để trống một ô hoặc thiếu số văn bản: nút Lưu tắt.'] },
+});
+ACT.k3save = () => { S.mem.nextSaved = true; toast('Đã lưu hạn mức chi đổi điểm Q1/2027.', 'ok'); render(); };
+ACT.k3edit = () => { S.mem.nextSaved = false; render(); };
+
+/* ---------- Quỹ điểm thưởng VNGroup (R-Q1, R-Q2) — mô hình quỹ chung 23/10 ---------- */
+/* Tháng 10/2026, triệu đồng, minh hoạ; cộng chéo khớp R-G1: 82,4 tr điểm khách còn giữ, tỉ lệ tiêu điểm 12 tháng 28% (33 / 118); tỉ lệ tích 2% ở cả ba đơn vị (thông tin 28/10/2026) */ const QF = { open: 73.6, issued: 15.6, spent: 6.2, expired: 0.6, close: 82.4, kept: 2.6, negN: 3, negPts: 18400, units: [{ bl: 'Kite', rev: 360, issued: 7.2, spent: 2.2, hold: 39.6 }, { bl: 'Tiktak', rev: 260, issued: 5.2, spent: 2.4, hold: 27.6 }, { bl: 'Resort', rev: 160, issued: 3.2, spent: 1.6, hold: 15.2 }] };
+const trd = (n) => String(Math.round(n * 100) / 100).replace('.', ',') + ' tr';
+def('R-Q1', {
+  name: 'Quỹ điểm thưởng VNGroup', flow: 'f7', figma: false, roles: ['finance', 'gpcn'], role: 'finance', nav: 'mem-quy',
+  snap: () => snap('approved', (s) => { s.today = '01/11/2026'; }),
+  view: (s) => {
+    const us = QF.units.filter((u) => unitOk(u.bl));
+    const book = [['23/10/2026 · 09:12', 'Kite', 'Hoá đơn 40.000đ khách trả bằng tiền', 'Kite nộp 800đ', '+800 điểm'], ['23/10/2026 · 14:30', 'Tiktak', 'Thuê chỗ 100.000đ: khách dùng 4.000 điểm, trả 96.000đ bằng tiền', 'Quỹ trả Tiktak 4.000đ · Tiktak nộp 1.920đ', '−4.000, +1.920 điểm'], ['25/10/2026 · 16:05', 'Resort', 'Huỷ hoá đơn RS-10-2291 đã tích 12.000 điểm, khách đã tiêu 8.000', 'Quỹ trả lại Resort 12.000đ (chạy ngược)', '−12.000 điểm · ví âm −8.000'], ['31/10/2026 · 23:59', '3 đơn vị', 'Đợt điểm tích tháng 10/2025 hết hạn', 'Tiền 0,6 tr ở lại quỹ', '−600.000 điểm']].filter((r) => r[1] === '3 đơn vị' || unitOk(r[1]));
+    return newMark('mô hình quỹ chung 23/10 (bảng sếp vẽ, Membership câu 26); Re-MKT câu 14 (khoản phải trả khách bằng số dư quỹ); Membership câu 24 (ví âm), câu 28 (tiền điểm hết hạn ở lại quỹ); đề xuất câu 17') + crumb([['Membership'], ['Quỹ điểm thưởng VNGroup']]) +
+      pageHead('Quỹ điểm thưởng VNGroup — tháng 10/2026', 'Mỗi đơn vị nộp vào quỹ 2% số tiền khách trả bằng tiền; khách nhận số điểm bằng số tiền đó (1 điểm = 1đ). Khách tiêu điểm ở đơn vị nào thì quỹ trả đơn vị đó. Sổ kế toán vẫn là sổ chính.', (s.role === 'finance' ? '<button class="btn btn-s" data-act="exportX">Xuất Excel</button><button class="btn btn-p" data-go="R-Q2">Đối soát theo đơn vị</button>' : '<button class="btn btn-s" data-go="R-Q2">Đối soát theo đơn vị</button>')) + fresh('Số liệu tính đến 23:59 · 31/10/2026') +
+      '<div class="kpis k5">' + kpiBox('Phải trả khách', trd(QF.close), 'Bằng tổng điểm khách đang giữ · khoản phải trả khách tại quỹ (câu 14)', '#9B3EE5') + kpiBox('Tiền trong quỹ', trd(QF.close + QF.kept), trd(QF.close) + ' phải trả khách + ' + trd(QF.kept) + ' tiền của điểm đã hết hạn giữ lại') + kpiBox('Nộp vào trong tháng', trd(QF.issued), '2% của 780 tr khách trả bằng tiền ở ba đơn vị', '#2563EB') + kpiBox('Quỹ trả đơn vị', trd(QF.spent), 'Cho 6,2 triệu điểm khách tiêu trong tháng', '#E8521A') + kpiBox('Điểm hết hạn', trd(QF.expired), 'Tiền ở lại quỹ (Membership câu 28)') + '</div>' +
+      '<table class="tbl mb16"><thead><tr><th>Đơn vị</th><th class="num">Khách trả bằng tiền</th><th class="num">Nộp quỹ 2%</th><th class="num">Quỹ trả (khách tiêu điểm tại đơn vị)</th><th class="num">Nộp − nhận</th><th class="num">Điểm khách đang giữ (đơn vị phát)</th></tr></thead><tbody>' +
+      us.map((u) => '<tr><td>' + u.bl + '</td><td class="num">' + trd(u.rev) + '</td><td class="num">' + trd(u.issued) + '</td><td class="num">' + trd(u.spent) + '</td><td class="num">+' + trd(u.issued - u.spent) + '</td><td class="num">' + trd(u.hold) + '</td></tr>').join('') +
+      (us.length > 1 ? '</tbody><tfoot><tr><td>Cả tập đoàn</td><td class="num">' + trd(us.reduce((a, u) => a + u.rev, 0)) + '</td><td class="num">' + trd(us.reduce((a, u) => a + u.issued, 0)) + '</td><td class="num">' + trd(us.reduce((a, u) => a + u.spent, 0)) + '</td><td class="num">+' + trd(us.reduce((a, u) => a + u.issued - u.spent, 0)) + '</td><td class="num">' + trd(us.reduce((a, u) => a + u.hold, 0)) + '</td></tr></tfoot>' : '</tbody>') + '</table>' +
+      '<div class="grid2" style="grid-template-columns:420px 1fr;align-items:start">' + '<div class="ch-card"><h3>Biến động phải trả khách trong tháng</h3>' + rrow('Đầu tháng 01/10', trd(QF.open)) + rrow('+ Điểm phát (đơn vị nộp vào)', trd(QF.issued)) + rrow('− Điểm khách tiêu (quỹ trả đơn vị)', trd(QF.spent)) + rrow('− Điểm hết hạn (tiền ở lại quỹ)', trd(QF.expired)) + '<div class="hr" style="margin:8px 0"></div>' + rrow('<b>Cuối tháng 31/10</b>', '<b>' + trd(QF.close) + '</b>') + '</div>' +
+      '<div class="banner bn-warn" style="margin:0"><span class="dot" style="background:var(--warning)"></span><div><div class="bt">' + QF.negN + ' khách đang có số dư điểm âm, tổng ' + fmtInt(QF.negPts) + ' điểm</div><p class="sm">Hoá đơn bị huỷ sau khi điểm của hoá đơn đó đã được tiêu (Membership câu 24). Quỹ đã trả lại đơn vị nên khoản này trừ dần vào điểm khách tích lần sau; khách xoá tài khoản thì trừ vào tiền hoàn.</p></div></div></div>' +
+      '<h3 style="font-size:15px;margin:20px 0 10px">Sổ quỹ gần đây</h3><table class="tbl"><thead><tr><th>Thời điểm</th><th>Đơn vị</th><th>Giao dịch</th><th>Tiền quỹ</th><th>Điểm khách</th></tr></thead><tbody>' + book.map((r) => '<tr><td class="sm">' + r[0] + '</td><td>' + r[1] + '</td><td>' + esc(r[2]) + '</td><td>' + esc(r[3]) + '</td><td class="sm">' + esc(r[4]) + '</td></tr>').join('') + '</tbody></table>' +
+      '<div class="tbl-note">Hai dòng ngày 23/10 là ví dụ gốc của mô hình quỹ chung: Kite giữ 39.200đ, nộp 800đ; Tiktak nhận 96.000đ tiền và 4.000đ từ quỹ, nộp 1.920đ, giữ 98.080đ (tính lại theo tỉ lệ 2%; bảng gốc 23/10 minh hoạ 10%). Huỷ hoá đơn thì chạy ngược các bước của hoá đơn bị huỷ. Số tháng 10 là minh hoạ.</div>';
+  },
+  notes: { src: 'mô hình quỹ chung 23/10/2026 (ảnh bảng trắng; Figma trang Membership — Luồng, tình huống 5.1–5.8); Membership câu 24, 26, 28; Re-MKT câu 9, 14; đề xuất câu 17',
+    rules: ['Đơn vị nộp 2% số tiền khách trả bằng tiền; khách nhận số điểm bằng số tiền đó; phần trả bằng điểm không sinh điểm (Membership câu 26; 10% là số minh hoạ).', 'Khách tiêu điểm ở đơn vị nào thì quỹ trả đơn vị đó. Huỷ hoá đơn thì chạy ngược; điểm đã tiêu thì để ví âm, trừ dần (câu 24).', 'Phải trả khách bằng tổng điểm khách đang giữ (Re-MKT câu 14). Tiền của điểm hết hạn ở lại quỹ (Membership câu 28), nên tiền trong quỹ = phải trả khách + tiền điểm hết hạn giữ lại.', 'Số tháng 10 cộng chéo khớp R-G1: 82,4 tr điểm khách còn giữ; 12 tháng phát 118 tr, tiêu 33 tr (28%), hết hạn 2,6 tr.'],
+    decided: [D(9), D(14)],
+    pending: [PD(17)],
+    roles: ['Finance HO và GPCN HO xem toàn tập đoàn, lọc đơn vị bằng ô Xem dữ liệu của. Ban Kế toán dùng file xuất để đối soát với sổ kế toán.'],
+    self: ['Màn tháng; chưa có chọn kỳ vì bản xem thử chỉ có số tháng 10.', 'Dòng Sổ quỹ gần đây chỉ là mẫu; sổ đầy đủ xuất Excel.'],
+    demo: ['Đổi ô Xem dữ liệu của sang Tiktak để lọc bảng và sổ quỹ.', 'Bấm Đối soát theo đơn vị để mở R-Q2.'] },
+});
+def('R-Q2', {
+  name: 'Đối soát quỹ điểm theo đơn vị', flow: 'f7', figma: false, roles: ['finance', 'gpcn'], role: 'finance', nav: 'mem-ds',
+  snap: () => snap('approved', (s) => { s.today = '01/11/2026'; }),
+  view: (s) => {
+    const m = s.ui.q2m || '10/2026', rows = s.mem.settle[m].filter((r) => unitOk(r.bl)), fin = s.role === 'finance';
+    const dir = (x) => (x > 0 ? 'Đơn vị chuyển vào quỹ' : x < 0 ? 'Quỹ chuyển cho đơn vị' : 'Không phải chuyển');
+    const stTag = (r) => tag(r.st, r.st === 'Đã chuyển' ? 't-ok' : r.st === 'Đã xác nhận' ? 't-info' : 't-warn') + (r.at ? '<div class="xs muted">' + r.at + '</div>' : '');
+    const act = (r, i) => (!fin ? '' : r.st === 'Chờ đơn vị xác nhận' ? '<button class="btn btn-s btn-sm" data-act="q2remind" data-arg="' + r.bl + '">Nhắc đơn vị</button>' : r.st === 'Đã xác nhận' ? '<button class="btn btn-p btn-sm" data-act="q2paid" data-arg="' + m + '|' + i + '">Ghi nhận đã chuyển</button>' : '');
+    const sum = (k) => rows.reduce((a, r) => a + r[k], 0);
+    return newMark('mô hình quỹ chung 23/10 (Membership câu 26); đề xuất câu 17: bù trừ cuối tháng, chỉ chuyển phần chênh (thêm 28/10/2026, chưa chốt); cùng mẫu R-F5') + crumb([['Membership'], ['Quỹ điểm thưởng VNGroup', 'R-Q1'], ['Đối soát theo đơn vị']]) +
+      pageHead('Đối soát quỹ điểm tháng ' + m, 'Cuối tháng mỗi đơn vị bù trừ tiền phải nộp quỹ với tiền quỹ phải trả cho điểm khách tiêu tại đơn vị, rồi chỉ chuyển phần chênh. Hạn chuyển ngày 10 tháng sau.', '<select class="sel" style="width:160px" data-model="ui.q2m" data-rerender="1"><option value="10/2026"' + (m === '10/2026' ? ' selected' : '') + '>Tháng 10/2026</option><option value="09/2026"' + (m === '09/2026' ? ' selected' : '') + '>Tháng 9/2026</option></select><button class="btn btn-s" data-act="exportX">Xuất Excel</button>') +
+      '<table class="tbl mb16"><thead><tr><th>Đơn vị</th><th class="num">Khách trả bằng tiền</th><th class="num">Phải nộp quỹ (2%)</th><th class="num">Quỹ phải trả</th><th class="num">Phần chênh</th><th>Chiều chuyển</th><th>Trạng thái</th>' + (fin ? '<th></th>' : '') + '</tr></thead><tbody>' +
+      rows.map((r) => { const i = s.mem.settle[m].indexOf(r), x = r.pay - r.recv; return '<tr><td>' + r.bl + '</td><td class="num">' + trd(r.rev) + '</td><td class="num">' + trd(r.pay) + '</td><td class="num">' + trd(r.recv) + '</td><td class="num b">' + trd(Math.abs(x)) + '</td><td>' + dir(x) + '</td><td>' + stTag(r) + '</td>' + (fin ? '<td>' + act(r, i) + '</td>' : '') + '</tr>'; }).join('') +
+      '</tbody>' + (rows.length > 1 ? '<tfoot><tr><td>Cả tập đoàn</td><td class="num">' + trd(sum('rev')) + '</td><td class="num">' + trd(sum('pay')) + '</td><td class="num">' + trd(sum('recv')) + '</td><td class="num">' + trd(sum('pay') - sum('recv')) + '</td><td>Vào quỹ (ròng)</td><td></td>' + (fin ? '<td></td>' : '') + '</tr></tfoot>' : '') + '</table>' +
+      '<div class="grid2"><div class="ch-card"><h3>Cách tính · ví dụ gốc ngày 23/10, tính theo tỉ lệ 2%</h3><p class="sm" style="margin:0 0 8px"><b>Kite</b> bán cà phê 40.000đ, khách trả bằng tiền: Kite giữ 39.200đ, nộp quỹ 800đ, khách nhận 800 điểm.</p><p class="sm" style="margin:0 0 8px"><b>Tiktak</b> cho thuê chỗ 100.000đ, khách dùng 4.000 điểm và trả 96.000đ: quỹ trả Tiktak 4.000đ; Tiktak nộp 1.920đ (2% của 96.000đ), giữ 98.080đ.</p><p class="sm muted" style="margin:0">Bù trừ cuối tháng: quỹ chỉ chuyển cho Tiktak 2.080đ (4.000đ − 1.920đ).</p></div>' +
+      '<div class="ch-card"><h3>Điều chỉnh trong tháng</h3><table class="tbl" style="border:0"><thead><tr><th>Hoá đơn</th><th>Đơn vị</th><th>Điều chỉnh</th></tr></thead><tbody>' + (m === '10/2026' ? '<tr><td>RS-10-2291 · huỷ 25/10</td><td>Resort</td><td class="sm">Quỹ trả lại Resort 12.000đ; khách −12.000 điểm, ví âm −8.000</td></tr><tr><td>KITE-10-55821 · trả 1 món 27/10</td><td>Kite</td><td class="sm">Thu lại 1.500 điểm theo tỉ lệ tiền hoàn (Membership câu 31); quỹ trả lại Kite 1.500đ</td></tr>' : '<tr><td colspan="3" class="muted">Không có điều chỉnh.</td></tr>') + '</tbody></table></div></div>' +
+      '<div class="tbl-note">Sổ kế toán của Ban Kế toán vẫn là sổ chính; bảng này để đối soát. Trạng thái: Chờ đơn vị xác nhận, Đã xác nhận, Đã chuyển. Số minh hoạ.</div>';
+  },
+  notes: { src: 'mô hình quỹ chung 23/10 (Membership câu 26); Membership câu 24, 31; đề xuất câu 17 (thêm 28/10/2026, chưa chốt); cùng mẫu R-F5 (bảng chi phí cuối tháng)',
+    rules: ['Phần chênh = phải nộp quỹ − quỹ phải trả. Dương: đơn vị chuyển vào quỹ; âm: quỹ chuyển cho đơn vị (Resort tháng 9: nộp 2,4 tr, nhận 2,6 tr).', 'Tháng 10 khớp R-Q1: nộp 15,6 tr, quỹ trả 6,2 tr, ròng vào quỹ 9,4 tr.', 'Huỷ hoá đơn, trả một phần: chạy ngược theo tỉ lệ tiền hoàn (Membership câu 24, 31).'],
+    decided: [D(14)],
+    pending: [PD(17)],
+    roles: ['Finance HO: nhắc đơn vị xác nhận, ghi nhận đã chuyển tiền. GPCN HO: chỉ xem.'],
+    self: ['Còn mở từ mô hình 23/10: chuyển tiền ngay theo từng giao dịch hay bù trừ cuối tháng; quỹ đứng tên ai. Bản xem thử vẽ theo đề xuất bù trừ cuối tháng, hạn ngày 10 tháng sau.'],
+    demo: ['Ở vai Finance HO, bấm Ghi nhận đã chuyển ở dòng Tiktak.', 'Đổi sang Tháng 9/2026 để thấy chiều Quỹ chuyển cho đơn vị (Resort).'] },
+});
+ACT.q2remind = (bl) => toast('Đã nhắc kế toán ' + bl + ' xác nhận số đối soát tháng.', 'ok');
+ACT.q2paid = (arg) => { const [m, i] = arg.split('|'); const r = S.mem.settle[m][+i]; r.st = 'Đã chuyển'; r.at = S.today; toast('Đã ghi nhận ' + r.bl + ' chuyển tiền tháng ' + m + '.', 'ok'); render(); };
+
+/* ---------- R-S1 cấu hình điểm và hạng (GPCN HO) ---------- */
+const CFG_LBL = { rate: 'Tỉ lệ tích', gold: 'Gold từ', plat: 'Platinum từ', months: 'Hạn điểm', remind: 'Nhắc trước hết hạn', first: 'Thưởng lần đầu', firstMin: 'Hoá đơn tối thiểu cho thưởng lần đầu', bday: 'Nhân điểm ngày sinh nhật', confirmAt: 'Xác nhận trên app từ' };
+function cfgErr(d, s) {
+  const e = {};
+  if (!(num(d.rate) >= 1 && num(d.rate) <= 20)) e.rate = 'Tỉ lệ tích từ 1% đến 20%.';
+  if (!(num(d.gold) > 0) || num(d.gold) >= num(d.plat)) e.plat = 'Ngưỡng Platinum phải lớn hơn ngưỡng Gold.';
+  if (!(num(d.months) >= 1 && num(d.months) <= 36)) e.months = 'Hạn điểm từ 1 đến 36 tháng.';
+  const ef = pDate(d.eff), min = pDate(addDays(s.today, 30));
+  if (!ef) e.eff = 'Nhập ngày hiệu lực dạng dd/mm/yyyy.'; else if (ef < min) e.eff = 'Ngày hiệu lực sớm nhất là ' + fDate(min) + ' (30 ngày sau hôm nay) để kịp báo khách.';
+  return e;
+}
+function cfgChanges(a, b) { return Object.keys(CFG_LBL).filter((k) => num(a[k]) !== num(b[k])); }
+def('R-S1', {
+  name: 'Cấu hình điểm và hạng (GPCN HO)', flow: 'f7', figma: false, roles: ['gpcn'], role: 'gpcn', nav: 'mem-ch',
+  snap: () => snap('approved', (s) => { s.today = '28/10/2026'; }),
+  view: (s) => {
+    const d = s.mem.cfgDraft, base = s.mem.cfgNext || s.mem.cfg, ch = cfgChanges(d, base), er = cfgErr(d, s), ok = ch.length > 0 && !Object.keys(er).length;
+    const f = (label, k, unit, help) => '<div class="fld"><label>' + label + '</label><div class="row" style="gap:8px"><input class="inp' + (er[k] && ch.length ? ' err' : '') + '" style="max-width:180px" data-model="mem.cfgDraft.' + k + '" data-rerender="1" value="' + esc(d[k]) + '"><span class="sm muted">' + unit + '</span></div>' + (er[k] && ch.length ? '<div class="errt">' + er[k] + '</div>' : '') + (help ? '<div class="help">' + help + '</div>' : '') + '</div>';
+    const card = (t, body) => '<div class="card card-pad"><h3>' + t + '</h3>' + body + '</div>';
+    const ro = (t) => '<div class="sm" style="padding:6px 0">' + t + '</div>';
+    return newMark('đề xuất câu 17 (thêm 28/10/2026, chưa chốt); brainstorm Membership bảng phân quyền (GPCN cấu hình tỉ lệ điểm, ngưỡng hạng, trần thông báo); Membership câu 21, 26, 28, 29, 33; Re-MKT câu 4') + crumb([['Membership'], ['Cấu hình điểm và hạng']]) +
+      pageHead('Cấu hình điểm và hạng', 'Quy tắc tích điểm, xét hạng, hạn điểm và thưởng của chương trình thành viên, áp dụng chung cho Kite, Tiktak, Resort. Đổi quy tắc phải báo khách trước ngày hiệu lực.') +
+      (s.mem.cfgNext ? '<div class="banner bn-info"><span class="dot" style="background:var(--primary)"></span><div><div class="bt">Đã lên lịch thay đổi từ ' + esc(s.mem.cfgNext.eff) + '</div><p class="sm">Đến ngày đó cấu hình hiện tại vẫn áp dụng; app báo khách trước ngày hiệu lực.</p></div></div>' : '') +
+      '<div class="grid2">' + card('Tích điểm', f('Tỉ lệ tích', 'rate', '% số tiền khách trả bằng tiền', '1 điểm = 1đ; phần trả bằng điểm, voucher không sinh điểm. Đơn vị nộp quỹ đúng số tiền này (Membership câu 26).') + ro('Điểm mới chờ đối soát, dùng được từ 12:00 hôm sau (biên bản 21/10).')) +
+      card('Hạng thành viên', f('Gold từ', 'gold', 'điểm trong năm') + f('Platinum từ', 'plat', 'điểm trong năm', 'Silver: dưới ngưỡng Gold. Xét theo điểm tích trong năm dương lịch; lên hạng ngay khi đủ ngưỡng (Membership câu 26, 27).')) +
+      card('Hạn điểm', f('Hạn dùng', 'months', 'tháng, theo từng đợt tích') + f('Nhắc trước khi hết hạn', 'remind', 'ngày', 'Dùng điểm thì trừ đợt sắp hết hạn trước. Tiền của điểm hết hạn ở lại Quỹ điểm thưởng VNGroup (Membership câu 28).')) +
+      card('Thưởng và quyền lợi', f('Thưởng lần đầu dùng một đơn vị mới', 'first', 'điểm') + f('cho hoá đơn từ', 'firstMin', 'đồng', 'Membership câu 33.') + f('Ngày sinh nhật nhân điểm', 'bday', 'lần') + ro('Quyền lợi theo hạng: Gold giảm thêm 5% hoá đơn tại cả ba đơn vị; Platinum có quyền lợi của Gold và được nâng hạng phòng tại Resort (Membership câu 29).')) +
+      card('Dùng điểm tại quầy', f('Khách xác nhận trên app khi dùng từ', 'confirmAt', 'điểm', 'Membership câu 21.')) +
+      card('Thông báo ưu đãi', ro('Tối đa 2 campaign mỗi khách mỗi tháng, chỉ gửi từ 8 đến 21 giờ.') + '<div class="help">Theo quy định tin quảng cáo (Re-MKT câu 4), không đổi trên hệ thống. Bộ đếm do Membership giữ (Re-MKT câu 12).</div>') + '</div>' +
+      '<div class="card card-pad mt16"><div class="row" style="align-items:flex-end;gap:16px"><div class="fld" style="margin:0;flex:0 0 260px"><label>Ngày hiệu lực <span class="req">*</span></label><input class="inp' + (er.eff && ch.length ? ' err' : '') + '" data-model="mem.cfgDraft.eff" data-rerender="1" placeholder="dd/mm/yyyy" value="' + esc(d.eff) + '"></div><div class="sm muted" style="flex:1;padding-bottom:10px">' + (ch.length ? 'Thay đổi: ' + ch.map((k) => CFG_LBL[k] + ' ' + esc(base[k]) + ' → ' + esc(d[k])).join('; ') + '.' : 'Chưa có thay đổi.') + '</div><button class="btn btn-s" data-act="sReset"' + (ch.length ? '' : ' disabled') + '>Huỷ thay đổi</button><button class="btn btn-p" data-act="sSave"' + (ok ? '' : ' disabled') + '>Lưu cấu hình</button></div>' + (er.eff && ch.length ? '<div class="errt">' + er.eff + '</div>' : '<div class="help">Sớm nhất 30 ngày sau hôm nay; app báo khách trước ngày hiệu lực.</div>') + '</div>' +
+      '<h3 style="font-size:15px;margin:20px 0 10px">Lịch sử thay đổi</h3><div class="card card-pad">' + s.mem.cfgLog.map((h) => '<div class="sm" style="margin-bottom:6px">' + esc(h) + '</div>').join('') + '</div>';
+  },
+  notes: { src: 'brainstorm Membership bảng phân quyền (GPCN: cấu hình tỉ lệ điểm, ngưỡng hạng, trần thông báo), Mục 9 rủi ro (đổi quy tắc phải báo khách trước); Membership câu 21, 26, 27, 28, 29, 33; Re-MKT câu 4, 12; đề xuất câu 17 (thêm 28/10/2026, chưa chốt)',
+    rules: ['Giá trị đang áp dụng lấy theo bảng chốt Membership: tích 2%, như nhau ở Kite, Tiktak, Resort (câu 26, cập nhật 28/10/2026; chốt 26/10 ghi 10%), Gold từ 50.000, Platinum từ 200.000 điểm (câu 26), hạn 12 tháng theo đợt, nhắc trước 30 ngày (câu 28), thưởng lần đầu 5.000 điểm cho hoá đơn từ 100.000đ (câu 33), xác nhận trên app từ 200.000 điểm (câu 21).', 'Trần thông báo ưu đãi cố định theo quy định tin quảng cáo (Re-MKT câu 4).'],
+    decided: [D(4), D(9), D(12)],
+    pending: [PD(17)],
+    roles: ['Chỉ GPCN HO (brainstorm Membership: Manager, Admin Biz Line không cấu hình tỉ lệ điểm, ngưỡng hạng).'],
+    self: ['Ngày hiệu lực sớm nhất 30 ngày sau ngày lưu để kịp báo khách; trong thời gian chờ, cấu hình cũ vẫn áp dụng.', 'Ràng buộc nhập: tỉ lệ tích 1–20%, Platinum lớn hơn Gold, hạn điểm 1–36 tháng.'],
+    demo: ['Đổi Tỉ lệ tích thành 3, nhập ngày hiệu lực 01/01/2027 rồi Lưu cấu hình: hiện khối Đã lên lịch và dòng mới ở Lịch sử thay đổi.', 'Đặt Platinum từ 40.000: báo lỗi Platinum phải lớn hơn Gold.', 'Nhập ngày hiệu lực 01/11/2026: báo ngày sớm nhất.'] },
+});
+ACT.sReset = () => { S.mem.cfgDraft = Object.assign({}, S.mem.cfgNext || S.mem.cfg); render(); };
+ACT.sSave = () => {
+  const d = S.mem.cfgDraft, base = S.mem.cfgNext || S.mem.cfg, ch = cfgChanges(d, base);
+  S.mem.cfgLog.unshift(S.today + ' · GPCN HO · ' + ch.map((k) => CFG_LBL[k] + ' ' + base[k] + ' → ' + d[k]).join('; ') + ', hiệu lực từ ' + d.eff);
+  S.mem.cfgNext = Object.assign({}, d); toast('Đã lưu. Cấu hình mới có hiệu lực từ ' + d.eff + '; app báo khách trước ngày đó.', 'ok'); render();
+};
+
+/* ---------- Báo cáo Membership: R-E5 tăng trưởng thành viên (MEM-01), R-E6 tích và đổi điểm (MEM-02) ---------- */
+/* Tháng 10/2026, theo đơn vị nơi khách đăng ký; cộng chéo khớp R-G1: 12.480 thành viên (12.480 voucher chào mừng), 5.117 hoạt động 30 ngày (41%), 7.862 voucher chào mừng đã dùng */
+const MEMU = {
+  Kite: { total: 7420, m: [1250, 2760, 3410], act: 3180, silver: 6810, gold: 540, plat: 70, consent: 5300, wel: 4920, del: 9, welAvg: 6000 },
+  Tiktak: { total: 3010, m: [540, 1150, 1320], act: 1290, silver: 2590, gold: 360, plat: 60, consent: 2200, wel: 1890, del: 6, welAvg: 15000 },
+  Resort: { total: 2050, m: [360, 860, 830], act: 647, silver: 1836, gold: 202, plat: 12, consent: 1468, wel: 1052, del: 3, welAvg: 50000 },
+};
+function memScope(s) { return memOwn(s) ? ['Tiktak'] : MEM_UNITS.filter(unitOk); }
+function memSum(us, k) { return us.reduce((a, u) => a + MEMU[u][k], 0); }
+function memScopeTxt(s) { return memOwn(s) ? 'đơn vị Tiktak' : (S.unitView === 'all' ? 'cả tập đoàn' : 'đơn vị ' + S.unitView); }
+const MEM_RPT_ROLES = ['admin', 'manager', 'finance', 'gpcn', 'mkt'];
+def('R-E5', {
+  name: 'Tăng trưởng thành viên, MEM-01', flow: 'f7', figma: false, roles: MEM_RPT_ROLES, role: 'gpcn', nav: 'bc',
+  snap: () => snap('approved', (s) => { s.today = '01/11/2026'; }),
+  view: (s) => {
+    const us = memScope(s), T = memSum(us, 'total'), A = memSum(us, 'act'), N = us.reduce((a, u) => a + MEMU[u].m[2], 0), C = memSum(us, 'consent'), W = memSum(us, 'wel');
+    const months = [0, 1, 2].map((i) => [['Tháng 8', 'Tháng 9', 'Tháng 10'][i], us.reduce((a, u) => a + MEMU[u].m[i], 0)]);
+    const pc = (a, b) => pct1(a / b);
+    return newMark('file concept Membership (báo cáo MEM-01 Tăng trưởng thành viên); brainstorm Membership Mục 4 P0 (báo cáo MEM-01); Re-MKT câu 10, 13; đề xuất câu 17 (thêm 28/10/2026, chưa chốt)') + crumb([['Báo cáo', 'R-E1'], ['Tăng trưởng thành viên']]) +
+      pageHead('Tăng trưởng thành viên — tháng 10/2026', 'Thành viên Membership của ' + memScopeTxt(s) + ', theo đơn vị nơi khách đăng ký. Hoạt động tính theo ngày có mở app.', '<button class="btn btn-s" data-act="exportX">Xuất Excel</button>') + fresh('Số liệu tính đến 23:59 · 31/10/2026') + rptTabs(s, 'R-E5') +
+      '<div class="kpis k5">' + kpiBox('Tổng thành viên', fmtInt(T), '+' + fmtInt(N) + ' trong tháng 10') + kpiBox('Thành viên mới tháng 10', fmtInt(N), 'Tháng 9: ' + fmtInt(months[1][1]) + ' · ' + (N >= months[1][1] ? '▲' : '▼') + ' ' + pct1(Math.abs(N - months[1][1]) / months[1][1]), '#2563EB') + kpiBox('Hoạt động 30 ngày', pc(A, T), fmtInt(A) + ' thành viên có ngày mở app trong 30 ngày (Re-MKT câu 13)', '#00913E') + kpiBox('Đồng ý nhận ưu đãi', pc(C, T), fmtInt(C) + ' thành viên · tập có thể gửi campaign', '#9B3EE5') + kpiBox('Đã dùng voucher chào mừng', pc(W, T), fmtInt(W) + ' trên ' + fmtInt(T) + ' voucher giảm 10%') + '</div>' +
+      '<div class="grid2 mb16" style="grid-template-columns:1fr 1.3fr;align-items:start"><div class="ch-card"><h3>Thành viên mới theo tháng</h3>' + barChartV(months, 460, 210) + '<p class="xs muted" style="margin:6px 0 0">Số đăng ký mới mỗi tháng từ khi ra mắt.</p></div>' +
+      '<div class="ch-card"><h3>Theo hạng</h3>' + ['silver', 'gold', 'plat'].map((k, i) => { const v = memSum(us, k); return '<div class="hbar"><span>' + TIERS3[i] + '</span><div class="row" style="gap:10px"><div class="prog-line" style="flex:1;height:14px"><span style="width:' + (v / T * 100).toFixed(1) + '%"></span></div><span class="sm" style="min-width:110px;text-align:right">' + fmtInt(v) + ' · ' + pc(v, T) + '</span></div></div>'; }).join('') + '<p class="xs muted" style="margin:8px 0 0">Hạng xét theo điểm trong năm: Silver dưới 50.000, Gold 50.000–199.999, Platinum từ 200.000 (Membership câu 26).</p></div></div>' +
+      '<table class="tbl"><thead><tr><th>Đơn vị nơi đăng ký</th><th class="num">Tổng thành viên</th><th class="num">Mới tháng 10</th><th class="num">Hoạt động 30 ngày</th><th class="num">Silver</th><th class="num">Gold</th><th class="num">Platinum</th><th class="num">Đồng ý nhận ưu đãi</th><th class="num">Xoá tài khoản</th></tr></thead><tbody>' +
+      us.map((u) => { const x = MEMU[u]; return '<tr><td>' + u + '</td><td class="num">' + fmtInt(x.total) + '</td><td class="num">' + fmtInt(x.m[2]) + '</td><td class="num">' + fmtInt(x.act) + ' · ' + pc(x.act, x.total) + '</td><td class="num">' + fmtInt(x.silver) + '</td><td class="num">' + fmtInt(x.gold) + '</td><td class="num">' + fmtInt(x.plat) + '</td><td class="num">' + fmtInt(x.consent) + '</td><td class="num">' + fmtInt(x.del) + '</td></tr>'; }).join('') +
+      '</tbody>' + (us.length > 1 ? '<tfoot><tr><td>Cả tập đoàn</td><td class="num">' + fmtInt(T) + '</td><td class="num">' + fmtInt(N) + '</td><td class="num">' + fmtInt(A) + ' · ' + pc(A, T) + '</td><td class="num">' + fmtInt(memSum(us, 'silver')) + '</td><td class="num">' + fmtInt(memSum(us, 'gold')) + '</td><td class="num">' + fmtInt(memSum(us, 'plat')) + '</td><td class="num">' + fmtInt(C) + '</td><td class="num">' + fmtInt(memSum(us, 'del')) + '</td></tr></tfoot>' : '') + '</table>' +
+      '<div class="tbl-note">Số minh hoạ, cộng chéo khớp màn Tổng hợp toàn tập đoàn (R-G1): 12.480 thành viên, 5.117 hoạt động 30 ngày (41%), 7.862 voucher chào mừng đã dùng (63%).</div>';
+  },
+  notes: { src: 'file concept Membership (MEM-01: thành viên mới, rời đi, tổng thành viên hoạt động, phân bổ theo hạng; hằng tháng; GPCN HO, Manager); brainstorm Membership Mục 4 P0; đề xuất câu 17',
+    rules: ['MEM-01 theo file concept: số thành viên mới, rời đi, tổng thành viên hoạt động, phân bổ theo hạng.', 'Thành viên hoạt động đếm theo ngày có mở app (Re-MKT câu 13).', 'Theo đơn vị nơi khách đăng ký (app nhớ quầy khách đã quét, Membership câu 5).'],
+    decided: [D(10), D(13)],
+    pending: [PD(17)],
+    roles: ['BL Admin, BL Manager: đơn vị mình (Tiktak). Finance HO, GPCN HO, Phòng MKT: cả tập đoàn, lọc bằng ô Xem dữ liệu của (brainstorm Membership: xem báo cáo đơn vị mình / toàn bộ).'],
+    self: ['Rời đi ghi bằng số xoá tài khoản; số tắt nhận ưu đãi nằm ở R-E4.', 'Ô Đồng ý nhận ưu đãi đặt ở đây vì đó là tập Re-MKT gửi được (Re-MKT câu 3).'],
+    demo: ['Đổi vai BL Manager: chỉ còn số của Tiktak.', 'Ở vai GPCN HO, chọn Resort ở ô Xem dữ liệu của.'] },
+});
+/* Tích và đổi điểm tháng 10/2026 (triệu đồng = triệu điểm), khớp R-Q1; 12 tháng: phát 118, tiêu 33, hết hạn 2,6, còn giữ 82,4 */
+const MEMP = {
+  Kite: { iss: 7.2, y: 55, ysp: 14, exp: 1.4, hold: 39.6, vou: 1.81, bill: 0.39 },
+  Tiktak: { iss: 5.2, y: 40, ysp: 11.6, exp: 0.8, hold: 27.6, vou: 0.7, bill: 1.7 },
+  Resort: { iss: 3.2, y: 23, ysp: 7.4, exp: 0.4, hold: 15.2, vou: 0.59, bill: 1.01 },
+};
+def('R-E6', {
+  name: 'Tích và đổi điểm, MEM-02', flow: 'f7', figma: false, roles: MEM_RPT_ROLES, role: 'gpcn', nav: 'bc',
+  snap: () => snap('approved', (s) => { s.today = '01/11/2026'; }),
+  view: (s) => {
+    const us = memScope(s), sm = (k) => us.reduce((a, u) => a + MEMP[u][k], 0), r2 = (x) => Math.round(x * 100) / 100;
+    const iss = sm('iss'), sp = r2(sm('vou') + sm('bill')), y = sm('y'), ysp = sm('ysp'), exp = sm('exp'), hold = sm('hold');
+    const offers = s.mem.offers.filter((o) => memOk(s, o.bl) && o.redeemed).sort((a, b) => b.redeemed - a.redeemed).slice(0, 6);
+    const welCost = (u) => MEMU[u].wel * MEMU[u].welAvg, gapCost = (u) => s.mem.offers.filter((o) => o.bl === u).reduce((a, o) => a + o.used * kGap(o), 0);
+    return newMark('file concept Membership (MEM-02 Tích điểm và đổi điểm; MEM-04 hiệu quả danh mục); brainstorm Membership Mục 4 P0 (MEM-02, đối soát điểm phát ra với doanh thu); mô hình quỹ chung 23/10; đề xuất câu 17') + crumb([['Báo cáo', 'R-E1'], ['Tích và đổi điểm']]) +
+      pageHead('Tích và đổi điểm — tháng 10/2026', 'Điểm phát ra, điểm khách tiêu và điểm còn giữ của ' + memScopeTxt(s) + '. 1 điểm = 1đ; điểm phát ra bằng tiền đơn vị nộp Quỹ điểm thưởng VNGroup.', '<button class="btn btn-s" data-act="exportX">Xuất Excel</button>') + fresh('Số liệu tính đến 23:59 · 31/10/2026') + rptTabs(s, 'R-E6') +
+      '<div class="kpis k5">' + kpiBox('Điểm phát trong tháng', trd(iss), '2% số tiền khách trả bằng tiền', '#2563EB') + kpiBox('Điểm khách tiêu', trd(sp), trd(r2(sm('vou'))) + ' qua voucher đổi điểm · ' + trd(r2(sm('bill'))) + ' trừ vào hoá đơn', '#E8521A') + kpiBox('Tỉ lệ tiêu điểm 12 tháng', pct1(ysp / y), trd(ysp) + ' đã tiêu trên ' + trd(y) + ' đã phát · cảnh báo khi dưới 20%', '#9B3EE5') + kpiBox('Điểm hết hạn 12 tháng', trd(exp), 'Tiền ở lại quỹ (Membership câu 28)') + kpiBox('Điểm khách đang giữ', trd(hold), 'Khoản phải trả khách tại quỹ (Re-MKT câu 14)', '#00913E') + '</div>' +
+      '<div class="grid2 mb16" style="align-items:start"><div><h3 style="font-size:15px;margin:0 0 10px">Theo đơn vị phát điểm</h3><table class="tbl"><thead><tr><th>Đơn vị</th><th class="num">Phát tháng 10</th><th class="num">Phát 12 tháng</th><th class="num">Đã tiêu</th><th class="num">Tỉ lệ tiêu</th><th class="num">Hết hạn</th><th class="num">Đang giữ</th></tr></thead><tbody>' +
+      us.map((u) => { const x = MEMP[u]; return '<tr><td>' + u + '</td><td class="num">' + trd(x.iss) + '</td><td class="num">' + trd(x.y) + '</td><td class="num">' + trd(x.ysp) + '</td><td class="num">' + pct1(x.ysp / x.y) + '</td><td class="num">' + trd(x.exp) + '</td><td class="num">' + trd(x.hold) + '</td></tr>'; }).join('') + '</tbody></table></div>' +
+      '<div><h3 style="font-size:15px;margin:0 0 10px">Theo nơi khách tiêu điểm · tháng 10</h3><table class="tbl"><thead><tr><th>Đơn vị</th><th class="num">Dùng voucher đổi điểm</th><th class="num">Trừ vào hoá đơn</th><th class="num">Quỹ trả đơn vị</th></tr></thead><tbody>' +
+      us.map((u) => { const x = MEMP[u]; return '<tr><td>' + u + '</td><td class="num">' + trd(x.vou) + '</td><td class="num">' + trd(x.bill) + '</td><td class="num">' + trd(r2(x.vou + x.bill)) + '</td></tr>'; }).join('') + '</tbody></table></div></div>' +
+      '<div class="grid2" style="align-items:start"><div><h3 style="font-size:15px;margin:0 0 10px">Ưu đãi đổi nhiều nhất</h3><table class="tbl"><thead><tr><th>Ưu đãi</th><th>Đơn vị</th><th class="num">Lượt đổi</th><th class="num">Đã dùng</th><th class="num">Điểm đã đổi</th></tr></thead><tbody>' +
+      offers.map((o) => '<tr><td>' + esc(o.name) + '</td><td>' + o.bl + '</td><td class="num">' + fmtInt(o.redeemed) + '</td><td class="num">' + fmtInt(o.used) + '</td><td class="num">' + fmtInt(o.redeemed * num(o.pts)) + '</td></tr>').join('') + '</tbody></table><div class="tbl-note">Lấy từ danh mục đổi điểm (R-K1).</div></div>' +
+      '<div><h3 style="font-size:15px;margin:0 0 10px">Chi phí ưu đãi đơn vị chịu · từ ngày ra mắt</h3><table class="tbl"><thead><tr><th>Đơn vị</th><th class="num">Voucher chào mừng đã dùng</th><th class="num">Chi phí voucher chào mừng</th><th class="num">Phần bù đổi điểm</th></tr></thead><tbody>' +
+      us.map((u) => '<tr><td>' + u + '</td><td class="num">' + fmtInt(MEMU[u].wel) + '</td><td class="num">' + vnd(welCost(u)) + '</td><td class="num">' + vnd(gapCost(u)) + '</td></tr>').join('') + '</tbody></table><div class="tbl-note">Voucher chào mừng giảm 10%, tối đa 50.000đ, do đơn vị nơi khách đăng ký chịu (Membership câu 4, 5); mức giảm trung bình mỗi lượt là minh hoạ. Phần bù đổi điểm = lượt đã dùng × (giá trị ưu đãi − số điểm).</div></div></div>';
+  },
+  notes: { src: 'file concept Membership (MEM-02: tổng điểm phát, điểm đổi, tỉ lệ đổi, điểm tồn, điểm hết hạn; GPCN, Finance); brainstorm Membership Mục 4 P0 (MEM-02, đối soát điểm phát ra với doanh thu); mô hình quỹ chung 23/10; đề xuất câu 17',
+    rules: ['Điểm phát ra bằng tiền đơn vị nộp quỹ (1 điểm = 1đ, 2% số tiền khách trả bằng tiền).', 'Tỉ lệ tiêu điểm 12 tháng = điểm đã tiêu / điểm đã phát; cảnh báo khi dưới 20% (mức của R-G1).', 'Số tháng 10 khớp R-Q1 (phát 15,6 tr, tiêu 6,2 tr) và R-G1 (82,4 tr đang giữ, 28%).', 'Phần Chi phí ưu đãi đơn vị chịu là đích của liên kết “Xem chi phí ưu đãi” ở R-G1.'],
+    decided: [D(9), D(14)],
+    pending: [PD(17)],
+    roles: ['BL Admin, BL Manager: đơn vị mình (Tiktak). Finance HO, GPCN HO, Phòng MKT: cả tập đoàn.'],
+    self: ['Bảng Ưu đãi đổi nhiều nhất thay một phần báo cáo MEM-04 (hiệu quả danh mục) của file concept.'],
+    demo: ['Đổi vai BL Manager: chỉ còn Tiktak.', 'Cho hiện một ưu đãi mới ở R-K2 rồi quay lại: bảng ưu đãi không đổi vì chưa có lượt đổi.'] },
+});
+
+/* ---------- R-G2 bán chéo theo cặp đơn vị ---------- */
+/* [đơn vị phát, đơn vị dùng, đã dùng, đã phát, doanh thu tr đ]; khớp biểu đồ và bảng của R-G1 (312 / 2.790; 326 tr đ) */
+const XPAIR = [['Kite', 'Tiktak', 160, 1200, 82], ['Resort', 'Tiktak', 26, 250, 14], ['Kite', 'Resort', 58, 760, 168], ['Tiktak', 'Resort', 16, 220, 44], ['Tiktak', 'Kite', 44, 280, 15], ['Resort', 'Kite', 8, 80, 3]];
+def('R-G2', {
+  name: 'Bán chéo theo cặp đơn vị', flow: 'f6', figma: false, roles: ['gpcn', 'mkt'], role: 'gpcn', nav: 'cap',
+  snap: () => snap('approved'),
+  view: (s) => {
+    const ps = XPAIR.filter((p) => unitOk(p[0]) || unitOk(p[1]));
+    const cell = (a, b) => { if (a === b) return '<td class="dg">—</td>'; const p = XPAIR.find((x) => x[0] === a && x[1] === b); const dim = !(unitOk(a) || unitOk(b)); return '<td' + (dim ? ' style="opacity:.4"' : '') + '><b>' + pct1(p[2] / p[3]) + '</b><div class="xs muted">' + fmtInt(p[2]) + ' / ' + fmtInt(p[3]) + ' · ' + p[4] + ' tr đ</div></td>'; };
+    const best = ps.slice().sort((a, b) => b[2] / b[3] - a[2] / a[3]);
+    return newMark('Re-MKT câu 13 (cơ hội bán chéo là voucher đã gửi tới khách chưa từng dùng đơn vị phát); biểu đồ và bảng của R-G1; đề xuất câu 16 (thêm 28/10/2026, chưa chốt)') + crumb([['Tổng hợp toàn tập đoàn', 'R-G1'], ['Bán chéo theo cặp đơn vị']]) +
+      pageHead('Bán chéo theo cặp đơn vị — tháng 10/2026', 'Voucher, điểm do đơn vị ở hàng phát ra được dùng ở đơn vị ở cột. Mỗi ô: tỉ lệ chuyển đổi, đã dùng / đã phát, doanh thu hoá đơn có dùng voucher, điểm đó.', '<button class="btn btn-s" data-act="exportX">Xuất Excel</button>') + fresh('Dữ liệu tính đến: 3 đơn vị 28/10/2026') +
+      '<table class="tbl mx mb16"><thead><tr><th style="text-align:left">Đơn vị phát ↓ · đơn vị dùng →</th>' + MEM_UNITS.map((u) => '<th>' + u + '</th>').join('') + '</tr></thead><tbody>' + MEM_UNITS.map((a) => '<tr><td style="text-align:left" class="b">' + a + '</td>' + MEM_UNITS.map((b) => cell(a, b)).join('') + '</tr>').join('') + '</tbody></table>' +
+      '<div class="grid2" style="grid-template-columns:1fr 360px;align-items:start"><div class="ch-card"><h3>Tỉ lệ chuyển đổi theo cặp</h3>' + barChartPct(best.map((p) => [p[0] + ' → ' + p[1], fmtInt(p[2]) + ' / ' + fmtInt(p[3]), p[2] / p[3] * 100, pct1(p[2] / p[3])]), 680, 230) + '</div>' +
+      '<div class="ch-card"><h3>Đọc nhanh</h3><p class="sm" style="margin:0 0 8px">Cao nhất: <b>' + best[0][0] + ' → ' + best[0][1] + '</b> ' + pct1(best[0][2] / best[0][3]) + '.</p><p class="sm" style="margin:0 0 8px">Thấp nhất: <b>' + best[best.length - 1][0] + ' → ' + best[best.length - 1][1] + '</b> ' + pct1(best[best.length - 1][2] / best[best.length - 1][3]) + '.</p><p class="sm muted" style="margin:0">Cả tập đoàn: 312 / 2.790 = 11,2%; doanh thu 326 tr đ (R-G1).</p><div class="mt12"><button class="lnk sm" data-go="' + (s.role === 'gpcn' ? 'R-C1' : 'R-E1') + '">Xem từng campaign →</button></div></div></div>';
+  },
+  notes: { src: 'R-G1 (biểu đồ tỉ lệ chuyển đổi bán chéo theo cặp đơn vị, bảng theo đơn vị nhận khách); biên bản 21/10 mục 2.3 phần 4; Re-MKT câu 13; đề xuất câu 16 (thêm 28/10/2026, chưa chốt)',
+    rules: ['Tỉ lệ chuyển đổi bán chéo = voucher, điểm đơn vị A phát được dùng ở đơn vị B / số đã phát (R-G1).', 'Số khớp R-G1: sáu cặp cộng lại 312 / 2.790 = 11,2%; doanh thu theo đơn vị dùng: Tiktak 96 tr, Resort 212 tr, Kite 18 tr.'],
+    decided: [D(13)],
+    pending: [PD(16)],
+    roles: ['GPCN HO và Phòng MKT (chỉ xem).'],
+    self: ['Ma trận hàng phát, cột dùng; ô chéo để trống. Chọn đơn vị ở ô Xem dữ liệu của thì làm mờ các cặp không liên quan.', 'Doanh thu từng cặp chia từ bảng R-G1 là minh hoạ.'],
+    demo: ['Chọn Kite ở ô Xem dữ liệu của.'] },
+});
+
 /* ================= Khởi động ================= */
 const SL_FIRST = ['R-A1', 'R-A2'];
 function boot() {
@@ -2362,9 +2918,9 @@ function boot() {
     '<div class="tb"><span class="tb-brand">Re-MKT<small>bản xem thử · VNG 360</small></span>' +
     '<button id="tbList" title="Danh sách màn">' + IC.list + 'Danh sách màn</button><span class="tb-sep"></span>' +
     '<span class="tb-cur" id="tbCur"></span><span class="tb-date" id="tbDate"></span><span class="tb-sep"></span>' +
-    '<span style="color:var(--tb-muted)">' + IC.user + '</span><select id="tbRole" title="Đổi vai"><option value="admin">BL Admin · Tiktak</option><option value="manager">BL Manager · Tiktak</option><option value="finance">Finance HO</option><option value="gpcn">GPCN HO</option></select>' +
+    '<span style="color:var(--tb-muted)">' + IC.user + '</span><select id="tbRole" title="Đổi vai"><option value="admin">BL Admin · Tiktak</option><option value="manager">BL Manager · Tiktak</option><option value="finance">Finance HO</option><option value="gpcn">GPCN HO</option><option value="mkt">Phòng MKT · chỉ xem</option></select>' +
     '<button id="tbSys" title="Giả lập việc hệ thống tự làm">' + IC.bolt + 'Giả lập hệ thống</button><button id="tbNotes" title="Bật hoặc tắt ghi chú thiết kế">' + IC.note + 'Ghi chú</button>' +
-    '<button id="tbDQ" title="14 quyết định chốt ngày 26/10/2026 (khung Cần anh/chị chốt trên Figma)">' + IC.check14 + 'Đã chốt cho MVP (' + DQN + ')</button></div>' +
+    '<button id="tbDQ" title="' + DQN_OK + ' quyết định chốt ngày 26/10/2026 và ' + (DQN - DQN_OK) + ' câu thêm 28/10/2026 chưa chốt (khung Cần anh/chị chốt trên Figma)">' + IC.check14 + 'Đã chốt cho MVP (' + DQN_OK + ') · ' + (DQN - DQN_OK) + ' chờ chốt</button></div>' +
     '<div class="tb-menu" id="tbMenu"></div>' +
     '<div class="sl-back" id="slBack"></div><aside class="sl" id="sl"><div class="sl-head"><b>Danh sách màn</b><button class="lnk" id="slClose">Đóng</button></div><div class="sl-body" id="slBody"></div>' +
     '<div class="sl-legend"><span><span class="pill pill-figma">Theo Figma</span> ' + nFig + ' màn dựng lại từ file "360 Customers"</span><span><span class="pill pill-new">Chưa có</span> ' + nNew + ' màn dựng từ tài liệu</span><span>Mở màn từ danh sách sẽ đưa dữ liệu mẫu về đúng thời điểm của màn đó.</span></div></aside>' +

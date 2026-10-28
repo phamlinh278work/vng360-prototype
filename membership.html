@@ -361,6 +361,42 @@ body.mobile.tb-open .tb-fab{background:var(--m-brand)}
 .p-small{font-size:12px;color:#60646C}
 .p-err{color:#B80411;font-size:13px;font-weight:600}
 .pscr .toasts{bottom:24px;left:auto;right:16px;width:340px}
+/* ===== Trang nhân viên quầy Tiktak, Resort: web nhỏ trên máy tính bảng ngang (câu 18) ===== */
+.pos.tab{width:1024px;height:768px;border-radius:30px;padding:18px;background:#26262B}
+.pos.tab .pscr{width:988px;height:732px;border-radius:12px}
+.q-top{height:56px;flex:none;background:#fff;border-bottom:1px solid #E2E8F0;display:flex;align-items:center;gap:14px;padding:0 20px}
+.q-top .logo{width:30px;height:30px;border-radius:8px;background:var(--m-brand);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px;flex:none}
+.q-top .ttl{display:flex;flex-direction:column;line-height:1.25;white-space:nowrap}
+.q-top .ttl b{font-size:14px}
+.q-top .ttl span{font-size:12px;color:#60646C}
+.q-nav{display:flex;gap:4px;margin-left:10px}
+.q-nav button{height:34px;padding:0 12px;border-radius:8px;font-weight:600;color:#60646C;white-space:nowrap}
+.q-tbl td b{white-space:nowrap}
+.q-nav button.on{background:#F1F6FF;color:#1443AB}
+.q-top .u{margin-left:auto;display:flex;align-items:center;gap:10px;color:#60646C;font-size:13px;white-space:nowrap}
+.q-top .u b{color:#1C2024;font-weight:600}
+.q-top .off{color:#B80411;font-weight:600}
+.q-body{flex:1;min-height:0;display:flex;gap:20px;padding:20px;overflow-y:auto}
+.q-col{display:flex;flex-direction:column;gap:14px;min-width:0}
+.q-card{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.q-card.bad{border-color:#F3B2AC;background:#FFF8F7}
+.q-h{font-size:18px;font-weight:700;margin:0}
+.q-h.bad{color:#B80411}
+.q-lbl{font-size:13px;font-weight:600}
+.q-steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+.q-ok{width:56px;height:56px;border-radius:50%;background:#EAFBEC;color:#007631;display:grid;place-items:center}
+.q-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.q-tbl th{text-align:left;font-weight:600;color:#60646C;padding:8px 10px;border-bottom:1px solid #E2E8F0;background:#FAFAFA;white-space:nowrap}
+.q-tbl td{padding:10px;border-bottom:1px solid #F0F0F2;vertical-align:top}
+.q-tbl tr.mine td{background:#FBF8FE}
+.q-st{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;background:#EAFBEC;color:#007631;white-space:nowrap}
+.q-st.undo{background:#F4F4F6;color:#60646C}
+.q-st.wait{background:#FFF3EA;color:#914D00}
+.q-login{margin:auto;width:440px}
+.p-btn.danger{background:#DC2626}
+.p-btn.sm{height:34px;font-size:13px;padding:0 12px}
+select.p-inp{appearance:auto}
+textarea.p-inp{height:64px;padding:8px 12px;resize:none;font:inherit}
 
 /* ===== Trang chủ, mã thành viên (Figma M1, M3, M17) ===== */
 .pendchip{display:inline-flex;align-items:center;gap:4px;margin-top:4px;padding:1px 8px;border:1.2px dashed var(--m-decor);border-radius:10px;font-size:12px;color:var(--m-muted)}
@@ -570,6 +606,8 @@ body.notes-on .notes{display:block}
 .dec .body{overflow-y:auto;padding:0 18px 40px}
 .dec .tbl2{display:grid;grid-template-columns:34px minmax(170px,1.6fr) 112px minmax(220px,2.6fr) 116px minmax(200px,2fr);border-left:1px solid var(--c-line)}
 .dec .done{color:#0B4F49;font-weight:500}
+.dec .open{color:var(--c-amber-ink);font-weight:600}
+.dec .grp-h.new{background:var(--c-amber-bg);color:var(--c-amber-ink)}
 .dec .tbl2>div{padding:10px;border-right:1px solid var(--c-line);border-bottom:1px solid var(--c-line)}
 .dec .th{position:sticky;top:0;background:#F4F4F6;font-weight:600;font-size:12.5px;z-index:2;border-top:1px solid var(--c-line)}
 .dec .grp-h{grid-column:1/-1;background:#EFE7F7;color:var(--m-brand);font-weight:600}
@@ -614,7 +652,7 @@ body.notes-on .notes{display:block}
   <button class="tb-btn" id="tb-list" aria-label="Mở danh sách màn">☰ Danh sách màn</button>
   <span class="tb-title">Membership<small>VNGroup 360 · bản xem thử HTML</small></span>
   <span class="tb-seg" role="group" aria-label="Chế độ máy">
-    <button data-mode="kh">App KH</button><button data-mode="nv">Máy iPOS</button><button data-mode="duo">Hai máy</button>
+    <button data-mode="kh">App KH</button><button data-mode="nv" title="Kite: máy iPOS · Tiktak, Resort: trang nhân viên quầy trên máy tính bảng">Máy quầy</button><button data-mode="duo">Hai máy</button>
   </span>
   <button class="tb-btn" id="tb-gift" title="Campaign Re-MKT gửi ưu đãi Tiktak; khách nhận theo phương án B (câu 40)">Gửi ưu đãi mẫu</button>
   <button class="tb-btn" id="tb-topup" title="Chỉ có trong bản xem thử: cộng 1.000.000 điểm dùng được vào hồ sơ đang xem, không tính vào xét hạng">+ Nạp 1 triệu điểm</button>
@@ -624,7 +662,7 @@ body.notes-on .notes{display:block}
     </span>
   </span>
   <span class="tb-sp"></span>
-  <button class="tb-btn" id="tb-dec" aria-pressed="false" title="43 câu trong bảng &quot;Cần anh/chị chốt&quot; trên Figma, chốt theo đề xuất của BA ngày 26/10/2026">Đã chốt cho MVP (43)</button>
+  <button class="tb-btn" id="tb-dec" aria-pressed="false" title="43 câu trong bảng &quot;Cần anh/chị chốt&quot; trên Figma, chốt theo đề xuất của BA ngày 26/10/2026; câu 44–46 thêm ngày 28/10/2026, chưa chốt">Đã chốt cho MVP (43) · 3 chờ chốt</button>
   <button class="tb-btn" id="tb-notes" aria-pressed="false">Ghi chú</button>
   <button class="tb-btn" id="tb-reset" title="Đưa dữ liệu mẫu về ban đầu và mở lại Hành trình 1">Đặt lại</button>
   <nav class="jb" id="jb" aria-label="Hành trình"></nav>
@@ -645,6 +683,7 @@ body.notes-on .notes{display:block}
         <li>Màn Figma chưa vẽ (nối lịch sử ở đơn vị khác, trang hạng và quyền lợi, tài khoản và cài đặt, báo thiếu điểm, quên PIN) được dựng theo các câu đã chốt, mang nhãn "Chưa có trên Figma".</li>
         <li>Hướng thiết kế C "Nền sáng, thẻ quý": nền sáng, thẻ hạng là điểm nhấn, màu hành động ngọc, cam chỉ cho việc gấp. Màu lấy từ bộ biến Membership.</li>
         <li>Dữ liệu mẫu: KH Phạm Thu Trang, hạng Gold; giờ trên màn Figma là 9:41 ngày 12/10/2026. Ảnh và QR là minh hoạ. Thẻ ghi chú Figma còn vài số theo thang điểm cũ (vd Platinum từ 2.001 điểm); bản HTML dùng thang 1 điểm = 1đ (câu 26) và ghi ở mục "Khác với Figma".</li>
+        <li>Bổ sung 28/10/2026: trang nhân viên quầy cho Tiktak, Resort (Q1 đến Q7b, theo câu 18) và các màn app M34, M4b, M20c, M24b. Việc quản trị (xác minh liên kết, báo thiếu điểm, yêu cầu xoá) nằm ở CRM Hub; danh mục đổi điểm, quỹ điểm nằm ở web Re-MKT. Chỗ đặt này là đề xuất, chờ chốt ở câu 44–46; ghi chú có nút mở thẳng màn bên web kia.</li>
         <li>Banner, bảng ở quầy, nhân viên đứng cửa là đồ in và lời thoại ngoài đời, không phải màn app.</li>
         <li>Chuyển động chỉ ghi chú. Khi máy bật Reduce Motion: chỉ dùng mờ dần.</li>
       </ul>
@@ -661,7 +700,7 @@ body.notes-on .notes{display:block}
     <div class="scaler" id="sc-kh"><div class="phone"><div class="ph" id="dev-kh"></div></div></div>
   </section>
   <section class="devwrap" id="wrap-nv">
-    <div class="devlabel">Máy iPOS tại quầy · Kite Coffee Nguyễn Trãi</div>
+    <div class="devlabel" id="lbl-nv">Máy iPOS tại quầy · Kite Coffee Nguyễn Trãi</div>
     <div class="ribbon" id="rib-nv"></div>
     <div class="scaler" id="sc-nv"><div class="pos"><div class="pscr" id="dev-nv"></div></div></div>
   </section>
@@ -671,7 +710,7 @@ body.notes-on .notes{display:block}
 <div class="scrim" id="dec-scrim" style="z-index:66"></div>
 <aside class="dec" id="dec" aria-label="Đã chốt cho MVP">
   <header>
-    <div class="r"><h2 id="dec-title">Đã chốt cho MVP (43)</h2>
+    <div class="r"><h2 id="dec-title">Đã chốt cho MVP (43) · 3 câu chờ chốt</h2>
       <input id="dec-q" type="search" placeholder="Tìm theo nội dung, mã màn, người trả lời">
       <button class="tb-btn" id="dec-close">Đóng</button></div>
     <p class="intro" id="dec-intro"></p>
@@ -795,7 +834,7 @@ function seedVouchers() {
 function seedHistory() {
   return [
     { kind: 'earn', bl: 'kite', title: 'Kite Coffee · Bạc xỉu và bánh', short: 'Kite · Bạc xỉu và bánh', when: 'Hôm nay · 09:05', delta: 1200, pend: true },
-    { kind: 'earn', bl: 'kite', title: 'Kite Coffee · Cà phê latte', short: 'Kite · Cà phê latte', when: '10/10 · 08:12', delta: 400 },
+    { kind: 'earn', bl: 'kite', title: 'Kite Coffee · Cà phê latte', short: 'Kite · Cà phê latte', when: '10/10 · 08:12', delta: 900 },
     { kind: 'redeem', title: 'Đổi ưu đãi · Cà phê miễn phí', short: 'Đổi · Cà phê miễn phí', when: '08/10 · 15:20', delta: -50000 },
     { kind: 'claw', title: 'Thu hồi điểm', note: '20.000 điểm đã được trừ do giao dịch ngày 05/10/2026 bị hoàn.', delta: -20000 }
   ];
@@ -808,8 +847,8 @@ function seedNotifs() {
   ];
 }
 const PLACE = 'Kite Coffee · Nguyễn Trãi';
-const EARN_PCT = 0.1;        /* khách nhận điểm bằng 10% số tiền trả bằng tiền (mô hình quỹ chung 23/10, câu 26) */
-const EARN_TXT = '10%';
+const EARN_PCT = 0.02; /* khách nhận điểm bằng 2% số tiền trả bằng tiền, như nhau ở Kite, Tiktak, Resort (thông tin 28/10/2026; mô hình quỹ chung 23/10, câu 26) */
+const EARN_TXT = '2%';
 const CONFIRM_AT = 200000;   /* từ 200.000 điểm khách phải xác nhận trên app (câu 21) */
 const WELCOME_CAP = 50000;   /* trần giảm của voucher chào mừng 10% (câu 4: có trần; số do Ban Kế toán đặt, bản HTML dùng 50.000đ) */
 
@@ -842,7 +881,7 @@ const DRULE = {
   23: 'Quầy mất kết nối với VNG 360: chỉ lưu tạm tích điểm, khoá dùng điểm và voucher đến khi có mạng.',
   24: 'Huỷ hoá đơn khi điểm của hoá đơn đó đã được tiêu ở nơi khác: để ví âm, trừ dần vào điểm lần sau; chỉ trừ vào tiền hoàn khi khách xoá tài khoản.',
   25: 'Hoá đơn tại quầy không khớp dữ liệu đơn vị gửi về: điểm chờ đối soát đến hôm sau; lệch số tiền thì lấy số của đơn vị, sửa điểm trước khi điểm dùng được và báo khách kèm lý do.',
-  26: 'Tích điểm theo mô hình quỹ chung: khách nhận số điểm bằng ' + EARN_TXT + ' số tiền trả bằng tiền (1 điểm = 1đ). Hạng xét theo điểm trong năm: Silver dưới 50.000, Gold 50.000–199.999, Platinum từ 200.000.',
+  26: 'Tích điểm theo mô hình quỹ chung: khách nhận số điểm bằng ' + EARN_TXT + ' số tiền trả bằng tiền, như nhau ở Kite, Tiktak, Resort (1 điểm = 1đ; cập nhật 28/10/2026, trước là 10%). Hạng xét theo điểm trong năm: Silver dưới 50.000, Gold 50.000–199.999, Platinum từ 200.000.',
   27: 'Chỉ Membership xét hạng; CRM Hub chỉ hiện hạng.',
   28: 'Điểm hết hạn theo từng đợt tích: điểm tích ngày nào hết hạn sau 12 tháng kể từ ngày đó; đổi ưu đãi hoặc dùng điểm tại quầy thì trừ đợt sắp hết hạn trước. Trang chủ luôn báo đợt hết hạn gần nhất, chuyển sang dải cam khi còn từ 30 ngày trở xuống (đổi ngày 27/10/2026 theo góp ý, trước đó chốt tự gia hạn). Tiền của điểm hết hạn ở lại Quỹ điểm thưởng VNGroup.',
   29: 'Quyền lợi theo hạng: Gold giảm thêm 5% hoá đơn tại cả ba đơn vị; Platinum có quyền lợi của Gold và được nâng hạng phòng tại Resort. Đúng ngày sinh nhật điểm nhân đôi.',
@@ -862,8 +901,19 @@ const DRULE = {
   43: 'Phương án C (không chọn): hộp quà luôn mở đúng ưu đãi đã định cho khách, không ngẫu nhiên, nên không thành khuyến mại may rủi.'
 };
 const dr = n => ({ t: DRULE[n], q: n });
+/* Câu thêm ngày 28/10/2026 khi bổ sung màn còn thiếu: chưa chốt, bản xem thử vẽ theo đề xuất của BA */
+const NEW_DATE = '28/10/2026';
+const DPROP = {
+  44: 'Việc về hồ sơ khách (xác minh liên kết, báo thiếu điểm, yêu cầu xoá tài khoản và rút đồng ý) làm ở CRM Hub; việc về ưu đãi, điểm, tiền (danh mục đổi điểm, hạn mức chi đổi điểm, quỹ điểm thưởng, cấu hình điểm và hạng, báo cáo MEM-01, MEM-02) làm ở web Re-MKT; việc tại quầy làm trên iPOS (Kite) và trang nhân viên quầy (Tiktak, Resort).',
+  45: 'Trang nhân viên quầy là trang web mở trên máy tính bảng hoặc điện thoại của quầy; mỗi nhân viên một tài khoản công ty, chọn quầy và ca khi vào; chỉ Manager hoàn tác lượt quét nhầm, trong ngày.',
+  46: 'Manager đơn vị (hoặc Staff được giao quyền) xử lý trên CRM Hub: xác minh liên kết trong 24 giờ, báo thiếu điểm trong 3 ngày làm việc; quá hạn báo GPCN HO.'
+};
+const dp = n => ({ t: DPROP[n], q: n, open: true });
 /* Màn của bản HTML dựng theo câu đã chốt (Figma chưa vẽ), thêm vào cột "Màn liên quan" */
-const DEC_EXTRA = { 9: ['W9'], 13: ['M23'], 14: ['M22', 'M24'], 15: ['M22'], 16: ['M7', 'M29', 'M33', 'W8'], 17: ['M27', 'M30'], 27: ['M19'], 29: ['M19'], 32: ['M20'], 34: ['M32'], 39: ['M11'] };
+const DEC_EXTRA = { 9: ['W9'], 13: ['M23'], 14: ['M22', 'M24'], 15: ['M22', 'M24b'], 16: ['M7', 'M29', 'M33', 'W8'], 17: ['M27', 'M30'], 18: ['Q1', 'Q3'], 19: ['M34'], 23: ['Q6'], 24: ['M4b'], 27: ['M19'], 29: ['M19'], 31: ['M4b'], 32: ['M20', 'M20c'], 34: ['M32'], 39: ['M11'] };
+/* Đường dẫn sang hai web còn lại (mở tab mới) */
+const CRM_URL = 'crm-hub.html';
+const RMK_URL = 're-mkt.html';
 /* Nguyên văn khung "Cần anh/chị chốt" (Figma 289:20700): nhóm, câu, màn liên quan, lựa chọn và đề xuất của BA, người được hỏi.
    Ngày 26/10/2026 cả 43 câu chốt theo đề xuất của BA; cột "Đã chốt" lấy từ DRULE bên dưới. */
 const DEC = [
@@ -901,7 +951,7 @@ const DEC = [
     { n: 25, q: "Hoá đơn tại quầy không khớp dữ liệu đơn vị gửi về thì sao?", scr: "M3, P4, M17", opts: [["Đề xuất: điểm chờ đối soát đến hôm sau như biên bản 21/10; lệch số tiền thì lấy số của đơn vị,", 1], ["sửa điểm trước khi điểm dùng được và báo khách kèm lý do. (Bảng quyết định PO ngày 20/10 còn ghi cộng điểm dùng ngay; biên bản 21/10 đã thay.)"]], who: "PO" }
   ] },
   { g: "Nhóm 5 · Điểm và hạng", rows: [
-    { n: 26, q: "Tỉ lệ tích điểm và ngưỡng các hạng", scr: "M1, M2, M18, P4", opts: [["Đề xuất: theo mô hình quỹ chung ngày 23/10:", 1], ["đơn vị nộp một tỉ lệ tiền khách trả vào quỹ, khách nhận số điểm bằng số tiền đó (1 điểm = 1đ); Tỉ lệ 10% số tiền trả, chốt 26/10/2026; ngưỡng hạng theo thang 1 điểm = 1đ (Figma M1, M18 còn ghi Platinum từ 2.001 điểm theo thang cũ)."]], who: "Ban TCKT, Phòng MKT" },
+    { n: 26, q: "Tỉ lệ tích điểm và ngưỡng các hạng", scr: "M1, M2, M18, P4", opts: [["Đề xuất: theo mô hình quỹ chung ngày 23/10:", 1], ["đơn vị nộp một tỉ lệ tiền khách trả vào quỹ, khách nhận số điểm bằng số tiền đó (1 điểm = 1đ); Tỉ lệ 2% số tiền trả, như nhau ở Kite, Tiktak, Resort nên điểm tích ở đơn vị nào cũng dùng 1:1 ở đơn vị khác (thông tin 28/10/2026; chốt 26/10 ghi 10%); ngưỡng hạng theo thang 1 điểm = 1đ (Figma M1, M18 còn ghi Platinum từ 2.001 điểm theo thang cũ)."]], who: "Ban TCKT, Phòng MKT" },
     { n: 27, q: "Hệ thống nào xét hạng?", scr: "M1, M18", opts: [["Đề xuất: chỉ Membership xét hạng, CRM Hub chỉ hiện hạng.", 1], ["Salesforce Loyalty và VinClub đều để hạng thuộc chương trình thành viên."]], who: "PO" },
     { n: 28, q: "Điểm hết hạn sau 12 tháng, trong khi CRM Hub coi khách Resort là rời bỏ sau 18 tháng", scr: "M1, M4, M6b", opts: [["(a) 12 tháng cố định."], ["(b) 12 tháng, tự gia hạn mỗi khi có điểm mới (Accor)."], ["(c) Không hết hạn (VinClub)."], ["Đề xuất: (b),", 1], ["khách Resort mỗi năm rưỡi mới quay lại vẫn không mất điểm, còn khách bỏ hẳn thì điểm vẫn hết hạn. Tiền của điểm hết hạn ở lại Quỹ điểm thưởng VNGroup và giảm khoản phải trả khách."]], who: "PO, Ban TCKT, Phòng MKT" },
     { n: 29, q: "Quyền lợi theo hạng và voucher sinh nhật", scr: "M1, M18", opts: [["Đề xuất: giữ như file nguồn: Gold giảm thêm 5%, Platinum nâng hạng phòng;", 1], ["Quyền lợi hiện ở màn Hạng và quyền lợi (M19) và dòng giảm 5% trên iPOS."]], who: "PO, Ban TCKT" },
@@ -923,8 +973,11 @@ const DEC = [
     { n: 41, q: "Phương án A: thẻ báo ưu đãi mới trên Trang chủ tự ẩn sau bao lâu?", scr: "PA-A1", opts: [["Đề xuất: ẩn khi khách đã mở xem, hoặc sau 7 ngày.", 1]], who: "PO" },
     { n: 42, q: "Phương án B: hạn bấm nhận bằng hạn dùng hay sớm hơn?", scr: "PA-B1", opts: [["Đề xuất: bằng hạn dùng,", 1], ["đỡ một mốc thời gian phải giải thích."]], who: "PO" },
     { n: 43, q: "Phương án C: hộp quà mở ra ngẫu nhiên thì có phải đăng ký khuyến mại không?", scr: "PA-C", opts: [["Đề xuất: không làm ngẫu nhiên;", 1], ["hộp luôn mở đúng ưu đãi đã định cho khách nên không thành khuyến mại may rủi (Điều 19 Nghị định 81/2018)."]], who: "Ban Pháp chế" }
-  ] }
-];
+  ] },
+  { g: "Nhóm 8 · Việc quản trị và trang nhân viên quầy (thêm 28/10/2026, chưa chốt)", fresh: true, rows: [
+    { n: 44, q: "Việc quản trị Membership đặt ở web nào?", scr: "M25, M20b, M30, M5, Q7", opts: [["(a) Làm thêm một web quản trị Membership riêng."], ["(b) Gắn vào hai web đang có: CRM Hub và web Re-MKT."], ["Đề xuất: (b):", 1], ["việc về hồ sơ khách (xác minh liên kết, báo thiếu điểm, yêu cầu xoá) ở CRM Hub, mục \"Yêu cầu từ app Membership\" (V1 đến V6); việc về ưu đãi, điểm, tiền (danh mục đổi điểm, hạn mức chi, quỹ điểm thưởng, cấu hình điểm và hạng, báo cáo MEM-01, MEM-02) ở web Re-MKT, nhóm menu \"Membership\" (R-K1 đến R-S1). CRM Hub đã có đăng nhập công ty, phân quyền đơn vị, bản ghi nguồn để so khớp; Re-MKT đã có bộ hình thức ưu đãi, quỹ, vai Finance HO."]], who: "PO, PM" },
+    { n: 45, q: "Trang nhân viên quầy Tiktak, Resort chạy trên thiết bị gì, ai đăng nhập, ai hoàn tác quét nhầm?", scr: "Q1, Q2, Q3, Q5, Q6, Q7, Q7b", opts: [["Đề xuất: trang web mở trên máy tính bảng hoặc điện thoại của quầy;", 1], ["mỗi nhân viên một tài khoản công ty, chọn quầy và ca khi vào; chỉ Manager hoàn tác lượt quét nhầm, trong ngày (biên bản 21/10 câu K5). Trang không thay phần mềm bán hàng: nhân viên ghi khoản giảm vào hoá đơn của đơn vị rồi nhập số hoá đơn để tích điểm."]], who: "Manager Tiktak, Manager Resort, IT" },
+    { n: 46, q: "Bộ phận nào xử lý xác minh liên kết và báo thiếu điểm, trong bao lâu? (OQ-8 của brainstorm Membership)", scr: "M25, M20, M20b, M20c", opts: [["Đề xuất: Manager đơn vị (hoặc Staff được giao quyền) xử lý trên CRM Hub;", 1], ["xác minh liên kết trong 24 giờ (đã có trong brainstorm Mục 7.2), báo thiếu điểm trong 3 ngày làm việc (số đề xuất); quá hạn báo GPCN HO. Màn xử lý: CRM Hub V1, V2 (xác minh), V3, V4 (báo thiếu điểm)."]], who: "Ban HCNS, GPCN HO" } ] }, { g: "Nhóm 9 · Tỉ lệ tích điểm và điểm doanh nghiệp (thêm 28/10/2026)", fresh: true, rows: [ { n: 47, q: "Tích điểm cho doanh nghiệp: chủ doanh nghiệp chia điểm cho thành viên chạy thế nào?", scr: "Giai đoạn 2, chưa vẽ (CRM Hub I5 trang công ty)", opts: [["Đã có hướng (28/10/2026): doanh nghiệp được tích điểm, chủ doanh nghiệp tự chia điểm cho thành viên.", 1], ["Còn phải chốt: điểm doanh nghiệp tích từ hoá đơn nào (hợp đồng Tiktak), người nhận có phải là thành viên Membership không, chủ doanh nghiệp chia trên app hay web, hết hợp đồng thì điểm chưa chia xử lý ra sao."], ["Đề xuất: tích theo hoá đơn của hợp đồng; chỉ chia cho người đã là thành viên; chia trong app, ở tài khoản của chủ doanh nghiệp; hết hợp đồng chỉ thu hồi phần chưa chia (góp ý sau họp 21/10). Vẽ ở giai đoạn 2.", 1]], who: "PO, Manager Tiktak" }, { n: 48, q: "Tỉ lệ tích còn 2%: giữ ngưỡng hạng theo điểm hay theo mức chi tiêu?", scr: "M1, M19, Re-MKT R-S1", opts: [["(a) Giữ Gold từ 50.000, Platinum từ 200.000 điểm trong năm: tương ứng chi tiêu 2,5 triệu và 10 triệu đồng (lúc tính 10% là 500.000đ và 2 triệu đồng)."], ["(b) Giữ mức chi tiêu cũ: Gold từ 10.000, Platinum từ 40.000 điểm."], ["Đề xuất: (a),", 1], ["vì gói tháng Tiktak đã khoảng 2 triệu đồng: theo (b) gần như mọi khách Tiktak thành Platinum sau một tháng, hạng mất ý nghĩa. Bản xem thử đang giữ (a)."]], who: "Ban TCKT, Phòng MKT" } ] } ];
 const MENU = [
   { n: 'Bạc xỉu đá', p: 39000, k: 'drink' }, { n: 'Cà phê sữa đá', p: 35000, k: 'drink' }, { n: 'Americano', p: 39000, k: 'drink' }, { n: 'Latte nóng', p: 49000, k: 'drink' },
   { n: 'Cold brew cam sả', p: 55000, k: 'drink' }, { n: 'Kite signature', p: 59000, k: 'drink' }, { n: 'Cà phê muối', p: 45000, k: 'drink' }, { n: 'Espresso', p: 35000, k: 'drink' }
@@ -937,6 +990,34 @@ function seedPos(inv) {
     modal: null, scanErr: false, demoOld: false, phone: '', entry: '', err: '',
     offline: false, queue: [],
     earned: { 'KT-0050': { who: 'Phạm Thu Trang', at: '08:20 hôm nay', pts: 3000 } }
+  };
+}
+/* Trang nhân viên quầy Tiktak, Resort (câu 18): quầy, nhân viên mẫu, lịch sử quét trong ngày */
+const QW_UNITS = {
+  tiktak: { place: 'Tiktak Lotus · Quầy lễ tân', short: 'Tiktak Lotus', inv: 'TK-LT-0412', sw: 'phần mềm bán hàng của Tiktak' },
+  resort: { place: 'Hospitality Resort · Lễ tân', short: 'Resort', inv: 'RS-LT-2231', sw: 'phần mềm quản lý khách sạn của Resort' }
+};
+const QW_STAFF = {
+  staff: { name: 'Nguyễn Minh', short: 'Minh', title: 'Nhân viên quầy' },
+  manager: { name: 'Trần Thu Hà', short: 'Hà', title: 'Manager' },
+  none: { name: 'Lê Quốc Bảo', short: 'Bảo', title: 'Nhân viên mới' }   /* tài khoản chưa được giao quầy (Q1 báo lỗi) */
+};
+function seedQwLog() {   /* lượt quét mẫu trước khi xem thử; khách khác KH mẫu nên hoàn tác không đổi app khách */
+  return [
+    { id: 'q1', at: '08:20', who: 'Đỗ Quang Huy', phone: '0903 *** 512', inv: 'TK-LT-0398', amount: 1200000, vTitle: '1 ngày làm việc tại Tiktak', vd: 250000, td: 0, pd: 0, due: 950000, earn: 19000, by: 'Minh', status: 'ok' },
+    { id: 'q2', at: '09:05', who: 'Trần Bảo Ngọc', phone: '0988 *** 204', inv: 'TK-LT-0401', amount: 350000, vTitle: '', vd: 0, td: 0, pd: 0, due: 350000, earn: 7000, by: 'Lan', status: 'ok', via: 'phone' },
+    { id: 'q3', at: '09:40', who: 'Lê Hoàng Nam', phone: '0935 *** 771', inv: 'TK-LT-0405', amount: 2400000, vTitle: '', vd: 0, td: 0, pd: 100000, due: 2300000, earn: 46000, by: 'Minh', status: 'undo', undo: { by: 'Hà', at: '09:52', reason: 'Nhân viên nhập nhầm số tiền', note: 'Nhập lại thành hoá đơn TK-LT-0406' } }
+  ];
+}
+function seedQw() {
+  const log = seedQwLog(), earned = {};
+  log.forEach(r => { if (r.status === 'ok') earned[r.inv] = r; });
+  return {
+    logged: false, acct: 'staff', unit: 'tiktak', shift: 'Ca sáng · 7:00–15:00', role: 'staff', lerr: '',
+    member: false, via: '', scanErr: false, demoOld: false, phone: '', err: '',
+    inv: '', amount: '', ierr: '', aerr: '', voucher: null, pts: 0, entry: '', perr: '', req: null,
+    offline: false, queue: [], vErr: null, soldout: false, last: null, view: 'scan',
+    log, earned, sel: null, reason: '', note: '', uerr: ''
   };
 }
 function seedState() {
@@ -960,11 +1041,12 @@ function seedState() {
     reg: { via: 'zalo', phone: '912 345 678', otp: '', err: '', sends: [], resendAt: 0, name: 'Phạm Thu Trang', dob: '12/03/1992', terms: true, promo: false, ferr: {}, hintPhone: false },
     verify: null, forgot: null,
     login: { phone: '0912 345 678', otp: '', err: '' },
-    miss: { bl: 'kite', invoice: '', date: '', amount: '', err: '', sent: null },
+    miss: { bl: 'kite', invoice: '', date: '', amount: '', err: '', sent: null, result: null },
     del: { ack: false, sent: false },
     refer: { used: 2 },
     verifyReqs: [],
-    pos: seedPos(),
+    migrated: false, neg: null, unlink: null,   /* M34 chuyển điểm iPOS CRM, M4b số dư âm, M24b liên kết bị gỡ */
+    pos: seedPos(), qw: seedQw(),
     shown: null,
     mode: 'kh', cur: { kh: 'M1', nv: 'P1' }, stack: { kh: [], nv: [] }, focus: 'kh', notesDev: null,
     giftOpt: 'B', showNotes: false
@@ -973,7 +1055,7 @@ function seedState() {
 let st = seedState();
 
 function toNewMember(fromReg) {
-  const keep = { mode: st.mode, giftOpt: st.giftOpt, showNotes: st.showNotes, reg: st.reg, pos: st.pos }, keepNv = st.cur.nv;
+  const keep = { mode: st.mode, giftOpt: st.giftOpt, showNotes: st.showNotes, reg: st.reg, pos: st.pos, qw: st.qw }, keepNv = st.cur.nv;
   st = seedState();
   Object.assign(st, keep);
   st.profile = 'new'; st.tier = 'silver';
@@ -1024,6 +1106,7 @@ const FLOWS = [
   { id: 'reg', name: 'Hành trình 1 · Khách mới tại quầy: thấy bảng, tải app, đăng ký, dùng voucher ngay' },
   { id: 'login', name: 'Đăng nhập lại (thành viên cũ, máy mới)' },
   { id: 'pos', name: 'Hành trình 2 · Thanh toán tại quầy trên iPOS: tích điểm, voucher, dùng điểm' },
+  { id: 'quay', name: 'Hành trình 2b · Trang nhân viên quầy Tiktak, Resort (không dùng iPOS, câu 18)' },
   { id: 'deduct', name: 'Hành trình 2 · App khách khi thu ngân quét mã, dùng điểm' },
   { id: 'home', name: 'Trang chủ, điểm và lịch sử điểm' },
   { id: 'redeem', name: 'Hành trình 3 · Đổi điểm và dùng voucher' },
@@ -1158,6 +1241,9 @@ function renderDev(dev, o = {}) {
   const oldT = ph.querySelector('.toasts'), keepT = oldT ? Array.from(oldT.children) : [];
   const r = norm(sc.render(st));
   if (dev === 'nv') {
+    /* Máy quầy: iPOS ở Kite; trang nhân viên quầy trên máy tính bảng ở Tiktak, Resort (câu 18) */
+    $('#sc-nv .pos').classList.toggle('tab', !!sc.qw);
+    $('#lbl-nv').textContent = sc.qw ? 'Máy tính bảng tại quầy · trang nhân viên quầy VNG 360 (web) · ' + QW_UNITS[st.qw.unit].place : 'Máy iPOS tại quầy · Kite Coffee Nguyễn Trãi';
     ph.className = 'pscr';
     ph.innerHTML = r.body + (r.overlay ? '<div class="ov">' + r.overlay + '</div>' : '') + '<div class="toasts"></div>';
     const nt0 = ph.querySelector('.toasts'); keepT.forEach(x => nt0.appendChild(x));
@@ -1229,7 +1315,7 @@ function go(id, o = {}) {
   layout(); renderNotes(); markDrawer();
 }
 function back(dev) {
-  const p = st.stack[dev].pop() || S[st.cur[dev]].parent || (dev === 'kh' ? 'HOME' : 'P1');
+  const p = st.stack[dev].pop() || S[st.cur[dev]].parent || (dev === 'kh' ? 'HOME' : S[st.cur[dev]].qw ? 'Q2' : 'P1');
   go(p, { fromBack: true });
 }
 window.addEventListener('popstate', e => {
@@ -1877,7 +1963,7 @@ function homeGoldBody(s, o = {}) {
   let h = '<div class="pad" style="display:flex;align-items:center;gap:12px;padding-top:6px;padding-bottom:14px"><button class="ico-c p" style="width:48px;height:48px;font-weight:600;font-size:16px" data-go="M21" aria-label="Tài khoản">' + esc(s.user.initials) + '</button><div style="flex:1"><div class="mut">' + greet + '</div><div class="b" style="font-size:20px">' + esc(s.user.name) + '</div></div><button class="ib w" style="position:relative;width:46px;height:46px" data-go="M32" aria-label="Thông báo">' + ic('bell', 22) + (s.unread ? '<i style="position:absolute;top:10px;right:11px;width:8px;height:8px;border-radius:50%;background:var(--m-urgent)"></i>' : '') + '</button></div>';
   h += '<div class="pad stack">';
   if (o.giftCard) h += '<button class="card" style="display:flex;gap:12px;align-items:center;text-align:left" data-go="PA-A2"><span class="ico-c" style="border-radius:14px;width:44px;height:60px">' + ic('gift', 22) + '</span><div style="flex:1"><div class="xs lnk" style="letter-spacing:.04em">MỚI · TIKTAK</div><div class="b" style="font-size:17px">' + BF.title + '</div><div class="sm mut">' + BF.deal + ' · dùng đến ' + BF.until + '</div><div class="sm lnk-a">Đã thêm vào Ví của bạn</div></div>' + ic('chev', 20) + '</button>';
-  h += tierCard() + expiryCard();   /* góp ý 27/10/2026: chưa tính hạng, chỗ thanh lên hạng báo điểm sắp hết hạn */
+  h += tierCard() + (avail() < 0 ? negBand() : expiryCard());   /* góp ý 27/10/2026: chưa tính hạng, chỗ thanh lên hạng báo điểm sắp hết hạn; số dư âm thì báo âm (câu 24) */
   h += '</div><div class="sec-t"><span class="h3">Tích điểm ở</span><button class="lnk sm" data-go="M19">Sinh nhật x2 điểm</button></div>';
   h += '<div class="pad" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">' + linkCard('kite') + linkCard('tiktak') + linkCard('resort') + '</div>';
   if (pick.length) h += '<div class="sec-t"><span class="h3">Đổi được ngay</span><button class="lnk sm" data-go="M5">Xem tất cả</button></div><div class="pad" style="display:flex;gap:12px">' + pick.map(offerMini).join('') + '</div>';
@@ -1889,11 +1975,11 @@ A['demo-expire'] = (a, dev) => { st.exp = [{ pts: avail(), at: daysOn(20) }]; st
 const M1_NOTES = {
   rules: ['Thẻ hạng tách điểm khả dụng và điểm đang chờ; điểm đang chờ dùng được từ 12 giờ trưa hôm sau. Câu chữ: "+{N} điểm tại {Biz Line}. Điểm dùng được từ 12 giờ trưa mai." (biên bản 21/10: chờ đối soát T+1).', 'Dưới thẻ thành viên: đợt điểm hết hạn gần nhất, "{N} điểm sẽ hết hạn ngày {ngày}" (góp ý 27/10/2026: chưa chốt cách xét hạng nên tạm bỏ thanh lên hạng). Còn từ 30 ngày trở xuống thì là dải cam kèm nút Đổi điểm (URD UN-007: được nhắc kịp để dùng); xa hơn là thẻ thường, bấm mở Lịch sử điểm.', 'Ô "Tích điểm ở": số điểm đã tích ở từng đơn vị; Kite, Resort đã tự liên kết (hành trình 1 của URD: đăng ký và thấy ngay dịch vụ đã dùng). Ô "Liên kết ngay" mở màn nối lịch sử (M23).', 'Sinh nhật x2 điểm. Nút "Mã thành viên" trên thẻ và tab Mã QR mở M3.', '"Đổi được ngay" chỉ hiện ưu đãi đủ điểm; không hiện ưu đãi riêng Platinum cho KH Gold. "Sắp đủ điểm" hiện ưu đãi chưa đủ (kể cả điểm đang chờ) kèm số còn thiếu: "Bạn còn thiếu {N} điểm để đổi ưu đãi này."', '3 giao dịch gần nhất: điểm cộng màu ngọc, điểm trừ màu chữ; điểm đang chờ có chip viền đứt (URD UN-005, UN-006).', dr(26), dr(27), dr(28), dr(29), dr(13), dr(14), dr(15), dr(35)],
   motion: ['Mở app: số điểm đếm lên 600ms; thẻ Gold nghiêng nhẹ theo con quay, ánh kim chạy chéo. Reduce Motion: chỉ mờ dần, không nghiêng, không đếm.', 'Thẻ ưu đãi hiện lần lượt khi cuộn (mờ + trượt 8px, 150ms); Reduce Motion: chỉ mờ dần.'],
-  demo: ['Chế độ Hai máy: ở máy iPOS quét mã thành viên rồi thanh toán; máy khách mở M17 (vừa tích điểm).', { t: 'Giả lập 11 tháng không có điểm mới (dải cam)', act: 'demo-expire' }],
+  demo: ['Chế độ Hai máy: ở máy iPOS quét mã thành viên rồi thanh toán; máy khách mở M17 (vừa tích điểm).', { t: 'Giả lập 11 tháng không có điểm mới (dải cam)', act: 'demo-expire' }, { t: 'Giả lập huỷ hoá đơn khi điểm đã tiêu (số dư âm)', act: 'demo-neg' }, { t: 'Giả lập khách Kite mở app lần đầu sau ngày ra mắt (M34)', act: 'demo-migrate' }],
   diff: ['Gộp hai khung M1 và M1 (cuộn xuống) thành một màn cuộn.', 'Bỏ thanh "Còn 32.000 điểm lên Platinum" của Figma (góp ý 27/10/2026, chưa tính hạng); dải cam điểm sắp hết hạn theo Figma, số mẫu là 1.300 điểm còn 19 ngày (Figma: 12.000 điểm, 08/11/2026). Đổi ưu đãi sẽ trừ đợt này trước, thẻ chuyển sang đợt kế tiếp.', 'Thẻ ghi chú M1 trên Figma còn theo thang điểm cũ (Platinum từ 2.001 điểm, Kite 5.000đ = 1 điểm); màn Figma và bản HTML dùng thang 1 điểm = 1đ (câu 26).', 'Ảnh ưu đãi trên Figma là ảnh chụp; bản HTML thay bằng khối màu kèm biểu tượng đơn vị.']
 };
 /* Mở M1, M2 từ danh sách màn thì đổi sang đúng hồ sơ mẫu của màn đó */
-function toGold() { const keep = { mode: st.mode, giftOpt: st.giftOpt, showNotes: st.showNotes, pos: st.pos }, nv = st.cur.nv; st = seedState(); Object.assign(st, keep); st.cur = { kh: 'M1', nv }; }
+function toGold() { const keep = { mode: st.mode, giftOpt: st.giftOpt, showNotes: st.showNotes, pos: st.pos, qw: st.qw }, nv = st.cur.nv; st = seedState(); Object.assign(st, keep); st.cur = { kh: 'M1', nv }; }
 def('M1', { dev: 'kh', flow: 'home', fig: '79:18630 + 79:18817', code: 'M1', name: 'Trang chủ · KH hạng Gold', tab: 'home', enter: (s, o) => { if (!o.pop && s.profile === 'new') toGold(); st.shown = null; }, render: s => homeGoldBody(s), notes: M1_NOTES });
 
 def('M2', {
@@ -1950,25 +2036,52 @@ def('M3', {
 });
 
 A.hfilter = (k, dev) => { st.sel.hfilter = k; rr(dev); };
+/* Thân Lịch sử điểm, dùng chung cho M4 và M4b (số dư âm) */
+function histBody(s) {
+  const f = s.sel.hfilter, exp = soonExp();
+  const list = s.history.filter(h => f === 'all' || h.bl === f || h.kind === f);
+  const chip = (k, t) => '<button class="chip' + (f === k ? ' on' : '') + '" data-act="hfilter" data-arg="' + k + '">' + (f === k ? ic('check', 15) : '') + t + '</button>';
+  return '<div class="pad"><div class="card" style="display:grid;grid-template-columns:repeat(3,1fr);text-align:center;padding:14px 6px">' +
+    '<div><div class="xs mut">Khả dụng</div><div class="b" style="font-size:22px">' + fmtN(avail()) + '</div></div>' +
+    '<div style="border-left:1px solid var(--m-border);border-right:1px solid var(--m-border)"><div class="xs mut" style="display:flex;gap:4px;justify-content:center;align-items:center">' + ic('clock', 13) + 'Đang chờ</div><div class="b" style="font-size:22px;color:var(--m-muted)">' + fmtN(s.pending || 0) + '</div></div>' +
+    '<div><div class="xs mut" style="display:flex;gap:4px;justify-content:center;align-items:center"><span style="color:var(--m-urgent);display:inline-flex">' + ic('hour', 13) + '</span>Sắp hết hạn</div><div class="b" style="font-size:22px;color:' + (exp ? 'var(--m-urgent-text)' : 'var(--m-muted)') + '">' + fmtN(exp) + '</div></div></div></div>' +
+    '<div class="chips" style="margin:14px 0 6px;flex-wrap:wrap">' + chip('all', 'Tất cả') + chip('kite', 'Kite') + chip('tiktak', 'Tiktak') + chip('resort', 'Resort') + chip('redeem', 'Đổi điểm') + chip('deduct', 'Trừ tiền') + chip('expire', 'Hết hạn') + '</div>' +
+    '<div class="sm mut b" style="margin:12px 20px 8px">Tháng 10/2026</div><div class="pad"><div class="list">' + (list.map(x => hRow(x)).join('') || '<div class="row"><div class="tx t2">Chưa có giao dịch nào ở mục này.</div></div>') + '</div>' +
+    '<button class="row" style="margin-top:12px;background:#fff;border:1px solid var(--m-border);border-radius:16px" data-go="M20"><span class="ico-c p">' + ic('receipt', 20) + '</span><div class="tx"><div class="t1">Thiếu điểm cho một giao dịch?</div><div class="t2">Gửi số hoá đơn trong 6 tháng kể từ ngày mua</div></div>' + ic('chev', 20) + '</button></div>';
+}
 def('M4', {
   dev: 'kh', flow: 'home', fig: '79:19333', name: 'Lịch sử điểm',
-  render: s => {
-    const f = s.sel.hfilter, exp = soonExp();
-    const list = s.history.filter(h => f === 'all' || h.bl === f || h.kind === f);
-    const chip = (k, t) => '<button class="chip' + (f === k ? ' on' : '') + '" data-act="hfilter" data-arg="' + k + '">' + (f === k ? ic('check', 15) : '') + t + '</button>';
-    return hd('Lịch sử điểm', { close: false }) + '<div class="pad"><div class="card" style="display:grid;grid-template-columns:repeat(3,1fr);text-align:center;padding:14px 6px">' +
-      '<div><div class="xs mut">Khả dụng</div><div class="b" style="font-size:22px">' + fmtN(avail()) + '</div></div>' +
-      '<div style="border-left:1px solid var(--m-border);border-right:1px solid var(--m-border)"><div class="xs mut" style="display:flex;gap:4px;justify-content:center;align-items:center">' + ic('clock', 13) + 'Đang chờ</div><div class="b" style="font-size:22px;color:var(--m-muted)">' + fmtN(s.pending || 0) + '</div></div>' +
-      '<div><div class="xs mut" style="display:flex;gap:4px;justify-content:center;align-items:center"><span style="color:var(--m-urgent);display:inline-flex">' + ic('hour', 13) + '</span>Sắp hết hạn</div><div class="b" style="font-size:22px;color:' + (exp ? 'var(--m-urgent-text)' : 'var(--m-muted)') + '">' + fmtN(exp) + '</div></div></div></div>' +
-      '<div class="chips" style="margin:14px 0 6px;flex-wrap:wrap">' + chip('all', 'Tất cả') + chip('kite', 'Kite') + chip('tiktak', 'Tiktak') + chip('resort', 'Resort') + chip('redeem', 'Đổi điểm') + chip('deduct', 'Trừ tiền') + chip('expire', 'Hết hạn') + '</div>' +
-      '<div class="sm mut b" style="margin:12px 20px 8px">Tháng 10/2026</div><div class="pad"><div class="list">' + (list.map(x => hRow(x)).join('') || '<div class="row"><div class="tx t2">Chưa có giao dịch nào ở mục này.</div></div>') + '</div>' +
-      '<button class="row" style="margin-top:12px;background:#fff;border:1px solid var(--m-border);border-radius:16px" data-go="M20"><span class="ico-c p">' + ic('receipt', 20) + '</span><div class="tx"><div class="t1">Thiếu điểm cho một giao dịch?</div><div class="t2">Gửi số hoá đơn trong 6 tháng kể từ ngày mua</div></div>' + ic('chev', 20) + '</button></div>';
-  },
+  render: s => hd('Lịch sử điểm', { close: false }) + histBody(s),
   notes: {
     rules: ['3 con số: Khả dụng / Đang chờ / Sắp hết hạn (URD UN-006).', 'Lọc theo đơn vị và theo loại (Đổi điểm, Hết hạn); chip chọn có dấu tích.', 'Nhóm theo tháng; cột số căn phải. "+" màu ngọc, "−" màu chữ thường.', 'Đang chờ: chip viền đứt + "dùng được từ 12:00, {ngày mai}".', 'Thu hồi: câu chữ chốt trong brainstorm "{N} điểm đã được trừ do giao dịch ngày {ngày} bị hoàn." (URD UN-014: hiểu vì sao điểm thay đổi).', 'Sinh nhật x2 điểm.', dr(28), dr(31), dr(32), dr(24)],
     motion: ['Đổi chip lọc: danh sách mờ chéo 150ms. Reduce Motion: thay ngay.'],
-    demo: ['Sau khi đổi điểm hoặc thanh toán ở máy iPOS, dòng mới hiện đầu danh sách.'],
+    demo: ['Sau khi đổi điểm hoặc thanh toán ở máy iPOS, dòng mới hiện đầu danh sách.', { t: 'Giả lập huỷ hoá đơn khi điểm đã tiêu (số dư âm, M4b)', act: 'demo-neg' }],
     diff: ['Thêm chip "Trừ tiền" (thu ngân dùng điểm trên iPOS) và lối vào Báo thiếu điểm (M20, câu 32).', 'Ô "Sắp hết hạn" cộng các đợt điểm hết hạn trong 30 ngày tới (câu 28: hết hạn theo từng đợt tích); số mẫu 1.300 (Figma ghi 12.000).']
+  }
+});
+/* Số dư âm (câu 24): hoá đơn Resort bị huỷ sau khi khách đã tiêu phần điểm của hoá đơn đó */
+const NEG = { inv: 'RS-LT-2210', bl: 'resort', pts: 30000, date: '20/10/2026', before: 12000 };
+function applyNeg() {
+  if (st.neg) return;
+  st.neg = NEG;
+  st.points = NEG.before + st.held - NEG.pts; st.exp = [];   /* khách mẫu đã tiêu gần hết điểm, còn 12.000 */
+  st.tierPts = Math.max(0, st.tierPts - NEG.pts); st.blPts.resort = Math.max(0, (st.blPts.resort || 0) - NEG.pts);   /* câu 31: xét lại hạng ngay */
+  addHistory({ kind: 'claw', bl: 'resort', title: 'Thu hồi điểm · hoá đơn ' + NEG.inv + ' bị huỷ', short: 'Thu hồi · Resort', note: fmtN(NEG.pts) + ' điểm đã được trừ do giao dịch ngày ' + NEG.date + ' bị hoàn.', delta: -NEG.pts });
+  addNotif({ t: fmtN(NEG.pts) + ' điểm đã được trừ do giao dịch ngày ' + NEG.date + ' bị hoàn. Số dư điểm đang âm ' + fmtN(avail()) + ' điểm.', when: 'Vừa xong', ic: 'undo', go: 'M4b' });
+}
+function negBand() {   /* dải cam trên Trang chủ khi số dư âm */
+  return '<button class="band warn" style="align-items:center;text-align:left" data-go="M4b">' + ic('alert', 22, 'ic') + '<span style="flex:1"><span style="display:block;font-weight:600">Số dư điểm đang âm ' + fmtN(avail()) + ' điểm</span><span class="sm">Hoá đơn ' + NEG.inv + ' bị huỷ sau khi điểm đã được dùng</span></span><span style="font-weight:600;white-space:nowrap;display:inline-flex;align-items:center">Xem lý do ' + ic('chev', 18) + '</span></button>';
+}
+A['demo-neg'] = () => { applyNeg(); go('M4b'); };
+def('M4b', {
+  dev: 'kh', flow: 'home', from: 'câu 24, 31 của bảng đã chốt (26/10/2026); câu chữ dải cam là câu tự viết', name: 'Lịch sử điểm · số dư âm sau khi hoá đơn bị huỷ', parent: 'M4',
+  enter: (s, o) => { if (!o.pop) applyNeg(); },
+  render: s => hd('Lịch sử điểm') + '<div class="pad" style="margin-bottom:12px"><div class="band warn" style="flex-direction:column;align-items:stretch;gap:6px"><b>Số dư điểm đang âm: ' + fmtN(avail()) + ' điểm</b><span>Hoá đơn ' + NEG.inv + ' tại ' + BL[NEG.bl].full + ' ngày ' + NEG.date + ' bị huỷ nên ' + fmtN(NEG.pts) + ' điểm của hoá đơn đó được thu lại, trong khi bạn đã dùng phần điểm này trước đó.</span><span>Điểm tích lần sau sẽ bù vào phần âm trước. Trong lúc số dư âm, bạn chưa đổi ưu đãi hay dùng điểm tại quầy được; voucher trong Ví vẫn dùng bình thường.</span></div></div>' + histBody(s),
+  notes: {
+    rules: [dr(24), dr(31), 'Câu thu hồi giữ đúng brainstorm Mục 7.3: "{N} điểm đã được trừ do giao dịch ngày {ngày} bị hoàn."', 'Trang chủ hiện dải cam "Số dư điểm đang âm", bấm mở màn này; thẻ hạng hiện số âm.', 'Khách xoá tài khoản khi đang âm: phần âm trừ vào tiền hoàn (M30).'],
+    motion: [],
+    demo: ['Mở từ danh sách màn: giả lập khách còn 12.000 điểm thì hoá đơn Resort 30.000 điểm bị huỷ.', { t: 'Giả lập huỷ hoá đơn khi điểm đã tiêu', act: 'demo-neg' }],
+    diff: ['Figma chưa vẽ trạng thái số dư âm; bản HTML dựng theo câu 24 đã chốt.', 'Hoá đơn RS-LT-2210 và các số 12.000, 30.000 là dữ liệu mẫu.']
   }
 });
 
@@ -1986,6 +2099,34 @@ def('M17', {
     motion: [],
     demo: ['Chế độ Hai máy: thanh toán ở máy iPOS có quét mã thành viên; máy khách mở màn này với số điểm và số hoá đơn thật.'],
     diff: ['Tên khung trên Figma ghi "+6.000 điểm"; nội dung màn và thẻ ghi chú ghi +1.200: bản HTML theo nội dung.', 'Không hiện dải cam điểm sắp hết hạn ở màn này; dải cam nằm ở Trang chủ (M1).']
+  }
+});
+
+/* Kite chuyển hẳn khỏi iPOS CRM (câu 19): lần đầu mở app sau ngày ra mắt, khách Kite thấy điểm cũ đã quy đổi. Tỉ lệ và số là minh hoạ */
+const KITE_OLD = { pts: 1820, rate: 10, card: 'Thẻ Vàng Kite', vouchers: 2 };
+function applyMigrate() {
+  if (st.migrated) return;
+  const n = KITE_OLD.pts * KITE_OLD.rate;
+  st.migrated = true; addPts(n); st.blPts.kite = (st.blPts.kite || 0) + n;   /* không cộng vào điểm xét hạng: hạng cũ đã được giữ đến hết năm */
+  addHistory({ kind: 'link', bl: 'kite', title: 'Chuyển điểm Kite cũ (iPOS CRM)', short: 'Chuyển điểm Kite cũ', when: 'Hôm nay · ' + hm(), delta: n, note: fmtN(KITE_OLD.pts) + ' điểm cũ quy đổi' });
+  addNotif({ t: 'Điểm Kite cũ đã chuyển sang VNG 360: ' + fmtN(KITE_OLD.pts) + ' điểm cũ thành ' + fmtN(n) + ' điểm, dùng được ngay.', when: 'Vừa xong', ic: 'coins', go: 'M34' });
+}
+A['demo-migrate'] = () => { applyMigrate(); go('M34'); };
+def('M34', {
+  dev: 'kh', flow: 'home', from: 'câu 19 của bảng đã chốt (26/10/2026); câu chữ và tỉ lệ quy đổi là minh hoạ', name: 'Điểm Kite cũ đã chuyển sang (từ iPOS CRM)', parent: 'HOME',
+  enter: (s, o) => { if (!o.pop) applyMigrate(); },
+  render: s => {
+    const n = KITE_OLD.pts * KITE_OLD.rate;
+    return hd('Điểm Kite cũ', { close: true }) + '<div class="pad" style="text-align:center;padding-top:12px"><div class="ico-c" style="width:76px;height:76px;margin:0 auto 14px">' + ic('coffee', 34) + '</div><div class="h2">Điểm Kite cũ đã chuyển sang VNG 360</div><p class="mut">Từ nay mua tại Kite Coffee tích điểm VNG 360, dùng được ở cả Kite, Tiktak, Resort.</p></div>' +
+      '<div class="pad stack"><div class="tbl"><div class="kv"><div class="k">Điểm Kite cũ</div><div class="v">' + fmtN(KITE_OLD.pts) + ' điểm</div><div class="k">Quy đổi thành</div><div class="v" style="color:var(--m-action);font-weight:600">+' + fmtN(n) + ' điểm VNG 360</div><div class="k">Hạng cũ</div><div class="v">' + KITE_OLD.card + ' · giữ hạng ' + tierN(s.tier) + ' đến 31/12/2026</div><div class="k">Voucher Kite cũ</div><div class="v">' + KITE_OLD.vouchers + ' voucher, vẫn dùng tại quầy Kite đến hết hạn</div></div></div>' +
+      '<div class="band info">' + ic('info', 20, 'ic') + '<span>Điểm quy đổi dùng được ngay, hết hạn sau 12 tháng kể từ hôm nay như các đợt điểm khác.</span></div>' +
+      '<button class="btn" data-go="M4">Xem lịch sử điểm</button><button class="btn sec" data-go="HOME">Về trang chủ</button></div>';
+  },
+  notes: {
+    rules: [dr(19), 'Màn hiện một lần, khi khách Kite mở app lần đầu sau ngày ra mắt; lịch sử điểm có dòng "Chuyển điểm Kite cũ (iPOS CRM)", thông báo có câu tương ứng.', 'Voucher Kite cũ vẫn nằm ở iPOS CRM: thu ngân áp trên iPOS như trước đến hết hạn; app không chép voucher cũ vào Ví.', dr(28)],
+    motion: [],
+    demo: ['Mở từ Trang chủ (M1) · Ghi chú · "Giả lập khách Kite mở app lần đầu sau ngày ra mắt", hoặc từ danh sách màn. Điểm chỉ cộng một lần; bấm Đặt lại để thử lại.'],
+    diff: ['Figma chưa vẽ màn này; dựng theo câu 19 đã chốt.', 'Tỉ lệ 1 điểm cũ = 10 điểm mới, 1.820 điểm cũ, "Thẻ Vàng Kite", 2 voucher cũ là số minh hoạ; tỉ lệ thật do Ban Kế toán và Manager Kite chốt.', 'Câu 19 chưa nói điểm quy đổi có tính xét hạng không; bản HTML không cộng vào điểm xét hạng vì hạng cũ đã được giữ đến hết năm.']
   }
 });
 
@@ -2018,7 +2159,7 @@ A['miss-send'] = (a, dev) => {
   if (!m) st.miss.derr = 'Vui lòng nhập ngày giao dịch theo dạng ngày/tháng/năm.';
   else { const d = new Date(+m[3], +m[2] - 1, +m[1]), lim = new Date(); lim.setMonth(lim.getMonth() - 6); if (d < lim) st.miss.derr = 'Chỉ gửi được yêu cầu trong 6 tháng kể từ ngày mua.'; }
   if (st.miss.err || st.miss.derr) { rr(dev); return; }
-  st.miss.sent = { inv, bl: st.miss.bl, at: hm() };
+  st.miss.sent = { inv, bl: st.miss.bl, at: hm(), date: String(st.miss.date).trim(), amount: parseMoney(st.miss.amount) };
   go('M20b', { noStack: true });
 };
 def('M20', {
@@ -2035,14 +2176,48 @@ def('M20b', {
   dev: 'kh', flow: 'home', from: 'câu 32 của bảng đã chốt (26/10/2026)', name: 'Báo thiếu điểm · đã gửi', parent: 'M4',
   render: s => hd('Báo thiếu điểm', { close: true }) + '<div class="pad" style="text-align:center;padding-top:30px"><div class="ico-c" style="width:72px;height:72px;margin:0 auto 16px">' + ic('send', 32) + '</div><div class="h2">Đã gửi yêu cầu</div><p class="mut">Hoá đơn ' + esc(s.miss.sent ? s.miss.sent.inv : '') + ' tại ' + esc(s.miss.sent ? BL[s.miss.sent.bl].full : '') + '. Kết quả sẽ báo trong app.</p>' +
     '<button class="btn" style="margin-top:20px" data-go="M4">Về lịch sử điểm</button></div>',
-  notes: { rules: ['Xác nhận đã gửi; kết quả báo trong app.', dr(32)], motion: [], demo: [], diff: ['Câu chữ trên màn là câu tự viết (Figma chưa vẽ).'] }
+  notes: { rules: ['Xác nhận đã gửi; kết quả báo trong app (M20c).', 'Yêu cầu vào hàng chờ "Báo thiếu điểm" của CRM Hub (V3); Manager đơn vị tra hoá đơn trong dữ liệu đơn vị gửi về rồi cộng điểm hoặc từ chối kèm lý do (V4).', dr(32), dp(46), dp(44)], motion: [], demo: ['Bản xem thử giả lập kết quả của CRM Hub:', { t: 'Giả lập CRM Hub cộng điểm', act: 'demo-miss', arg: '1' }, { t: 'Giả lập CRM Hub từ chối', act: 'demo-miss', arg: '0' }, { t: 'Mở CRM Hub · hàng chờ báo thiếu điểm (V3)', href: CRM_URL + '#V3' }], diff: ['Câu chữ trên màn là câu tự viết (Figma chưa vẽ).'] }
+});
+/* Kết quả báo thiếu điểm do CRM Hub xử lý (V4): cộng điểm chờ đối soát, hoặc từ chối kèm lý do */
+A['demo-miss'] = ok => {
+  const m = st.miss;
+  if (!m.sent) m.sent = { inv: 'KT-0079', bl: 'kite', at: hm(), date: '15/10/2026', amount: 120000 };
+  const r = m.sent, amount = r.amount || 120000;
+  if (ok === '1') {
+    const pts = Math.floor(amount * EARN_PCT);
+    m.result = { ok: true, inv: r.inv, bl: r.bl, date: r.date || '15/10/2026', amount, pts };
+    st.pending = (st.pending || 0) + pts; st.blPts[r.bl] = (st.blPts[r.bl] || 0) + pts;
+    addHistory({ kind: 'earn', bl: r.bl, title: BL[r.bl].full + ' · hoá đơn ' + r.inv + ' (báo thiếu điểm)', short: BL[r.bl].name + ' · báo thiếu điểm', when: 'Hôm nay · ' + hm(), delta: pts, pend: true });
+    addNotif({ t: 'Đã cộng +' + fmtN(pts) + ' điểm cho hoá đơn ' + r.inv + ' tại ' + BL[r.bl].full + ' theo yêu cầu của bạn, chờ đối soát.', when: 'Vừa xong', ic: 'coins', go: 'M20c' });
+  } else {
+    m.result = { ok: false, inv: r.inv, bl: r.bl, date: r.date, reason: 'Không tìm thấy hoá đơn ' + r.inv + ' trong dữ liệu ' + BL[r.bl].full + ' gửi về' + (r.date ? ' ngày ' + r.date : '') + '.' };
+    addNotif({ t: 'Chưa cộng được điểm cho hoá đơn ' + r.inv + ': không tìm thấy hoá đơn trong dữ liệu ' + BL[r.bl].full + '.', when: 'Vừa xong', ic: 'receipt', go: 'M20c' });
+  }
+  go('M20c', { noStack: true });
+};
+A['miss-again'] = () => { st.miss.invoice = ''; st.miss.err = ''; st.miss.derr = ''; go('M20'); };
+def('M20c', {
+  dev: 'kh', flow: 'home', from: 'câu 32 của bảng đã chốt; câu 46 (đề xuất, chưa chốt): CRM Hub xét trong 3 ngày làm việc; câu chữ tự viết', name: 'Kết quả báo thiếu điểm', parent: 'M4',
+  render: s => {
+    const r = s.miss.result || { ok: true, inv: 'KT-0079', bl: 'kite', date: '15/10/2026', amount: 120000, pts: 2400 };
+    if (r.ok) return hd('Báo thiếu điểm', { close: true }) + '<div class="pad" style="text-align:center;padding-top:24px"><div class="ico-c" style="width:76px;height:76px;margin:0 auto 16px;animation:bounce .5s">' + ic('check', 34) + '</div><div class="h2">Đã cộng điểm</div><p class="mut">+' + fmtN(r.pts) + ' điểm cho hoá đơn ' + esc(r.inv) + ' tại ' + BL[r.bl].full + '. Điểm chờ đối soát, ' + pendTxt() + '.</p></div>' +
+      '<div class="pad stack"><div class="tbl"><div class="kv"><div class="k">Hoá đơn</div><div class="v">' + esc(r.inv) + '</div><div class="k">Ngày giao dịch</div><div class="v">' + esc(r.date || '') + '</div><div class="k">Số tiền theo dữ liệu đơn vị</div><div class="v">' + money(r.amount) + '</div><div class="k">Điểm cộng</div><div class="v">+' + fmtN(r.pts) + ' điểm</div></div></div><button class="btn" data-go="M4">Xem lịch sử điểm</button></div>';
+    return hd('Báo thiếu điểm', { close: true }) + '<div class="pad" style="text-align:center;padding-top:24px"><div class="ico-c r" style="width:76px;height:76px;margin:0 auto 16px">' + ic('alert', 32) + '</div><div class="h2">Chưa cộng được điểm</div><p class="mut">' + esc(r.reason) + '</p></div>' +
+      '<div class="pad stack"><div class="band info">' + ic('info', 20, 'ic') + '<span>Bạn kiểm tra lại số hoá đơn trên phiếu thanh toán rồi gửi lại, hoặc nhờ nhân viên quầy tra giúp.</span></div><button class="btn" data-act="miss-again">Gửi lại yêu cầu</button><button class="btn sec" data-go="M4">Về lịch sử điểm</button></div>';
+  },
+  notes: {
+    rules: ['Hai kết quả: đã cộng (điểm vào trạng thái chờ đối soát như điểm tích tại quầy) hoặc chưa cộng được kèm lý do. Số tiền tính điểm lấy theo dữ liệu đơn vị gửi về (câu 25).', 'Kết quả đến từ CRM Hub V4 (Manager đơn vị xét); khách nhận thông báo, bấm mở màn này.', dr(32), dr(25), dp(46)],
+    motion: ['Biểu tượng nảy nhẹ khi đã cộng; Reduce Motion: mờ dần.'],
+    demo: [{ t: 'Giả lập CRM Hub cộng điểm', act: 'demo-miss', arg: '1' }, { t: 'Giả lập CRM Hub từ chối', act: 'demo-miss', arg: '0' }, { t: 'Mở CRM Hub · xét một báo thiếu điểm (V4)', href: CRM_URL + '#V4' }],
+    diff: ['Figma chưa vẽ màn này; câu chữ là câu tự viết. Hoá đơn KT-0079 ngày 15/10/2026, 120.000đ là dữ liệu mẫu khi chưa gửi yêu cầu nào.']
+  }
 });
 
 def('M32', {
   dev: 'kh', flow: 'home', from: 'brainstorm Membership Mục 7.3 (câu thông báo), Mục 5.2; câu 34 của bảng đã chốt', name: 'Thông báo',
   enter: s => { s.unread = 0; },
   render: s => hd('Thông báo') + '<div class="pad"><div class="list">' + (s.notifs.map(n => '<button class="row" data-go="' + n.go + '"><span class="ico-c">' + ic(n.ic || 'bell', 20) + '</span><div class="tx"><div class="t1">' + esc(n.t) + '</div><div class="t2">' + esc(n.when) + '</div></div>' + ic('chev', 18) + '</button>').join('') || '<div class="row"><div class="tx t2">Chưa có thông báo.</div></div>') + '</div></div>',
-  notes: { rules: ['Câu thông báo lấy đúng brainstorm Mục 7.3: "+{N} điểm tại {Biz Line}, chờ đối soát.", "Voucher {tên} còn 3 ngày nữa hết hạn.", "{N} điểm sẽ hết hạn ngày {ngày}.".', 'Chuông trên Trang chủ có chấm cam khi có thông báo chưa đọc (M1).', dr(34)], motion: [], demo: ['Thanh toán ở máy iPOS để thấy thông báo mới.'], diff: ['Đổi mã M17 của bản HTML trước thành M32: Figma dùng M17 cho "Trang chủ — vừa tích điểm".'] }
+  notes: { rules: ['Câu thông báo lấy đúng brainstorm Mục 7.3: "+{N} điểm tại {Biz Line}, chờ đối soát.", "Voucher {tên} còn 3 ngày nữa hết hạn.", "{N} điểm sẽ hết hạn ngày {ngày}.".', 'Thông báo từ việc phía sau (bổ sung 28/10): kết quả xác minh liên kết (CRM Hub V2), kết quả báo thiếu điểm (V4, mở M20c), liên kết bị gỡ khi CRM Hub tách hồ sơ (mở M24b), số dư âm khi hoá đơn bị huỷ (mở M4b), điểm Kite cũ đã chuyển (mở M34), quầy Tiktak, Resort hoàn tác lượt quét (Q7b). Đều là thông báo giao dịch nên luôn gửi.', 'Chuông trên Trang chủ có chấm cam khi có thông báo chưa đọc (M1).', dr(34)], motion: [], demo: ['Thanh toán ở máy iPOS hoặc trang nhân viên quầy để thấy thông báo mới.', { t: 'Giả lập CRM Hub cộng điểm báo thiếu', act: 'demo-miss', arg: '1' }, { t: 'Giả lập CRM Hub tách hồ sơ Resort', act: 'demo-unlink' }, { t: 'Giả lập huỷ hoá đơn khi điểm đã tiêu', act: 'demo-neg' }], diff: ['Đổi mã M17 của bản HTML trước thành M32: Figma dùng M17 cho "Trang chủ — vừa tích điểm".'] }
 });
 /* ================= Hành trình 3 · Đổi điểm và dùng voucher ================= */
 A.ofilter = (k, dev) => { st.sel.ofilter = k; rr(dev); };
@@ -2084,9 +2259,9 @@ def('M5', {
       '<div class="ogrid" style="margin-top:14px">' + list.map(offerCard).join('') + '</div>';
   },
   notes: {
-    rules: ['Đầu trang hiện điểm khả dụng; tab theo đơn vị (URD UN-008).', 'Thứ tự: đủ điểm trước, chưa đủ (thanh "Thiếu N điểm"), hết suất xếp cuối. Ưu đãi chưa đủ vẫn hiện, ảnh mờ (BRD chọn cách này).', 'Ưu đãi riêng Platinum không hiện cho KH Gold.', '"Đủ điểm từ 12:00 mai": khi điểm đang chờ (+1.200) đủ bù phần thiếu; điểm đang chờ chưa đổi được (chờ đối soát T+1, biên bản họp 21/10).', 'Nhận ưu đãi campaign mà bấm "Để sau": ưu đãi nằm ở tab Ưu đãi với nút Nhận đến hết hạn dùng (phương án B).', dr(35), dr(36), dr(42)],
+    rules: ['Đầu trang hiện điểm khả dụng; tab theo đơn vị (URD UN-008).', 'Thứ tự: đủ điểm trước, chưa đủ (thanh "Thiếu N điểm"), hết suất xếp cuối. Ưu đãi chưa đủ vẫn hiện, ảnh mờ (BRD chọn cách này).', 'Ưu đãi riêng Platinum không hiện cho KH Gold.', '"Đủ điểm từ 12:00 mai": khi điểm đang chờ (+1.200) đủ bù phần thiếu; điểm đang chờ chưa đổi được (chờ đối soát T+1, biên bản họp 21/10).', 'Nhận ưu đãi campaign mà bấm "Để sau": ưu đãi nằm ở tab Ưu đãi với nút Nhận đến hết hạn dùng (phương án B).', 'Danh mục do Manager đơn vị nhập ở web Re-MKT, nhóm menu Membership (R-K1 danh sách, R-K2 tạo, sửa ưu đãi); hạn mức chi theo quý do Finance HO nhập (R-K3) sau khi Ban TCKT duyệt.', dr(35), dr(36), dr(42), dp(44)],
     motion: ['Đổi tab: lưới mờ chéo 150ms; thẻ hiện lần lượt. Reduce Motion: thay ngay.'],
-    demo: ['"Giảm 30% đồ uống" chỉ còn 1 suất: xác nhận đổi sẽ ra màn hết suất M9.', 'Bữa sáng 246.000 điểm: thiếu 1.000, điểm đang chờ bù đủ nên ghi "Đủ điểm từ 12:00 mai". Voucher 250.000đ: thiếu 5.000 điểm.'],
+    demo: ['"Giảm 30% đồ uống" chỉ còn 1 suất: xác nhận đổi sẽ ra màn hết suất M9.', 'Bữa sáng 246.000 điểm: thiếu 1.000, điểm đang chờ bù đủ nên ghi "Đủ điểm từ 12:00 mai". Voucher 250.000đ: thiếu 5.000 điểm.', { t: 'Mở Re-MKT · danh mục đổi điểm (R-K1)', href: RMK_URL + '#R-K1' }],
     diff: ['Danh mục mẫu mỗi đơn vị 3 ưu đãi theo câu 35 (Kite: Cà phê, Bạc xỉu, Giảm 30% đồ uống; Tiktak: 1 ngày làm việc, 1 giờ phòng họp, Giảm 20% gói tháng; Resort: Bữa sáng, Voucher 250.000đ, Giảm 100.000đ spa); Figma hiện 4 thẻ đầu.', 'Ảnh ưu đãi trên Figma là ảnh chụp; bản HTML thay bằng khối màu kèm biểu tượng đơn vị.']
   }
 });
@@ -2253,7 +2428,7 @@ def('M11', {
     let mid;
     if (v.status !== 'active') mid = '<div class="band warn">' + ic('cal', 20, 'ic') + '<span>Voucher đã hết hạn ngày ' + esc(v.until) + '.</span></div>';
     else mid = (s.khOffline ? offlineBand : qrLive(v.id, 200)) + '<div class="sm b" style="display:flex;gap:6px;align-items:center;justify-content:center;margin:14px 0">' + ic('cal', 16) + (v.untilShort ? v.untilShort.replace('Đến', 'Dùng đến') : 'Hạn dùng đến ' + esc(v.until)) + '</div>' +
-      '<div class="grp" style="display:flex;gap:12px"><span class="lnk" style="display:inline-flex">' + ic('scan', 22) + '</span><div><div class="lnk" style="font-weight:500">Đưa thu ngân quét</div><div class="sm">Thu ngân quét mã này trên iPOS. Mã đổi mỗi phút; ảnh chụp mã không dùng được.</div></div></div>';
+      '<div class="grp" style="display:flex;gap:12px"><span class="lnk" style="display:inline-flex">' + ic('scan', 22) + '</span><div><div class="lnk" style="font-weight:500">Đưa thu ngân quét</div><div class="sm">Nhân viên quầy quét mã này (iPOS ở Kite, trang nhân viên quầy ở Tiktak, Resort). Mã đổi mỗi phút; ảnh chụp mã không dùng được.</div></div></div>';
     return hd('Dùng voucher', { close: false }) + '<div class="pad"><div style="display:flex;gap:12px;align-items:center;margin-bottom:14px"><span class="ico-c" style="width:52px;height:52px;border-radius:14px">' + blIco(v.bl, 24) + '</span><div><div class="b" style="font-size:20px">' + esc(v.title) + '</div><div class="sm mut">' + esc(v.sub) + '</div></div></div>' + mid + '</div>';
   },
   notes: {
@@ -2310,26 +2485,29 @@ function sendRequest(pts) {
   go('M16', { focus: false });
   toast('Đã gửi yêu cầu xác nhận lên app của khách', 'nv', { icon: 'send' });
 }
+/* Yêu cầu có thể đến từ iPOS (st.pos) hoặc từ trang nhân viên quầy Tiktak, Resort (st.qw, r.src = 'qw') */
+function reqBack(r, o) { if (r.src === 'qw') { st.qw.req = null; if (o) qwGo(o); } else { st.pos.req = null; if (o) posGo(o); } }
 function confirmRequest() {
   const r = st.req; if (!r || r.status !== 'pending') return;
-  r.status = 'ok'; st.pos.pts = r.pts; st.pos.req = null;
-  posGo({ focus: false });
+  r.status = 'ok';
+  if (r.src === 'qw') st.qw.pts = r.pts; else st.pos.pts = r.pts;
+  reqBack(r, { focus: false });
   go('HOME', { noStack: true });
   toast('Đã đồng ý dùng ' + fmtN(r.pts) + ' điểm', 'kh', { sub: 'Điểm chỉ bị trừ khi hoá đơn thanh toán xong.' });
   toast('Khách đã xác nhận dùng ' + fmtN(r.pts) + ' điểm', 'nv');
 }
 function rejectRequest(why) {
   const r = st.req; if (!r || r.status !== 'pending') return;
-  r.status = why || 'rejected'; st.pos.req = null;
-  posGo({ focus: false });
+  r.status = why || 'rejected';
+  reqBack(r, { focus: false });
   if (st.cur.kh === 'M16') go('HOME', { focus: st.focus === 'kh', noStack: true });
   toast(r.status === 'rejected' ? 'Đã từ chối. Điểm của bạn không bị trừ.' : 'Yêu cầu dùng điểm đã hết hạn.', 'kh', { icon: 'info' });
   toast(r.status === 'rejected' ? 'Khách từ chối dùng điểm. Thu đủ tiền.' : 'Khách chưa xác nhận trong 3 phút. Yêu cầu đã huỷ.', 'nv', { icon: 'info' });
 }
 function cancelRequest() {
   const r = st.req; if (!r || r.status !== 'pending') return;
-  r.status = 'cancelled'; st.pos.req = null;
-  if (st.cur.kh === 'M16') { go('HOME', { focus: false, noStack: true }); toast(PLACE + ' đã huỷ yêu cầu dùng điểm.', 'kh', { icon: 'info' }); }
+  r.status = 'cancelled'; reqBack(r);
+  if (st.cur.kh === 'M16') { go('HOME', { focus: false, noStack: true }); toast((r.place || PLACE) + ' đã huỷ yêu cầu dùng điểm.', 'kh', { icon: 'info' }); }
 }
 TICKERS.push(now => {
   const r = st.req;
@@ -2378,7 +2556,7 @@ def('M16', {
   render: s => {
     const r = s.req, a = avail(), left = Math.max(0, Math.ceil((r.exp - Date.now()) / 1000));
     const base = norm(S[resolve('HOME')].render(s)).body;
-    return { body: '<div style="padding-top:54px" inert>' + base + '</div>', overlay: '<div class="dim"></div><div class="sheet"><div class="grab"></div><div style="display:flex;align-items:flex-start"><div style="flex:1"><div class="b" style="font-size:19px">' + PLACE + ' đề nghị trừ điểm</div><div class="sm mut">Hoá đơn ' + esc(r.invoice) + ' · còn <span data-cd="req">' + mmss(left) + '</span> để xác nhận</div></div><button class="ib" data-act="m16-reject" aria-label="Đóng và từ chối">' + ic('close', 20) + '</button></div>' +
+    return { body: '<div style="padding-top:54px" inert>' + base + '</div>', overlay: '<div class="dim"></div><div class="sheet"><div class="grab"></div><div style="display:flex;align-items:flex-start"><div style="flex:1"><div class="b" style="font-size:19px">' + esc(r.place || PLACE) + ' đề nghị trừ điểm</div><div class="sm mut">Hoá đơn ' + esc(r.invoice) + ' · còn <span data-cd="req">' + mmss(left) + '</span> để xác nhận</div></div><button class="ib" data-act="m16-reject" aria-label="Đóng và từ chối">' + ic('close', 20) + '</button></div>' +
       '<div class="grp" style="margin-top:12px"><div class="kv"><div class="k">Điểm dùng được</div><div class="v" style="text-align:right">' + fmtN(a) + '</div><div class="k">Sẽ trừ</div><div class="v" style="text-align:right">' + fmtN(-r.pts) + '</div><div class="k b" style="color:var(--m-ink)">Còn lại</div><div class="v" style="text-align:right;color:var(--m-action)">' + fmtN(a - r.pts) + ' điểm</div></div></div>' +
       '<div style="display:flex;gap:10px;margin:12px 0">' + ic('receipt', 20) + '<div class="sm"><div class="b">Giảm ' + money(r.money) + ' cho hoá đơn ' + money(r.amount) + '</div><div class="mut">Nhập PIN là đồng ý. Không phải hoá đơn của bạn? Bấm Từ chối, điểm không bị trừ.</div></div></div>' +
       (s.pin.set ? pinArea({ forgot: false, what: 'dùng điểm' }) : '<div class="band info">' + ic('lock', 20, 'ic') + '<span>Bạn chưa có mã PIN. Đặt mã PIN 6 số, rồi nhập mã đó để đồng ý.</span></div><button class="btn" style="margin-top:10px" data-act="m16-setpin">Đặt mã PIN</button>') + '<button class="btn sec" style="margin-top:10px" data-act="m16-reject">Từ chối</button></div>' };
@@ -2559,7 +2737,7 @@ def('M22', {
     return hd('Liên kết Biz Line') + '<div class="pad stack"><div class="list">' + r('kite') + r('tiktak') + r('resort') + '</div>' +
       '<div class="band info">' + ic('info', 20, 'ic') + '<span>Liên kết xong được cộng giao dịch 12 tháng tính lùi từ ngày liên kết ở đơn vị đó; điểm cộng dồn tính vào xét hạng năm 2026.</span></div></div>';
   },
-  notes: { rules: ['Mỗi đơn vị có trạng thái riêng: Chưa liên kết, Chờ xác minh, Tạm khoá liên kết, Đã liên kết (trạng thái "Liên kết một Biz Line" trên Figma).', 'Đóng app giữa bước liên kết: tài khoản đã tạo, liên kết sau trong phần cài đặt (brainstorm Mục 6.4).', dr(13), dr(14), dr(15)], motion: [], demo: [], diff: ['Figma chưa vẽ luồng nối lịch sử ở đơn vị khác; bản HTML dựng theo câu 13, 14, 15 đã chốt.'] }
+  notes: { rules: ['Mỗi đơn vị có trạng thái riêng: Chưa liên kết, Chờ xác minh, Tạm khoá liên kết, Đã liên kết (trạng thái "Liên kết một Biz Line" trên Figma).', 'Đóng app giữa bước liên kết: tài khoản đã tạo, liên kết sau trong phần cài đặt (brainstorm Mục 6.4).', 'CRM Hub tách hồ sơ thì đơn vị đó về "Chưa liên kết", khách nhận thông báo và màn M24b.', dr(13), dr(14), dr(15)], motion: [], demo: [{ t: 'Giả lập CRM Hub tách hồ sơ Resort (M24b)', act: 'demo-unlink' }], diff: ['Figma chưa vẽ luồng nối lịch sử ở đơn vị khác; bản HTML dựng theo câu 13, 14, 15 đã chốt.'] }
 });
 def('M23', {
   dev: 'kh', flow: 'acct', from: 'brainstorm Membership Mục 5.1 bước 5–6, 6.5, 7.2, 7.3', name: 'Liên kết một Biz Line', parent: 'M22',
@@ -2596,7 +2774,35 @@ def('M25', {
     return hd('Liên kết ' + BL[s.link.bl].name) + '<div class="pad" style="text-align:center;padding-top:20px"><div class="ico-c o" style="width:76px;height:76px;margin:0 auto 16px">' + ic('clock', 34) + '</div><div class="h2">Đang chờ xác minh</div><p class="mut">Yêu cầu liên kết đang được xử lý, bạn sẽ nhận kết quả trong 24 giờ.</p>' +
       '<div class="tbl" style="text-align:left;margin-top:14px"><div class="kv"><div class="k">Biz Line</div><div class="v">' + BL[s.link.bl].full + '</div><div class="k">Thông tin đã gửi</div><div class="v">' + esc(r.val) + '</div><div class="k">Gửi lúc</div><div class="v">' + esc(r.at) + '</div></div></div>' +
       '<button class="btn" style="margin-top:16px" data-go="HOME">Về trang chủ</button></div>'; },
-  notes: { rules: ['Không xác nhận được thì chuyển "Chờ xác minh", nhân viên đơn vị xử lý trong 24 giờ (brainstorm Mục 5.1 bước 6, 7.2).', 'Câu chữ: "Yêu cầu liên kết đang được xử lý, bạn sẽ nhận kết quả trong 24 giờ." (Mục 7.3).', 'Người duyệt đồng ý thì liên kết, ghi quyết định về CRM Hub; từ chối thì báo lý do và cách khác để thử. Quá 24 giờ: nhắc Manager, báo GPCN HO, không tự duyệt (trạng thái "Liên kết một Biz Line").', dr(13)], motion: [], demo: ['Manager duyệt trên trang quản trị của đơn vị. Bản xem thử giả lập kết quả:', { t: 'Giả lập Manager đồng ý', act: 'demo-verify', arg: '1' }, { t: 'Giả lập Manager từ chối', act: 'demo-verify', arg: '0' }], diff: [] }
+  notes: { rules: ['Không xác nhận được thì chuyển "Chờ xác minh", nhân viên đơn vị xử lý trong 24 giờ (brainstorm Mục 5.1 bước 6, 7.2).', 'Câu chữ: "Yêu cầu liên kết đang được xử lý, bạn sẽ nhận kết quả trong 24 giờ." (Mục 7.3).', 'Người duyệt đồng ý thì liên kết, ghi quyết định về CRM Hub; từ chối thì báo lý do và cách khác để thử. Quá 24 giờ: nhắc Manager, báo GPCN HO, không tự duyệt (trạng thái "Liên kết một Biz Line").', 'Yêu cầu vào hàng chờ "Xác minh liên kết" của CRM Hub (V1); Manager đơn vị so thông tin khách gửi với bản ghi nguồn rồi đồng ý hoặc từ chối (V2).', dr(13), dp(46), dp(44)], motion: [], demo: ['Manager duyệt trên CRM Hub (V1, V2). Bản xem thử giả lập kết quả:', { t: 'Giả lập Manager đồng ý', act: 'demo-verify', arg: '1' }, { t: 'Giả lập Manager từ chối', act: 'demo-verify', arg: '0' }, { t: 'Mở CRM Hub · hàng chờ xác minh liên kết (V1)', href: CRM_URL + '#V1' }], diff: [] }
+});
+/* CRM Hub tách hồ sơ của khách đã là thành viên (câu 15): đơn vị về "Chưa liên kết", điểm của hồ sơ bị tách thu lại như hoàn giao dịch */
+const UNLINK = { bl: 'resort', pts: 12400, n: 2 };
+function applyUnlink() {
+  if (st.unlink) return;
+  st.unlink = Object.assign({ at: hm() + ' · ' + today() }, UNLINK);
+  st.links.resort = 'none';
+  usePts(UNLINK.pts); st.tierPts = Math.max(0, st.tierPts - UNLINK.pts); st.blPts.resort = Math.max(0, (st.blPts.resort || 0) - UNLINK.pts);
+  addHistory({ kind: 'claw', bl: 'resort', title: 'Thu hồi điểm · gỡ liên kết Resort', short: 'Thu hồi · gỡ liên kết Resort', note: fmtN(UNLINK.pts) + ' điểm của ' + UNLINK.n + ' hoá đơn thuộc hồ sơ Resort đã tách khỏi tài khoản của bạn.', delta: -UNLINK.pts });
+  addNotif({ t: 'Liên kết Hospitality Resort đã được gỡ: hồ sơ Resort nối nhầm vào tài khoản của bạn đã được tách, ' + fmtN(UNLINK.pts) + ' điểm của hồ sơ đó được thu lại.', when: 'Vừa xong', ic: 'link', go: 'M24b' });
+}
+A['demo-unlink'] = () => { applyUnlink(); go('M24b'); };
+def('M24b', {
+  dev: 'kh', flow: 'acct', from: 'câu 15 của bảng đã chốt; câu 38 của bảng CRM Hub (đề xuất, chưa chốt); câu chữ tự viết', name: 'Liên kết bị gỡ sau khi CRM Hub tách hồ sơ', parent: 'M22',
+  enter: (s, o) => { if (!o.pop) applyUnlink(); },
+  render: s => {
+    const u = s.unlink || Object.assign({ at: '' }, UNLINK);
+    return hd('Liên kết Resort', { close: true }) + '<div class="pad" style="text-align:center;padding-top:20px"><div class="ico-c o" style="width:76px;height:76px;margin:0 auto 16px">' + ic('link', 34) + '</div><div class="h2">Liên kết Hospitality Resort đã được gỡ</div><p class="mut">Khi kiểm tra dữ liệu, nhân viên thấy hồ sơ Resort đã nối vào tài khoản của bạn là của một khách khác dùng chung số điện thoại. Hồ sơ đó đã được tách; Resort về trạng thái Chưa liên kết.</p></div>' +
+      '<div class="pad stack"><div class="tbl"><div class="kv"><div class="k">Đơn vị</div><div class="v">Hospitality Resort</div><div class="k">Trạng thái</div><div class="v">Chưa liên kết</div><div class="k">Điểm thu lại</div><div class="v">' + fmtN(-u.pts) + ' điểm · ' + u.n + ' hoá đơn</div><div class="k">Lúc</div><div class="v">' + esc(u.at) + '</div></div></div>' +
+      '<div class="band info">' + ic('info', 20, 'ic') + '<span>Điểm từ các hoá đơn khác của bạn không đổi. Nếu bạn có dùng Resort, liên kết lại bằng booking number của mình.</span></div>' +
+      '<button class="btn" data-act="open-link" data-arg="resort">Liên kết lại Resort</button><button class="btn sec" data-go="M4">Xem lịch sử điểm</button></div>';
+  },
+  notes: {
+    rules: [dr(15), 'Bên CRM Hub, màn tách hồ sơ (I4) và so sánh cặp (K1) báo trước số điểm sẽ thu lại và đơn vị bị gỡ liên kết trước khi bấm Tách (câu 38 của bảng CRM Hub, đề xuất, chưa chốt).', 'Khách nhận thông báo trong app; câu chữ không nêu tên, số điện thoại của khách kia.', 'Điểm thu lại có thể làm số dư âm: xử lý như câu 24.', dr(31)],
+    motion: [],
+    demo: ['Mở từ danh sách màn: giả lập CRM Hub tách hồ sơ Resort của khách mẫu.', { t: 'Giả lập CRM Hub tách hồ sơ Resort', act: 'demo-unlink' }, { t: 'Mở CRM Hub · tách hồ sơ (I4)', href: CRM_URL + '#I4' }],
+    diff: ['Figma chưa vẽ màn này; câu chữ là câu tự viết. Số 12.400 điểm của 2 hoá đơn là dữ liệu mẫu.']
+  }
 });
 A['demo-verify'] = ok => {
   const r = st.verifyReqs.shift(); if (!r) { toast('Chưa có yêu cầu nào đang chờ', 'kh', { icon: 'info' }); return; }
@@ -2692,7 +2898,7 @@ def('M30', {
       '<div class="note">' + ic('receipt', 16) + '<span>Hoá đơn đã tích điểm được giữ lại để không tích lại lần nữa. Số dư điểm âm (nếu có) được trừ vào tiền hoàn.</span></div>' +
       '<button class="btn danger' + (s.del.ack ? '' : ' dis') + '" data-act="del-send"' + (s.del.ack ? '' : ' disabled') + '>Gửi yêu cầu xoá tài khoản</button></div>';
   },
-  notes: { rules: [dr(17), 'Quyền xem, sửa, xoá, rút đồng ý theo Luật 91/2025/QH15.', 'Đăng ký lại bằng SĐT đã từng là thành viên: không tặng lại voucher chào mừng (brainstorm Mục 6.5).', dr(24)], motion: [], demo: ['Tích ô xác nhận rồi gửi để xem trạng thái đã nhận yêu cầu.'], diff: ['Figma chưa vẽ trang xoá tài khoản; câu chữ trên màn là câu tự viết.'] }
+  notes: { rules: [dr(17), 'Quyền xem, sửa, xoá, rút đồng ý theo Luật 91/2025/QH15.', 'Đăng ký lại bằng SĐT đã từng là thành viên: không tặng lại voucher chào mừng (brainstorm Mục 6.5).', 'Yêu cầu xoá vào hàng chờ "Yêu cầu xoá tài khoản" của CRM Hub (V5, V6); GPCN HO xử lý trong 30 ngày (câu 37 của bảng CRM Hub, đề xuất, chưa chốt). Rút đồng ý nhận ưu đãi có hiệu lực ngay, không cần người xử lý.', dr(24), dp(44)], motion: [], demo: ['Tích ô xác nhận rồi gửi để xem trạng thái đã nhận yêu cầu.', { t: 'Mở CRM Hub · yêu cầu xoá tài khoản (V5)', href: CRM_URL + '#V5' }], diff: ['Figma chưa vẽ trang xoá tài khoản; câu chữ trên màn là câu tự viết.'] }
 });
 A['refer-copy'] = (a, dev) => toast('Đã sao chép lời mời', dev);
 def('M31', {
@@ -2708,10 +2914,12 @@ def('M31', {
 const prow = (a, b) => '<div class="p-row"><span class="mut">' + a + '</span><b>' + b + '</b></div>';
 const maskPhone = p => { const d = String(p || '').replace(/\D/g, ''); return d.length >= 10 ? d.slice(0, 4) + ' *** ' + d.slice(-3) : esc(p); };
 const posSub = p => p.items.reduce((a, x) => a + x.p * x.q, 0);
-function checkVoucher(v) {
-  if (v.status === 'used') return { ok: false, reason: 'Voucher đã dùng lúc ' + v.usedAt + '.' };
-  if (v.status === 'expired') return { ok: false, reason: 'Voucher đã hết hạn ngày ' + v.until + '.' };
-  if (v.bl !== 'kite') return { ok: false, reason: 'Voucher này chỉ áp dụng tại ' + BL[v.bl].full + '.' };
+/* unit: đơn vị của quầy đang quét (iPOS là Kite; trang nhân viên quầy là Tiktak hoặc Resort) */
+function checkVoucher(v, unit = 'kite') {
+  if (v.status === 'used') return { ok: false, kind: 'used', reason: 'Voucher đã dùng lúc ' + v.usedAt + '.' };
+  if (v.status === 'expired') return { ok: false, kind: 'expired', reason: 'Voucher đã hết hạn ngày ' + v.until + '.' };
+  if (v.bl !== unit) return { ok: false, kind: 'unit', reason: 'Voucher này chỉ áp dụng tại ' + BL[v.bl].full + '.' };
+  if (v.src === 'campaign' && st.qw.soldout) return { ok: false, kind: 'soldout', reason: 'Ưu đãi này đã hết suất.' };   /* campaign Re-MKT đã dùng hết lượt (R-C3) */
   return { ok: true };
 }
 const posVouchers = () => activeV().filter(v => checkVoucher(v).ok);
@@ -2985,6 +3193,400 @@ def('P4b', {
     demo: ['Bấm Thanh toán: hoá đơn được lưu tạm. Bật mạng lại để gửi các hoá đơn này; máy khách nhận điểm chờ đối soát.', { t: 'Bật hoặc tắt mạng tại quầy', act: 'demo-pos-offline' }]
   })
 });
+/* ================= Trang nhân viên quầy Tiktak, Resort (web trên máy tính bảng; câu 18 đã chốt, câu 45 đề xuất) ================= */
+const qwU = () => QW_UNITS[st.qw.unit];
+const qwStaff = () => QW_STAFF[st.qw.acct];
+const qwMgr = () => st.qw.role === 'manager';
+/* Khoản giảm của một voucher cho hoá đơn nhập tay: giảm % có trần đọc từ dòng giá trị; voucher tặng dịch vụ tính theo giá minh hoạ */
+const QW_ITEM = [[/1 ngày làm việc/, 250000], [/phòng họp/, 150000], [/Bữa sáng/, 360000]];
+function qwDisc(v, amount) {
+  if (!v || !amount) return 0;
+  if (v.pct) return Math.min(Math.round(amount * v.pct / 100), v.cap || Infinity);   /* voucher chào mừng 10%, có trần (câu 4) */
+  const txt = (v.value || '') + ' ' + v.title;
+  const pct = /(\d+)%/.exec(txt), cap = /tối đa ([\d.]+)/.exec(txt), fix = /Giảm ([\d.]+)\s?đ/.exec(txt);
+  if (pct) return Math.min(Math.round(amount * +pct[1] / 100), cap ? parseMoney(cap[1]) : Infinity);
+  if (fix) return parseMoney(fix[1]);
+  const it = QW_ITEM.find(([re]) => re.test(txt));
+  return it ? it[1] : 0;
+}
+const qwVouchers = () => activeV().filter(v => checkVoucher(v, st.qw.unit).ok);
+function qwCalc(q = st.qw) {
+  const amount = parseMoney(q.amount), v = q.voucher ? vById(q.voucher) : null;
+  const vd = v ? Math.min(qwDisc(v, amount), amount) : 0;
+  /* thứ tự như iPOS: voucher trước (câu 22), giảm theo hạng trên phần còn lại (câu 29), điểm trừ cuối; tìm bằng số điện thoại hoặc mất mạng thì không áp */
+  const td = q.member && q.via === 'qr' && !q.offline && TIER_DISC[st.tier] ? Math.round((amount - vd) * TIER_DISC[st.tier]) : 0;
+  const pd = Math.min(q.pts, Math.max(0, amount - vd - td)), due = amount - vd - td - pd;
+  return { amount, v, vd, td, pd, due, earn: Math.floor(due * EARN_PCT) };
+}
+/* Màn hiện tại suy ra từ trạng thái của trang */
+function qwId(q = st.qw) {
+  if (!q.logged) return 'Q1';
+  if (q.view === 'log') return q.sel ? 'Q7b' : 'Q7';
+  if (q.last) return 'Q4';
+  if (q.vErr) return 'Q5';
+  if (!q.member) return 'Q2';
+  if (q.offline) return 'Q6';
+  return q.via === 'phone' ? 'Q3b' : 'Q3';
+}
+function qwGo(o = {}) { go(qwId(), Object.assign({ keep: true, noStack: true }, o)); }
+/* Khách tiếp theo: xoá hoá đơn đang nhập, giữ đăng nhập, lịch sử quét, trạng thái mạng */
+function qwFresh(q, o = {}) {
+  Object.assign(q, { member: false, via: '', scanErr: false, demoOld: false, phone: '', err: '', inv: '', amount: '', ierr: '', voucher: null, pts: 0, entry: '', perr: '', req: null, vErr: null, last: null, view: 'scan', sel: null, reason: '', note: '', uerr: '' }, o);
+}
+/* Số hoá đơn mẫu chưa tích điểm (mở thẳng Q3, Q4 nhiều lần không bị báo trùng) */
+function qwInv(q) {
+  const base = QW_UNITS[q.unit].inv, pfx = base.replace(/\d+$/, '');
+  let n = parseInt(base.slice(pfx.length), 10);
+  while (q.earned[pfx + String(n).padStart(4, '0')]) n++;
+  return pfx + String(n).padStart(4, '0');
+}
+const qwCancelReq = () => { if (st.req && st.req.src === 'qw') cancelRequest(); };
+
+function qwTop(s, active) {
+  const q = s.qw, u = qwU(), who = qwStaff();
+  const nav = q.logged ? '<nav class="q-nav"><button class="' + (active === 'scan' ? 'on' : '') + '" data-act="qw-view" data-arg="scan">Quét mã</button><button class="' + (active === 'log' ? 'on' : '') + '" data-act="qw-view" data-arg="log">Lịch sử quét hôm nay</button></nav>' : '';
+  const right = q.logged ? '<span class="u">' + (q.offline ? '<span class="off">Mất kết nối VNG 360</span>' : '') + '<span><b>' + esc(who.name) + '</b> · ' + (qwMgr() ? 'Manager ' + BL[q.unit].name : esc(who.title)) + '</span><button class="p-btn sec sm" data-act="qw-logout">Đăng xuất</button></span>' : '';
+  return '<div class="q-top"><span class="logo">V</span><span class="ttl"><b>VNG 360 · Trang nhân viên quầy</b><span>' + (q.logged ? esc(u.place) + ' · ' + esc(q.shift.split(' · ')[0]) + ' · ' + hm() : 'Dùng tại quầy không có iPOS') + '</span></span>' + nav + right + '</div>';
+}
+const qwPage = (s, active, inner, overlay) => ({ body: qwTop(s, active) + '<div class="q-body">' + inner + '</div>', overlay: overlay || '' });
+
+/* Q1 · vào ca */
+function qwLoginView(s) {
+  const q = s.qw, opt = (v, t, cur) => '<option value="' + esc(v) + '"' + (v === cur ? ' selected' : '') + '>' + esc(t) + '</option>';
+  return qwPage(s, '', '<div class="q-card q-login"><h2 class="q-h">Vào ca tại quầy</h2><div class="p-small" style="margin-top:-6px">Đăng nhập bằng tài khoản công ty như CRM Hub. Mỗi nhân viên một tài khoản; tài khoản phải được giao quầy mới vào được.</div>' +
+    '<label class="q-lbl" for="qa">Tài khoản công ty</label><select id="qa" class="p-inp" data-model="qw.acct">' + opt('staff', 'Nguyễn Minh · Nhân viên quầy', q.acct) + opt('manager', 'Trần Thu Hà · Manager đơn vị', q.acct) + opt('none', 'Lê Quốc Bảo · chưa được giao quầy', q.acct) + '</select>' +
+    '<label class="q-lbl" for="qu">Quầy</label><select id="qu" class="p-inp" data-model="qw.unit">' + opt('tiktak', QW_UNITS.tiktak.place, q.unit) + opt('resort', QW_UNITS.resort.place, q.unit) + '</select>' +
+    '<label class="q-lbl" for="qs">Ca</label><select id="qs" class="p-inp" data-model="qw.shift">' + opt('Ca sáng · 7:00–15:00', 'Ca sáng · 7:00–15:00', q.shift) + opt('Ca chiều · 15:00–23:00', 'Ca chiều · 15:00–23:00', q.shift) + '</select>' +
+    (q.lerr ? '<div class="p-err">' + esc(q.lerr) + '</div>' : '') +
+    '<button class="p-btn" data-act="qw-login">Vào ca</button>' +
+    '<div class="p-small">Kite thanh toán trên iPOS nên không dùng trang này. Trang không thay phần mềm bán hàng: hoá đơn vẫn lập trên phần mềm của đơn vị.</div></div>');
+}
+/* Q2 · quét mã */
+function qwScanView(s) {
+  const q = s.qw, u = qwU(), n = q.log.filter(r => r.status !== 'undo').length;
+  const left = '<div class="q-col" style="flex:1"><div class="q-card"><h2 class="q-h">Quét mã của khách</h2>' +
+    '<button class="p-scan' + (q.scanErr ? ' err' : '') + '" style="height:210px" data-act="qw-scan">' + (q.scanErr ? '<b>Mã này đã cũ</b><span class="p-small">Nhờ khách mở lại app để lấy mã mới rồi quét lại. Mã chụp màn hình không dùng được.</span>' : ic('scan', 40) + '<b>Đưa mã QR của khách vào camera</b><span class="p-small">Quét được mã thành viên và mã voucher trên app. Mã tự đổi nên ảnh chụp không dùng được. Bấm vào khung để giả lập quét.</span>') + '</button>' +
+    '<div class="q-lbl">Khách không mở được app?</div><div style="display:flex;gap:10px"><input class="p-inp" inputmode="tel" data-model="qw.phone" value="' + esc(q.phone) + '" placeholder="Số điện thoại của khách"><button class="p-btn sec" data-act="qw-phone">Tìm khách</button></div>' +
+    (q.err ? '<div class="p-err">' + esc(q.err) + '</div>' : '') +
+    '<div class="p-small" style="color:#914D00">Tìm bằng số điện thoại chỉ để tích điểm. Muốn dùng điểm hoặc voucher, khách mở mã trên app.</div></div></div>';
+  const right = '<div class="q-col" style="width:340px;flex:none"><div class="q-card"><div class="q-lbl">Cách làm tại quầy</div><ol class="q-steps"><li>Quét mã thành viên hoặc mã voucher trên app khách.</li><li>Nhập số tiền hoá đơn; chọn voucher, dùng điểm nếu khách muốn. Trang tính sẵn số tiền giảm.</li><li>Ghi các khoản giảm vào hoá đơn trên ' + esc(u.sw) + ', thu tiền.</li><li>Nhập số hoá đơn rồi bấm Xác nhận: khách được tích điểm và nhận thông báo trên app.</li></ol></div>' +
+    '<button class="q-card" style="text-align:left;flex-direction:row;align-items:center" data-act="qw-view" data-arg="log">' + ic('history', 22) + '<span style="flex:1"><b>Lịch sử quét hôm nay</b><br><span class="p-small">' + n + ' lượt đã ghi nhận tại quầy này</span></span>' + ic('chev', 18) + '</button></div>';
+  return qwPage(s, 'scan', left + right);
+}
+/* Q3, Q3b, Q6 · ghi hoá đơn, áp voucher, dùng điểm */
+function qwMember(s) {
+  const q = s.qw, off = q.offline, phoneOnly = q.via === 'phone', a = Math.max(0, avail());
+  const name = off ? 'Đã ghi nhận mã thành viên' : esc(s.user.name) + ' · ' + tierN(s.tier);
+  const sub = off ? 'Chưa kiểm tra được tên và điểm vì mất kết nối' : maskPhone(s.user.phone) + ' · ' + (phoneOnly ? 'tìm bằng số điện thoại' : 'nhận diện bằng mã trên app');
+  let rows;
+  if (off) rows = prow('Tích điểm', 'Lưu tạm, tự gửi khi có mạng') + prow('Dùng điểm, voucher', 'Tạm khoá');
+  else if (phoneOnly) rows = prow('Hoá đơn này', 'Chỉ tích điểm') + prow('Dùng điểm, voucher', 'Cần mã trên app');
+  else rows = prow('Điểm dùng được', fmtN(a) + ' điểm = ' + money(a)) + prow('Voucher dùng được tại ' + BL[q.unit].name, qwVouchers().length + ' voucher') + (TIER_DISC[s.tier] ? prow('Quyền lợi hạng ' + tierN(s.tier), 'Giảm thêm 5% hoá đơn') : '');
+  return '<div class="p-mem' + (off ? ' off' : '') + '"><div style="display:flex;gap:8px;align-items:center"><span class="tagv">VNG 360</span><b style="flex:1">' + name + '</b>' + (q.req ? '' : '<button class="lnk sm" data-act="qw-next">Bỏ khách</button>') + '</div><div class="p-small">' + sub + '</div>' + rows + '</div>';
+}
+function qwVList(s) {
+  const q = s.qw, amount = parseMoney(q.amount);
+  if (q.offline) return '<div class="p-small">Tạm khoá: chưa kiểm tra được voucher khi mất kết nối. Voucher vẫn còn trong ví của khách.</div>';
+  if (q.via === 'phone') return '<div class="p-small">Tìm bằng số điện thoại không dùng được voucher. Nhờ khách mở mã trên app.</div>';
+  const list = qwVouchers();
+  if (!list.length) return '<div class="p-small">Khách chưa có voucher dùng được tại ' + BL[q.unit].full + '.</div>';
+  return '<div class="p-list">' + list.map(v => '<button class="p-opt' + (q.voucher === v.id ? ' on' : '') + '" data-act="qw-pick-v" data-arg="' + (q.voucher === v.id ? '' : v.id) + '"' + (q.req ? ' disabled' : '') + '><span><b>' + esc(v.title) + '</b>' + (v.srcLine ? ' <span class="p-small">· ' + esc(v.srcLine) + '</span>' : '') + '<br><span class="p-small">' + esc(v.value || '') + ' · hạn ' + esc(v.until) + (amount ? ' · giảm ' + fmtN(qwDisc(v, amount)) + ' cho hoá đơn này' : '') + '</span></span>' + (q.voucher === v.id ? ic('check', 18) : '') + '</button>').join('') + '</div>';
+}
+function qwSum(s) {
+  const q = s.qw, c = qwCalc(q), pend = q.req && q.req.status === 'pending';
+  if (!c.amount) return '<div class="p-small">Nhập số tiền hoá đơn để xem số tiền giảm và số điểm khách được tích.</div>';
+  let h = '<div class="p-tots" style="border-top:0;padding-top:0"><div class="p-row mut"><span>Tổng tiền hoá đơn</span><span>' + fmtN(c.amount) + '</span></div>';
+  if (c.v) h += '<div class="p-row disc"><span>Voucher · ' + esc(c.v.title) + '</span><span>' + fmtN(-c.vd) + '</span></div>';
+  if (c.td) h += '<div class="p-row disc"><span>Ưu đãi hạng ' + tierN(st.tier) + ' · giảm 5%</span><span>' + fmtN(-c.td) + '</span></div>';
+  if (c.pd) h += '<div class="p-row disc"><span>Dùng ' + fmtN(c.pd) + ' điểm VNG 360</span><span>' + fmtN(-c.pd) + '</span></div>';
+  else if (pend) h += '<div class="p-row disc"><span>Dùng ' + fmtN(q.req.pts) + ' điểm · chờ khách xác nhận</span><span>…</span></div>';
+  h += '<div class="p-row tot"><span>Khách trả bằng tiền</span><span>' + fmtN(c.due) + '</span></div>';
+  return h + '<div class="p-row"><span>' + (q.offline ? 'Tích điểm (lưu tạm)' : 'Tích điểm (chờ đối soát)') + '</span><b>+' + fmtN(c.earn) + ' điểm</b></div></div>';
+}
+const qwRoom = q => { const c = qwCalc(Object.assign({}, q, { pts: 0 })); return Math.max(0, c.amount - c.vd - c.td); };
+const qwPtsErr = () => { const q = st.qw, n = parseMoney(q.entry), a = Math.max(0, avail()); return n > a ? 'Khách chỉ có ' + fmtN(a) + ' điểm dùng được.' : n > qwRoom(q) ? 'Không trừ quá số tiền còn phải trả (' + fmtN(qwRoom(q)) + ').' : ''; };
+const qwCanPay = s => { const q = s.qw; return !!String(q.inv).trim() && parseMoney(q.amount) > 0 && !(q.req && q.req.status === 'pending'); };
+CALC['qw-sum'] = s => qwSum(s);
+CALC['qw-vlist'] = s => qwVList(s);
+EN['qw-ok'] = s => qwCanPay(s);
+EN['qw-pts'] = s => parseMoney(s.qw.amount) > 0 && parseMoney(s.qw.entry) > 0;
+function qwPtsBox(s) {
+  const q = s.qw; if (q.offline || q.via === 'phone') return '';
+  const pend = q.req && q.req.status === 'pending';
+  let h = '<div class="q-card"><div class="q-lbl">Dùng điểm VNG 360 · 1 điểm = 1đ</div>';
+  if (q.pts) h += '<div class="p-row"><span>Đã áp ' + fmtN(q.pts) + ' điểm cho hoá đơn này</span><button class="lnk sm" data-act="qw-pts-clear">Bỏ</button></div>';
+  else if (pend) h += '<div class="p-hint warn">Từ ' + fmtN(CONFIRM_AT) + ' điểm: đã gửi yêu cầu xác nhận lên app của khách, còn <span data-cd="req">' + mmss(Math.max(0, Math.ceil((q.req.exp - Date.now()) / 1000))) + '</span>. Khách đồng ý thì điểm được áp; từ chối hoặc hết 3 phút thì thu đủ tiền.</div>';
+  else h += '<div style="display:flex;gap:10px"><input class="p-inp" inputmode="numeric" data-model="qw.entry" data-fmt="money" value="' + esc(q.entry) + '" placeholder="Số điểm khách muốn dùng" aria-label="Số điểm dùng"><button class="p-btn sec" data-en="qw-pts" data-act="qw-pts"' + (EN['qw-pts'](s) ? '' : ' disabled') + '>Áp điểm</button></div>' + (q.perr ? '<div class="p-err">' + esc(q.perr) + '</div>' : '') +
+    '<div class="p-small">Dưới ' + fmtN(CONFIRM_AT) + ' điểm trừ luôn; từ ' + fmtN(CONFIRM_AT) + ' điểm khách xác nhận bằng PIN trên app. Điểm chỉ bị trừ khi bấm Xác nhận.</div>';
+  return h + '</div>';
+}
+function qwFormView(s) {
+  const q = s.qw, u = qwU(), pend = q.req && q.req.status === 'pending';
+  const hint = q.offline ? '<div class="p-hint warn">Trang vẫn ghi hoá đơn để tích điểm: lưu tạm trên máy, tự gửi khi có mạng. Dùng điểm, voucher tạm khoá vì chưa kiểm tra được; báo khách dùng ở lần sau, ưu đãi vẫn còn trong ví.</div>'
+    : q.via === 'phone' ? '<div class="p-hint warn">Tìm bằng số điện thoại chỉ để tích điểm, tránh người khác dùng điểm của khách. Muốn dùng điểm hoặc voucher, nhờ khách mở mã trên app.</div>'
+      : '<div class="p-hint">Ghi các khoản giảm này vào hoá đơn trên ' + esc(u.sw) + ' trước khi thu tiền. Điểm, voucher chỉ bị trừ khi bấm Xác nhận.</div>';
+  const left = '<div class="q-col" style="flex:1">' + qwMember(s) +
+    '<div class="q-card"><div class="q-lbl">Hoá đơn trên ' + esc(u.sw) + '</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><div class="p-small" style="margin-bottom:4px">Số hoá đơn</div><input class="p-inp" data-model="qw.inv" value="' + esc(q.inv) + '" placeholder="Ví dụ ' + esc(u.inv) + '"' + (pend ? ' disabled' : '') + '></div><div><div class="p-small" style="margin-bottom:4px">Tổng tiền trước giảm (đ)</div><input class="p-inp" inputmode="numeric" data-model="qw.amount" data-fmt="money" value="' + esc(q.amount) + '" placeholder="Ví dụ 1.500.000"' + (pend ? ' disabled' : '') + '></div></div>' +
+    (q.ierr ? '<div class="p-err">' + esc(q.ierr) + '</div>' : '') + '<div class="p-small">Số hoá đơn phải trùng số trên ' + esc(u.sw) + '; mỗi hoá đơn chỉ tích điểm một lần.</div></div>' +
+    '<div class="q-card"><div class="q-lbl">Voucher của khách</div><div data-calc="qw-vlist">' + qwVList(s) + '</div></div>' + qwPtsBox(s) + '</div>';
+  const right = '<div class="q-col" style="width:340px;flex:none"><div class="q-card"><div class="q-lbl">Tóm tắt hoá đơn</div><div data-calc="qw-sum">' + qwSum(s) + '</div>' + hint +
+    '<div class="p-btns"><button class="p-btn sec" data-act="qw-next"' + (pend ? ' disabled' : '') + '>Huỷ</button><button class="p-btn" data-en="qw-ok" data-act="qw-pay"' + (qwCanPay(s) ? '' : ' disabled') + '>' + (q.offline ? 'Lưu tạm để tích điểm' : 'Xác nhận đã thu tiền') + '</button></div></div></div>';
+  return qwPage(s, 'scan', left + right);
+}
+/* Q4 · đã ghi nhận */
+function qwDoneView(s) {
+  const q = s.qw, r = q.last, u = qwU(), queued = r.status === 'queued';
+  return qwPage(s, 'scan', '<div class="q-col" style="flex:1;max-width:620px;margin:0 auto"><div class="q-card"><div style="display:flex;gap:14px;align-items:center"><span class="q-ok">' + ic('check', 30) + '</span><div><h2 class="q-h" style="color:#007631">' + (queued ? 'Đã lưu tạm hoá đơn ' : 'Đã ghi nhận hoá đơn ') + esc(r.inv) + '</h2><div class="p-small">' + esc(u.place) + ' · ' + esc(r.at) + ' · ' + esc(qwStaff().name) + '</div></div></div>' +
+    '<div class="p-mem"><b style="color:var(--m-brand)">VNG 360 · ' + esc(r.who) + (queued ? '' : ' · ' + tierN(s.tier)) + '</b>' + prow('Tổng tiền hoá đơn', fmtN(r.amount)) +
+    (r.vTitle ? prow('Voucher', esc(r.vTitle) + ' · đã dùng · giảm ' + fmtN(r.vd)) : '') + (r.td ? prow('Ưu đãi hạng ' + tierN(s.tier), 'giảm ' + fmtN(r.td)) : '') + (r.pd ? prow('Đã trừ', fmtN(r.pd) + ' điểm · còn ' + fmtN(Math.max(0, avail()))) : '') +
+    prow('Khách trả bằng tiền', fmtN(r.due)) + prow(queued ? 'Tích điểm (lưu tạm)' : 'Tích điểm (chờ đối soát)', '+' + fmtN(r.earn) + ' điểm · ' + (queued ? 'gửi khi có mạng' : 'dùng được từ 12:00, ' + tomorrow())) + '</div>' +
+    '<div class="p-small">' + (queued ? 'Có mạng lại, trang tự gửi hoá đơn này; khách nhận thông báo lúc đó.' : 'Khách nhận thông báo trên app ngay.') + ' Quét nhầm hoặc khách huỷ trong ngày: Manager hoàn tác ở Lịch sử quét hôm nay. Huỷ, trả hoá đơn sau ngày hôm nay: đơn vị gửi dữ liệu huỷ, hệ thống thu lại điểm và trả lại voucher.</div>' +
+    '<div class="p-btns"><button class="p-btn sec" data-act="qw-view" data-arg="log">Xem lịch sử quét</button><button class="p-btn" data-act="qw-next">Khách tiếp theo</button></div></div></div>');
+}
+/* Q5 · voucher không dùng được (câu chữ theo brainstorm Mục 7.3) */
+const QW_VERR = {
+  unit: ['Voucher sai đơn vị', v => 'Dạ voucher này dùng ở ' + (v.bl ? BL[v.bl].full : 'đơn vị khác') + '. Hoá đơn hôm nay anh/chị vẫn được tích điểm.'],
+  expired: ['Voucher đã hết hạn', () => 'Dạ voucher này đã hết hạn nên không dùng được. Hoá đơn hôm nay anh/chị vẫn được tích điểm.'],
+  soldout: ['Ưu đãi đã hết suất', () => 'Dạ chương trình này đã dùng hết suất. Hoá đơn hôm nay anh/chị vẫn được tích điểm.'],
+  used: ['Voucher đã được dùng', () => 'Dạ voucher này đã được dùng trước đó. Nếu anh/chị chưa dùng, em báo Manager kiểm tra lịch sử quét.']
+};
+function qwVErrView(s) {
+  const q = s.qw, e = q.vErr, v = vById(e.id) || {}, m = QW_VERR[e.kind] || QW_VERR.unit;
+  return qwPage(s, 'scan', '<div class="q-col" style="flex:1;max-width:620px;margin:0 auto"><div class="q-card bad"><div style="display:flex;gap:12px;align-items:center"><span style="color:#B80411;display:inline-flex">' + ic('alertc', 34) + '</span><div><h2 class="q-h bad">' + m[0] + '</h2><div class="b">' + esc(e.reason) + '</div></div></div>' +
+    prow('Voucher', esc(v.title || '')) + prow('Đơn vị áp dụng', esc(v.bl ? BL[v.bl].full : '')) + prow('Hạn dùng', esc(v.until || '')) +
+    (e.kind === 'used' ? prow('Đã dùng', esc(v.usedAt || '') + (v.usedPlace ? ' · ' + esc(v.usedPlace) : '')) : '') + (e.kind === 'soldout' ? prow('Campaign', 'Đã dùng hết lượt; lượt quét này không tính chi phí') : '') +
+    '<div class="p-hint">Nói với khách: “' + esc(m[1](v)) + '”</div>' +
+    '<div class="p-btns"><button class="p-btn sec" data-act="qw-next">Quét mã khác</button><button class="p-btn" data-act="qw-verr-go">Tiếp tục tích điểm cho khách</button></div></div></div>');
+}
+/* Q7, Q7b · lịch sử quét trong ngày, Manager hoàn tác */
+const QW_REASONS = ['Quét nhầm khách', 'Áp nhầm voucher hoặc số điểm', 'Nhập nhầm số tiền, số hoá đơn', 'Khách huỷ giao dịch trong ngày'];
+function qwUndoModal(s) {
+  const q = s.qw, r = q.log.find(x => x.id === q.sel); if (!r) return '';
+  const eff = [r.vTitle ? 'Voucher ' + r.vTitle + ' trả lại ví của khách, còn hạn thì dùng lại được.' : '', r.pd ? fmtN(r.pd) + ' điểm đã trừ được trả lại.' : '', r.earn ? 'Bỏ +' + fmtN(r.earn) + ' điểm đang chờ đối soát của hoá đơn này.' : '', 'Khách nhận thông báo trên app kèm lý do. Lượt hoàn tác giữ trong bảng, ghi người làm và lý do; hoá đơn này nhập lại được.'].filter(Boolean);
+  return '<div class="p-modal" style="width:500px"><h3>Hoàn tác lượt quét lúc ' + esc(r.at) + '</h3><div class="mut" style="margin-top:-6px">Hoá đơn ' + esc(r.inv) + ' · ' + esc(r.who) + ' · ' + money(r.amount) + ' · nhân viên ' + esc(r.by) + '</div>' +
+    '<div class="q-lbl">Sau khi hoàn tác</div><ul class="q-steps" style="padding-left:18px">' + eff.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>' +
+    '<label class="q-lbl" for="qr">Lý do (bắt buộc)</label><select id="qr" class="p-inp" data-model="qw.reason"><option value="">Chọn lý do</option>' + QW_REASONS.map(x => '<option' + (q.reason === x ? ' selected' : '') + '>' + esc(x) + '</option>').join('') + '</select>' +
+    '<textarea class="p-inp" data-model="qw.note" placeholder="Ghi chú thêm (tuỳ chọn)" aria-label="Ghi chú">' + esc(q.note) + '</textarea>' + (q.uerr ? '<div class="p-err">' + esc(q.uerr) + '</div>' : '') +
+    '<div class="p-btns"><button class="p-btn sec" style="flex:1" data-act="qw-undo-close">Huỷ</button><button class="p-btn danger" data-act="qw-undo-ok">Hoàn tác</button></div></div>';
+}
+function qwLogView(s) {
+  const q = s.qw, mgr = qwMgr(), u = qwU();
+  const stt = r => r.status === 'undo' ? '<span class="q-st undo">Đã hoàn tác</span><div class="p-small">' + esc(r.undo.by) + ' · ' + esc(r.undo.at) + ' · ' + esc(r.undo.reason) + '</div>' : r.status === 'queued' ? '<span class="q-st wait">Lưu tạm</span>' : '<span class="q-st">Đã ghi nhận</span>';
+  const what = r => [r.vTitle ? 'Voucher ' + esc(r.vTitle) + ' −' + fmtN(r.vd) : '', r.td ? 'Hạng −' + fmtN(r.td) : '', r.pd ? 'Dùng ' + fmtN(r.pd) + ' điểm' : '', r.via === 'phone' ? 'Tìm bằng số điện thoại' : ''].filter(Boolean).join('<br>') || '—';
+  const act = r => r.status !== 'ok' ? '' : mgr ? '<button class="p-btn sec sm" data-act="qw-undo" data-arg="' + r.id + '">Hoàn tác</button>' : '<span class="p-small">Chỉ Manager</span>';
+  const tbl = '<table class="q-tbl"><thead><tr><th>Giờ</th><th>Khách</th><th>Hoá đơn</th><th style="text-align:right">Số tiền</th><th>Voucher, điểm</th><th style="text-align:right">Tích điểm</th><th>Nhân viên</th><th>Trạng thái</th><th></th></tr></thead><tbody>' +
+    q.log.slice().reverse().map(r => '<tr' + (r.mine ? ' class="mine"' : '') + '><td>' + esc(r.at) + '</td><td><b>' + esc(r.who) + '</b><div class="p-small">' + esc(r.phone) + '</div></td><td>' + esc(r.inv) + '</td><td style="text-align:right">' + fmtN(r.amount) + '</td><td>' + what(r) + '</td><td style="text-align:right">+' + fmtN(r.earn) + '</td><td>' + esc(r.by) + '</td><td>' + stt(r) + '</td><td>' + act(r) + '</td></tr>').join('') + '</tbody></table>';
+  const band = mgr ? '<div class="p-hint">Manager hoàn tác được lượt quét trong ngày: voucher trả lại ví khách, điểm đã trừ trả lại, bỏ phần tích điểm đang chờ. Sau ngày hôm nay, huỷ hoá đơn đi theo dữ liệu huỷ của đơn vị.</div>' : '<div class="p-hint warn">Chỉ Manager hoàn tác được, trong ngày. Quét nhầm thì báo Manager ca: Trần Thu Hà.</div>';
+  return qwPage(s, 'log', '<div class="q-col" style="flex:1"><div class="q-card"><div style="display:flex;align-items:baseline;gap:10px"><h2 class="q-h" style="flex:1">Lịch sử quét hôm nay</h2><span class="p-small">' + esc(u.place) + ' · ' + today() + ' · ' + q.log.length + ' lượt</span></div>' + band + tbl + '</div></div>', q.sel ? qwUndoModal(s) : '');
+}
+
+/* Xác nhận: trừ điểm, đánh dấu voucher đã dùng, tích điểm chờ đối soát (mất mạng thì lưu tạm) */
+function qwEarn(row) {
+  const bl = st.qw.unit, u = QW_UNITS[bl];
+  if (row.earn > 0) { st.pending = (st.pending || 0) + row.earn; st.todayEarn += row.earn; st.blPts[bl] = (st.blPts[bl] || 0) + row.earn; addHistory({ kind: 'earn', bl, title: u.place + ' · hoá đơn ' + row.inv, short: BL[bl].name + ' · hoá đơn ' + row.inv, when: 'Hôm nay · ' + row.at, delta: row.earn, pend: true, inv: row.inv }); }
+  st.lastEarn = { pts: row.earn, place: u.place, inv: row.inv };
+}
+function qwPay() {
+  const q = st.qw, inv = String(q.inv).trim().toUpperCase(), c = qwCalc(q);
+  if (!inv || !c.amount || (q.req && q.req.status === 'pending')) return;
+  if (q.earned[inv]) { q.ierr = 'Hoá đơn ' + inv + ' đã được tích điểm lúc ' + q.earned[inv].at + ' hôm nay.'; rr('nv'); return; }
+  q.ierr = '';
+  const u = qwU(), bl = q.unit, at = hm();
+  const row = { id: 'q' + Date.now(), at, who: q.offline ? 'Mã thành viên đã ghi nhận' : st.user.name, phone: maskPhone(st.user.phone), inv, amount: c.amount, vTitle: c.v ? c.v.title : '', vId: c.v ? c.v.id : null, vd: c.vd, td: c.td, pd: c.pd, due: c.due, earn: c.earn, by: qwStaff().short, status: q.offline ? 'queued' : 'ok', via: q.via, mine: true };
+  if (q.offline) q.queue.push(row);
+  else {
+    if (c.pd) { usePts(c.pd); addHistory({ kind: 'deduct', title: 'Trừ tiền · ' + u.place, short: 'Trừ tiền · ' + BL[bl].name, when: 'Hôm nay · ' + at, delta: -c.pd, note: 'Hoá đơn ' + inv + ' · giảm ' + money(c.pd) }); }
+    if (c.v) { c.v.status = 'used'; c.v.usedAt = at + ' ngày ' + today(); c.v.usedPlace = u.place; c.v.fresh = false; }
+    qwEarn(row);
+    st.deduct.result = c.pd ? { pts: c.pd, money: c.pd, invoice: inv, place: u.place, at: at + ' · ' + today(), earn: c.earn, from: tomorrow() } : null;
+    addNotif({ t: (c.pd ? fmtN(-c.pd) + ' điểm, ' : '') + (c.v ? 'đã dùng voucher ' + c.v.title + ', ' : '') + '+' + fmtN(c.earn) + ' điểm tại ' + BL[bl].full + ', chờ đối soát.', when: 'Vừa xong', ic: 'coins', go: 'M4' });
+    /* App khách: mã voucher đang mở thì sang M11b; có dùng điểm thì M15; còn lại M17 (như iPOS) */
+    const vOpen = c.v && st.shown && st.shown.type === 'voucher' && st.shown.id === c.v.id;
+    if (vOpen) { st.sel.voucher = c.v.id; go('M11b', { focus: false, noStack: true }); }
+    else if (c.pd) go('M15', { focus: false, noStack: true });
+    else go('M17', { focus: false, noStack: true });
+  }
+  q.earned[inv] = row; q.log.push(row);
+  q.last = row; q.req = null; qwGo();
+}
+/* Có mạng lại: gửi các hoá đơn tích điểm đã lưu tạm */
+function qwFlush() {
+  const q = st.qw; if (!q.queue.length) return;
+  q.queue.forEach(r => { r.status = 'ok'; r.who = st.user.name; qwEarn(r); addNotif({ t: '+' + fmtN(r.earn) + ' điểm tại ' + BL[q.unit].full + ', chờ đối soát.', when: 'Vừa xong', ic: 'coins', go: 'M4' }); });
+  toast('Đã gửi ' + q.queue.length + ' hoá đơn tích điểm lưu tạm', 'nv', { icon: 'send' });
+  q.queue = []; rr('kh');
+}
+/* Hoàn tác lượt của khách mẫu: trả voucher, trả điểm đã trừ, bỏ điểm đang chờ của hoá đơn đó */
+function qwUndoApp(r) {
+  const q = st.qw, u = QW_UNITS[q.unit], parts = [];
+  if (r.vId) { const v = vById(r.vId); if (v) { v.status = 'active'; v.usedAt = ''; v.usedPlace = ''; parts.push('voucher ' + v.title + ' đã trả lại Ví'); } }
+  if (r.pd) { addPts(r.pd); addHistory({ kind: 'adjust', title: 'Trả lại điểm · ' + u.short + ' hoàn tác hoá đơn ' + r.inv, short: 'Trả lại điểm · ' + BL[q.unit].name, when: 'Hôm nay · ' + hm(), delta: r.pd }); parts.push(fmtN(r.pd) + ' điểm đã trả lại'); }
+  if (r.earn) { st.pending = Math.max(0, (st.pending || 0) - r.earn); st.todayEarn = Math.max(0, st.todayEarn - r.earn); st.blPts[q.unit] = Math.max(0, (st.blPts[q.unit] || 0) - r.earn); st.history = st.history.filter(h => !(h.pend && h.inv === r.inv)); parts.push('bỏ +' + fmtN(r.earn) + ' điểm đang chờ'); }
+  addNotif({ t: u.short + ' đã hoàn tác lượt quét lúc ' + r.at + ' (hoá đơn ' + r.inv + '): ' + parts.join(', ') + '. Lý do: ' + q.reason + '.', when: 'Vừa xong', ic: 'undo', go: 'M4' });
+  rr('kh');
+}
+function qwSendRequest(n) {   /* từ CONFIRM_AT điểm: khách xác nhận bằng PIN trên app (M16), như iPOS */
+  const q = st.qw;
+  q.req = { pts: n, money: n, amount: qwRoom(q), invoice: String(q.inv).trim().toUpperCase() || 'đang lập', exp: Date.now() + 3 * 60 * 1000, status: 'pending', src: 'qw', place: qwU().place };
+  st.req = q.req; q.entry = ''; st.pin.buf = ''; st.pin.err = '';
+  qwGo();
+  go('M16', { focus: false });
+  toast('Đã gửi yêu cầu xác nhận lên app của khách', 'nv', { icon: 'send' });
+}
+
+A['qw-login'] = () => {
+  const q = st.qw;
+  if (q.acct === 'none') { q.lerr = 'Tài khoản này chưa được giao quầy nào. Nhờ Manager đơn vị cấp quyền trên CRM Hub (màn Người dùng và quyền).'; rr('nv'); return; }
+  q.logged = true; q.role = q.acct === 'manager' ? 'manager' : 'staff'; q.lerr = '';
+  qwFresh(q); qwGo(); toast('Đã vào ca tại ' + qwU().place, 'nv');
+};
+A['qw-logout'] = () => { qwCancelReq(); const q = st.qw; q.logged = false; qwFresh(q); qwGo(); };
+A['qw-view'] = k => { const q = st.qw; if (k === 'scan' && q.last) qwFresh(q); q.view = k; q.sel = null; qwGo(); };
+A['qw-scan'] = () => {
+  const q = st.qw;
+  if (q.demoOld) { q.demoOld = false; q.scanErr = true; qwGo(); return; }
+  q.scanErr = false; q.err = '';
+  const sh = st.shown;
+  /* Chế độ Hai máy: máy khách đang mở mã voucher thì quét ra voucher đó; mã voucher cũng cho biết chủ tài khoản */
+  if (st.mode === 'duo' && sh && sh.type === 'voucher' && vById(sh.id)) {
+    const v = vById(sh.id), ck = checkVoucher(v, q.unit);
+    if (!ck.ok) { q.vErr = { kind: ck.kind, reason: ck.reason, id: v.id }; qwGo(); return; }
+    q.member = true; q.via = 'qr';
+    if (q.offline) { qwGo(); toast('Mất kết nối: chưa áp được voucher, chỉ lưu tạm tích điểm', 'nv', { icon: 'info' }); return; }
+    q.voucher = v.id; qwGo(); toast('Đã nhận diện khách và chọn ' + v.title, 'nv'); return;
+  }
+  q.member = true; q.via = 'qr'; qwGo();
+};
+A['qw-phone'] = () => {
+  const q = st.qw, ph = String(q.phone || '').replace(/\D/g, '');
+  if (q.offline) { q.err = 'Mất kết nối VNG 360: chưa tìm được khách bằng số điện thoại. Nhờ khách mở mã trên app để lưu tạm tích điểm.'; rr('nv'); return; }
+  if (!ph) { q.err = 'Nhập số điện thoại của khách.'; rr('nv'); return; }
+  if (ph !== String(st.user.phone).replace(/\D/g, '')) { q.err = 'Không tìm thấy thành viên với số này.'; rr('nv'); return; }
+  q.err = ''; q.member = true; q.via = 'phone'; q.voucher = null; q.pts = 0; qwGo();
+};
+A['qw-pick-v'] = id => { const q = st.qw; q.voucher = id || null; q.pts = Math.min(q.pts, qwRoom(q)); qwGo(); };
+A['qw-pts'] = () => {
+  const q = st.qw, n = parseMoney(q.entry); if (!n) return;
+  const e = qwPtsErr(); if (e) { q.perr = e; rr('nv'); return; }
+  q.perr = '';
+  if (n >= CONFIRM_AT) { qwSendRequest(n); return; }
+  q.pts = n; q.entry = ''; qwGo();
+};
+A['qw-pts-clear'] = () => { st.qw.pts = 0; qwGo(); };
+A['qw-pay'] = () => qwPay();
+A['qw-next'] = () => { qwCancelReq(); qwFresh(st.qw); qwGo(); };
+A['qw-verr-go'] = () => { const q = st.qw; q.vErr = null; q.member = true; q.via = 'qr'; q.voucher = null; qwGo(); };
+A['qw-undo'] = id => { const q = st.qw; q.sel = id; q.reason = ''; q.note = ''; q.uerr = ''; qwGo(); };
+A['qw-undo-close'] = () => { st.qw.sel = null; qwGo(); };
+A['qw-undo-ok'] = () => {
+  const q = st.qw, r = q.log.find(x => x.id === q.sel); if (!r) return;
+  if (!q.reason) { q.uerr = 'Chọn lý do hoàn tác.'; rr('nv'); return; }
+  r.status = 'undo'; r.undo = { by: qwStaff().short, at: hm(), reason: q.reason, note: q.note };
+  delete q.earned[r.inv];
+  if (r.mine) qwUndoApp(r);
+  q.sel = null; q.reason = ''; q.note = ''; q.uerr = '';
+  qwGo(); toast('Đã hoàn tác lượt quét lúc ' + r.at, 'nv', { icon: 'undo', sub: r.mine ? 'Khách nhận thông báo trên app.' : '' });
+};
+/* Thao tác chỉ có trong bản xem thử */
+const qwLogin = (q, role = 'staff') => { q.logged = true; q.acct = role; q.role = role; q.lerr = ''; };
+A['demo-qw-old'] = () => { if (st.mode === 'kh') st.mode = 'nv'; const q = st.qw; if (!q.logged) qwLogin(q); qwFresh(q); q.demoOld = true; A['qw-scan'](); };
+A['demo-qw-offline'] = () => { const q = st.qw; q.offline = !q.offline; if (!q.offline) qwFlush(); qwGo(); renderNotes(); };
+A['demo-qw-mgr'] = () => { const q = st.qw; qwLogin(q, 'manager'); q.view = 'log'; q.sel = null; qwGo(); toast('Đã đăng nhập bằng tài khoản Manager: Trần Thu Hà', 'nv'); };
+/* Voucher mẫu cho từng trường hợp không dùng được; hồ sơ "Thành viên mới" ít voucher thì đổi về hồ sơ Gold */
+function qwBadVoucher(k) {
+  const q = st.qw;
+  if (k === 'soldout') { addBfVoucher(); q.soldout = true; q.unit = 'tiktak'; return vById('bf'); }
+  const find = () => st.vouchers.find(v => k === 'unit' ? v.status === 'active' && v.bl !== q.unit : v.status === (k === 'used' ? 'used' : 'expired'));
+  if (!find() && st.profile === 'new') toGold();
+  return find();
+}
+A['demo-qw-verr'] = k => {
+  if (st.mode === 'kh') st.mode = 'nv';
+  const q = st.qw; if (!q.logged) qwLogin(q); qwFresh(q);
+  const v = qwBadVoucher(k); if (!v) return;
+  const ck = checkVoucher(v, q.unit);
+  q.vErr = { kind: ck.kind || k, reason: ck.reason, id: v.id }; qwGo();
+};
+A['demo-qw-big'] = () => { st.mode = 'duo'; ensurePts(st, 220000); const q = st.qw; if (!q.logged) qwLogin(q); qwFresh(q, { member: true, via: 'qr', inv: qwInv(q), amount: fmtN(2500000), entry: fmtN(220000) }); A['qw-pts'](); };
+
+const QW_DIFF = 'Trang nhân viên quầy chưa có trên Figma: dựng theo câu 18 đã chốt (Tiktak, Resort không nối được phần mềm bán hàng thì dùng một trang web nhỏ cho nhân viên quét mã) và câu 45 (đề xuất, chưa chốt).';
+const qwNote = (rules, extra = {}) => Object.assign({ rules, motion: [], demo: [], diff: [QW_DIFF] }, extra);
+/* Mở thẳng một màn từ danh sách màn: dựng trạng thái mẫu đúng màn đó */
+const qwSetup = f => (s, o) => { if (o.keep || o.pop) return; const q = s.qw; qwCancelReq(); f(q, s); };
+const qwIn = (q, o) => { if (!q.logged || q.acct === 'none') qwLogin(q, q.role === 'manager' ? 'manager' : 'staff'); qwFresh(q, o); };
+const QW_FROM = 'câu 18 của bảng đã chốt (26/10/2026); câu 45 (đề xuất, chưa chốt); brainstorm Membership Mục 4 (app nhân viên quầy), 7.3';
+def('Q1', {
+  dev: 'nv', qw: true, flow: 'quay', from: QW_FROM, name: 'Trang nhân viên quầy · vào ca',
+  enter: qwSetup(q => { q.logged = false; q.lerr = ''; q.offline = false; qwFresh(q); }),
+  render: qwLoginView,
+  notes: qwNote(['Đăng nhập bằng tài khoản công ty như CRM Hub; mỗi nhân viên một tài khoản, chọn quầy và ca khi vào.', 'Tài khoản chưa được giao quầy thì không vào được, báo nhờ Manager đơn vị cấp quyền trên CRM Hub (màn Người dùng và quyền D2; câu 39 của bảng CRM Hub, đề xuất).', 'Kite dùng iPOS (Hành trình 2) nên không cần trang này.', dr(18), dp(45)], {
+    demo: ['Chọn tài khoản "Lê Quốc Bảo · chưa được giao quầy" rồi bấm Vào ca: báo lỗi.', 'Chọn quầy Hospitality Resort để xem trang của Resort.', { t: 'Mở CRM Hub · Người dùng và quyền (D1)', href: CRM_URL + '#D1' }]
+  })
+});
+def('Q2', {
+  dev: 'nv', qw: true, flow: 'quay', from: QW_FROM, name: 'Trang nhân viên quầy · quét mã khách',
+  enter: qwSetup(q => { q.offline = false; qwIn(q); }),
+  render: qwScanView,
+  notes: qwNote(['Quét được cả mã thành viên (M3, đổi mỗi 30 giây) và mã voucher (M11, đổi mỗi phút); mã voucher cũng cho biết chủ tài khoản. Mã cũ hoặc ảnh chụp bị từ chối.', 'Khách không mở được app: tìm bằng số điện thoại, chỉ tích điểm (Q3b).', 'Bên phải là 4 bước tại quầy: trang tính khoản giảm, nhân viên ghi khoản giảm vào hoá đơn trên phần mềm của đơn vị, rồi nhập số hoá đơn để tích điểm.', dr(18), dr(20)], {
+    demo: ['Chế độ Hai máy: mở Mã thành viên (M3) hoặc một voucher trong Ví (M11) trên máy khách rồi bấm khung quét. Voucher Kite báo sai đơn vị (Q5).', 'Ô số điện thoại: 0912 345 678 tìm thấy (Q3b); số khác báo không tìm thấy.', { t: 'Giả lập quét mã đã cũ', act: 'demo-qw-old' }]
+  })
+});
+def('Q3', {
+  dev: 'nv', qw: true, flow: 'quay', from: QW_FROM + '; campaign Black Friday của web Re-MKT', name: 'Trang nhân viên quầy · tích điểm, áp voucher, dùng điểm',
+  enter: qwSetup(q => { q.offline = false; q.soldout = false; q.unit = 'tiktak'; addBfVoucher(); qwIn(q, { member: true, via: 'qr', inv: qwInv(q), amount: fmtN(1500000) }); const v = qwVouchers().find(x => x.id === 'bf') || qwVouchers()[0]; q.voucher = v ? v.id : null; }),
+  render: qwFormView,
+  notes: qwNote(['Trang không thay phần mềm bán hàng: nhân viên nhập số tiền, trang tính khoản giảm; nhân viên ghi khoản giảm vào hoá đơn trên phần mềm của đơn vị, thu tiền, rồi nhập số hoá đơn để tích điểm. Khác iPOS ở Kite, nơi khoản giảm nằm thẳng trên hoá đơn.', 'Thẻ thành viên hiện tên, hạng, điểm dùng được và số voucher dùng được tại đơn vị của quầy; danh sách voucher chỉ hiện voucher dùng được ở đây.', 'Voucher của campaign Re-MKT (ví dụ Black Friday · Tiktak) dùng ở đây; lượt dùng được đếm về màn theo dõi campaign R-C3 của web Re-MKT.', 'Mỗi hoá đơn chỉ tích một lần: nhập lại số hoá đơn đã ghi nhận thì báo.', dr(22), dr(29), dr(21), dr(26), dr(38), dp(45)], {
+    demo: ['Mở từ danh sách màn: ví khách có sẵn voucher Black Friday (giảm 30%, tối đa 500.000đ) và hoá đơn 1.500.000đ.', 'Nhập số hoá đơn TK-LT-0398: báo đã tích điểm lúc 08:20.', 'Nhập từ 200.000 điểm rồi Áp điểm: máy khách nhận yêu cầu xác nhận (M16).', { t: 'Giả lập dùng 220.000 điểm (Hai máy)', act: 'demo-qw-big' }, { t: 'Mở Re-MKT · theo dõi campaign (R-C3)', href: RMK_URL + '#R-C3' }],
+    diff: [QW_DIFF, 'Giá vé ngày Tiktak (250.000đ), giờ phòng họp (150.000đ), bữa sáng Resort (360.000đ) dùng để tính khoản giảm của voucher tặng dịch vụ là số minh hoạ.']
+  })
+});
+def('Q3b', {
+  dev: 'nv', qw: true, flow: 'quay', from: QW_FROM, name: 'Trang nhân viên quầy · khách chỉ đọc số điện thoại, chỉ tích điểm',
+  enter: qwSetup(q => { q.offline = false; qwIn(q, { member: true, via: 'phone', inv: qwInv(q), amount: fmtN(600000) }); }),
+  render: qwFormView,
+  notes: qwNote(['Khách không mở được app: tìm bằng số điện thoại, chỉ tích điểm; dùng điểm, voucher cần mã trên app để tránh người khác dùng điểm của khách (như iPOS P2b).', 'Tìm bằng số điện thoại không áp ưu đãi giảm theo hạng (câu 29), vì chưa chắc đúng chủ tài khoản.', dr(18)])
+});
+def('Q4', {
+  dev: 'nv', qw: true, flow: 'quay', from: QW_FROM, name: 'Trang nhân viên quầy · đã ghi nhận, điểm chờ đối soát',
+  enter: qwSetup((q, s) => { S.Q3.enter(s, {}); qwPay(); }),
+  render: qwDoneView,
+  notes: qwNote(['Điểm mới chờ đối soát, dùng được từ 12 giờ trưa hôm sau (biên bản 21/10). Tích ' + EARN_TXT + ' số tiền khách trả bằng tiền; phần trả bằng điểm, voucher không sinh điểm.', 'Khách nhận thông báo ngay: mã voucher đang mở thì app sang M11b, có dùng điểm thì M15, còn lại M17.', dr(24), dr(25), dr(31), dr(34)], {
+    demo: ['Bấm "Xem lịch sử quét" để thấy lượt vừa ghi; đổi sang Manager để hoàn tác (Q7b).']
+  })
+});
+def('Q5', {
+  dev: 'nv', qw: true, flow: 'quay', from: QW_FROM + '; câu chữ lỗi theo brainstorm Mục 7.3', name: 'Trang nhân viên quầy · voucher không dùng được',
+  enter: qwSetup(q => { q.offline = false; q.soldout = false; qwIn(q); const v = qwBadVoucher('unit'); if (!v) return; const ck = checkVoucher(v, q.unit); q.vErr = { kind: ck.kind, reason: ck.reason, id: v.id }; }),
+  render: qwVErrView,
+  notes: qwNote(['Câu báo theo brainstorm Mục 7.3: "Voucher này chỉ áp dụng tại {đơn vị}.", "Voucher đã hết hạn ngày {ngày}.", "Voucher đã dùng lúc {giờ}."; campaign hết lượt: "Ưu đãi này đã hết suất." như màn theo dõi campaign R-C3 của Re-MKT.', 'Voucher không dùng được thì khách vẫn được tích điểm: nút "Tiếp tục tích điểm cho khách".', 'Lượt quét sau khi campaign hết suất không tính chi phí (Re-MKT).', 'Dòng "Nói với khách" là câu gợi ý cho nhân viên, không hiện cho khách.', dr(5)], {
+    demo: [{ t: 'Sai đơn vị', act: 'demo-qw-verr', arg: 'unit' }, { t: 'Hết hạn', act: 'demo-qw-verr', arg: 'expired' }, { t: 'Hết suất (campaign Black Friday)', act: 'demo-qw-verr', arg: 'soldout' }, { t: 'Đã dùng', act: 'demo-qw-verr', arg: 'used' }]
+  })
+});
+def('Q6', {
+  dev: 'nv', qw: true, flow: 'quay', from: QW_FROM, name: 'Trang nhân viên quầy · mất kết nối VNG 360',
+  enter: qwSetup(q => { qwIn(q, { member: true, via: 'qr', inv: qwInv(q), amount: fmtN(450000) }); q.offline = true; }),
+  render: qwFormView,
+  notes: qwNote(['Mất kết nối: trang vẫn ghi hoá đơn để tích điểm, lưu tạm trên máy rồi tự gửi khi có mạng; khoá dùng điểm, voucher vì chưa kiểm tra được (như iPOS P4b).', 'Tìm khách bằng số điện thoại cần mạng nên báo nhờ khách mở mã trên app.', dr(23)], {
+    demo: ['Bấm "Lưu tạm để tích điểm": hoá đơn nằm trong Lịch sử quét với nhãn Lưu tạm. Bật mạng lại để gửi; máy khách nhận điểm chờ đối soát.', { t: 'Bật hoặc tắt mạng tại quầy', act: 'demo-qw-offline' }],
+    diff: [QW_DIFF, 'Trang web chỉ lưu tạm được khi đã được mở sẵn và lưu trên máy; IT xác nhận cách làm.']
+  })
+});
+def('Q7', {
+  dev: 'nv', qw: true, flow: 'quay', from: QW_FROM + '; biên bản 21/10 câu K5 (hoàn tác quét nhầm)', name: 'Trang nhân viên quầy · lịch sử quét hôm nay',
+  enter: qwSetup(q => { qwIn(q, { view: 'log' }); }),
+  render: qwLogView,
+  notes: qwNote(['Bảng lượt quét trong ngày của quầy: giờ, khách (số điện thoại che 3 số giữa), hoá đơn, số tiền, voucher và điểm, điểm tích, nhân viên, trạng thái (Đã ghi nhận, Lưu tạm, Đã hoàn tác).', 'Chỉ Manager hoàn tác, trong ngày (biên bản 21/10 câu K5); nhân viên thấy chữ "Chỉ Manager".', 'Lượt của khách mẫu (Phạm Thu Trang) tô nền tím nhạt; hoàn tác lượt đó thì app khách đổi theo.', dp(45)], {
+    demo: [{ t: 'Đổi sang tài khoản Manager', act: 'demo-qw-mgr' }]
+  })
+});
+def('Q7b', {
+  dev: 'nv', qw: true, flow: 'quay', from: QW_FROM + '; biên bản 21/10 câu K5', name: 'Trang nhân viên quầy · Manager hoàn tác lượt quét nhầm', parent: 'Q7',
+  enter: qwSetup(q => { qwLogin(q, 'manager'); qwFresh(q, { view: 'log' }); const r = q.log.slice().reverse().find(x => x.status === 'ok'); q.sel = r ? r.id : null; }),
+  render: qwLogView,
+  notes: qwNote(['Hoàn tác bắt buộc chọn lý do; voucher trả lại ví, điểm đã trừ trả lại, bỏ điểm đang chờ của hoá đơn đó; khách nhận thông báo kèm lý do (câu 34: thông báo giao dịch luôn gửi).', 'Lượt đã hoàn tác giữ trong bảng, ghi người làm và lý do; số hoá đơn đó nhập lại được.', 'Chỉ trong ngày; sau đó huỷ hoá đơn đi theo dữ liệu huỷ của đơn vị (câu 24, 31).', dr(34), dp(45)], {
+    demo: ['Chế độ Hai máy: ghi một hoá đơn có voucher ở Q3, mở Lịch sử quét bằng tài khoản Manager rồi hoàn tác: voucher quay lại Ví, có thông báo mới ở M32.', 'Bấm Hoàn tác khi chưa chọn lý do: báo thiếu lý do.']
+  })
+});
 /* ================= Khung xem thử: bố trí, ghi chú, danh sách màn ================= */
 function layout() {
   const mob = window.innerWidth < 500;
@@ -2993,8 +3595,9 @@ function layout() {
   $('#stage').style.top = tbH + 'px'; $('#notes').style.top = tbH + 'px';
   const showKh = st.mode !== 'nv', showNv = st.mode !== 'kh';
   $('#wrap-kh').hidden = !showKh; $('#wrap-nv').hidden = !showNv;
-  const stage = $('#stage'), DIM = { kh: [390, 844], nv: [1120, 700] };
-  const needW = (showKh ? 390 : 0) + (showNv ? 1120 : 0) + (showKh && showNv ? 40 : 0), needH = showKh ? 844 : 700;
+  const tab = S[st.cur.nv] && S[st.cur.nv].qw;   /* trang nhân viên quầy: máy tính bảng ngang 1024 × 768 */
+  const stage = $('#stage'), DIM = { kh: [390, 844], nv: tab ? [1024, 768] : [1120, 700] };
+  const needW = (showKh ? 390 : 0) + (showNv ? DIM.nv[0] : 0) + (showKh && showNv ? 40 : 0), needH = showKh ? 844 : DIM.nv[1];
   /* Điện thoại, chỉ app KH: màn app lấy đúng cỡ màn hình thật thay vì khung 390 × 844 thu nhỏ */
   const full = mob && st.mode === 'kh';
   document.body.classList.toggle('app-full', full);
@@ -3002,7 +3605,7 @@ function layout() {
   ['.phone', '.ph'].forEach(q => { const el = $('#sc-kh ' + q); el.style.width = full ? DIM.kh[0] + 'px' : ''; el.style.height = full ? DIM.kh[1] + 'px' : ''; });
   let s;
   if (full) s = 1;
-  else if (mob) s = Math.min(window.innerWidth / (showKh ? 390 : 1120), 1);
+  else if (mob) s = Math.min(window.innerWidth / (showKh ? 390 : DIM.nv[0]), 1);
   else {
     const availH = window.innerHeight - tbH - 32 - 64;
     s = Math.min(1, availH / needH);
@@ -3023,11 +3626,11 @@ function renderNotes() {
   const dev = st.notesDev && devs.includes(st.notesDev) ? st.notesDev : (devs.includes(st.focus) ? st.focus : devs[0]);
   const sc = S[st.cur[dev]]; if (!sc) return;
   const n = sc.notes || {};
-  /* Dòng dạng { t, q }: quy tắc đã chốt, bấm "câu N" mở bảng "Đã chốt cho MVP" đúng dòng */
-  const li = x => typeof x === 'string' ? '<li>' + esc(x) + '</li>' : '<li>' + esc(x.t) + ' <button class="qlink" data-q="' + x.q + '">câu ' + x.q + ', chốt ' + DEC_DATE + '</button></li>';
+  /* Dòng dạng { t, q }: quy tắc đã chốt, bấm "câu N" mở bảng "Đã chốt cho MVP" đúng dòng; { t, q, open } là câu chưa chốt, màn vẽ theo đề xuất */
+  const li = x => typeof x === 'string' ? '<li>' + esc(x) + '</li>' : '<li>' + esc(x.t) + ' <button class="qlink" data-q="' + x.q + '">câu ' + x.q + (x.open ? ', chưa chốt · vẽ theo đề xuất' : ', chốt ' + DEC_DATE) + '</button></li>';
   const ul = a => '<ul>' + a.map(li).join('') + '</ul>';
   let h = '';
-  if (devs.length > 1) h += '<div class="devsw">' + devs.map(d => '<button data-ndev="' + d + '" aria-pressed="' + (d === dev) + '">' + (d === 'kh' ? 'Máy khách' : 'Máy iPOS') + ' · ' + esc(st.cur[d]) + '</button>').join('') + '</div>';
+  if (devs.length > 1) h += '<div class="devsw">' + devs.map(d => '<button data-ndev="' + d + '" aria-pressed="' + (d === dev) + '">' + (d === 'kh' ? 'Máy khách' : 'Máy quầy') + ' · ' + esc(st.cur[d]) + '</button>').join('') + '</div>';
   h += '<div class="nhead">Ghi chú thiết kế</div><h3>' + esc(sc.code || sc.id) + ' · ' + esc(sc.name) + '</h3>';
   h += sc.fig ? '<div class="src">Theo Figma "360 Customers", khung ' + esc(sc.fig) + '</div>' : '<div class="src new">Chưa có trên Figma · dựng từ ' + esc(sc.from || '') + '</div>';
   if (n.rules && n.rules.length) h += '<h5>Quy tắc và nguồn</h5>' + ul(n.rules);
@@ -3035,10 +3638,12 @@ function renderNotes() {
   (n.more || []).forEach(m => { h += '<h5>' + esc(m.h) + '</h5>' + ul(m.items); });
   if (n.demo && n.demo.length) {
     const strs = n.demo.filter(x => typeof x === 'string'), btns = n.demo.filter(x => typeof x !== 'string');
-    h += '<div class="dbox"><h5>Cách xem nhánh lỗi</h5>' + (strs.length ? ul(strs) : '') + (btns.length ? '<div style="margin-top:6px">' + btns.map(b => '<button class="dact" data-act="' + esc(b.act) + '" data-arg="' + esc(b.arg || '') + '">' + esc(b.t) + '</button>').join('') + '</div>' : '') + '</div>';
+    /* { t, href }: mở màn tương ứng ở web CRM Hub hoặc Re-MKT trong tab mới */
+    const btn = b => b.href ? '<a class="dact" href="' + esc(b.href) + '" target="_blank" rel="noopener">' + esc(b.t) + ' ↗</a>' : '<button class="dact" data-act="' + esc(b.act) + '" data-arg="' + esc(b.arg || '') + '">' + esc(b.t) + '</button>';
+    h += '<div class="dbox"><h5>Cách xem nhánh lỗi</h5>' + (strs.length ? ul(strs) : '') + (btns.length ? '<div style="margin-top:6px">' + btns.map(btn).join('') + '</div>' : '') + '</div>';
   }
   if (n.diff && n.diff.length) h += '<div class="xbox"><h5>Khác với Figma</h5>' + ul(n.diff) + '</div>';
-  h += '<div class="src" style="margin-top:16px">Ghi chú theo thẻ của màn trên trang "Membership — Luồng màn hình". Quy tắc ghi "câu N" là câu trong bảng "Cần anh/chị chốt" của Figma, đã chốt theo đề xuất của BA ngày ' + DEC_DATE + '; bấm để xem bảng "Đã chốt cho MVP".</div>';
+  h += '<div class="src" style="margin-top:16px">Ghi chú theo thẻ của màn trên trang "Membership — Luồng màn hình". Quy tắc ghi "câu N" là câu trong bảng "Cần anh/chị chốt" của Figma, đã chốt theo đề xuất của BA ngày ' + DEC_DATE + '; câu 44–46 thêm ngày ' + NEW_DATE + ', chưa chốt. Bấm để xem bảng "Đã chốt cho MVP".</div>';
   el.innerHTML = h;
 }
 $('#notes').addEventListener('click', e => { const b = e.target.closest('[data-ndev]'); if (b) { st.notesDev = b.dataset.ndev; renderNotes(); } });
@@ -3067,6 +3672,9 @@ const JOURNEYS = [
   { k: 'pos', n: 'Hành trình 2 · Thanh toán tại quầy trên iPOS', duo: true, steps: [
     ['Khách đưa mã thành viên', ['M3']], ['Thu ngân quét mã trên iPOS', ['P1', 'P1b']],
     ['Áp voucher, dùng điểm vào hoá đơn', ['P2', 'P2b', 'P3', 'P3b', 'M16']], ['Thanh toán xong, điểm về app', ['P4', 'P4b', 'M15', 'M17']]] },
+  { k: 'quay', n: 'Hành trình 2b · Thanh toán tại quầy Tiktak, Resort (trang nhân viên quầy)', duo: true, steps: [
+    ['Nhân viên vào ca', ['Q1']], ['Khách mở mã thành viên hoặc voucher', ['M3', 'M10']], ['Quét mã', ['Q2', 'Q5']],
+    ['Ghi hoá đơn, áp voucher, dùng điểm', ['Q3', 'Q3b', 'Q6']], ['Đã ghi nhận, điểm về app', ['Q4']], ['Manager hoàn tác quét nhầm', ['Q7', 'Q7b']]] },
   { k: 'redeem', n: 'Hành trình 3 · Đổi điểm và dùng voucher', steps: [
     ['Chọn ưu đãi', ['M5', 'M6', 'M6b', 'M6c']], ['Xác nhận, vuốt để đổi', ['M7', 'M9']], ['Voucher vào Ví', ['M8', 'M10', 'M10b']],
     ['Mở mã tại quầy', ['M11']], ['Nhận ưu đãi', ['M11b']]] },
@@ -3124,17 +3732,17 @@ function optsHtml(opts) {
 }
 function renderDec() {
   const q = ($('#dec-q').value || '').toLowerCase().trim();
-  $('#dec-intro').textContent = '43 câu trong bảng "Cần anh/chị chốt" trên Figma (trang "Membership — Luồng màn hình"), chốt theo đề xuất của BA ngày ' + DEC_DATE + '. Các màn và ghi chú trong bản xem thử đã làm theo các lựa chọn này. Bấm mã màn để mở màn đó.';
+  $('#dec-intro').textContent = '43 câu trong bảng "Cần anh/chị chốt" trên Figma (trang "Membership — Luồng màn hình"), chốt theo đề xuất của BA ngày ' + DEC_DATE + '. Các màn và ghi chú trong bản xem thử đã làm theo các lựa chọn này. Câu 44–46 thêm ngày ' + NEW_DATE + ' khi bổ sung màn còn thiếu, chưa chốt: bản xem thử vẽ theo đề xuất của BA. Bấm mã màn để mở màn đó.';
   let h = '<div class="tbl2"><div class="th">#</div><div class="th">Câu cần chốt</div><div class="th">Màn liên quan</div><div class="th">Lựa chọn và đề xuất của BA</div><div class="th">Người được hỏi</div><div class="th">Đã chốt</div>';
   let n = 0;
   DEC.forEach(g => {
-    const rows = g.rows.filter(r => !q || [r.n, r.q, r.scr, r.who, DRULE[r.n], (DEC_EXTRA[r.n] || []).join(' '), r.opts.map(o => o[0]).join(' ')].join(' ').toLowerCase().includes(q));
+    const rows = g.rows.filter(r => !q || [r.n, r.q, r.scr, r.who, DRULE[r.n] || DPROP[r.n], (DEC_EXTRA[r.n] || []).join(' '), r.opts.map(o => o[0]).join(' ')].join(' ').toLowerCase().includes(q));
     if (!rows.length) return;
-    h += '<div class="grp-h">' + esc(g.g) + '</div>';
+    h += '<div class="grp-h' + (g.fresh ? ' new' : '') + '">' + esc(g.g) + '</div>';
     rows.forEach(r => {
       n++;
       const a = ' data-qrow="' + r.n + '"';
-      h += '<div class="qn qrow-start"' + a + ' id="dec-q' + r.n + '">' + r.n + '</div><div class="qq"' + a + ' data-lb="Câu cần chốt">' + esc(r.q) + '</div><div' + a + ' data-lb="Màn liên quan">' + scrChips(r) + '</div><div' + a + ' data-lb="Lựa chọn và đề xuất của BA">' + optsHtml(r.opts) + '</div><div' + a + ' data-lb="Người được hỏi">' + esc(r.who) + '</div><div' + a + ' data-lb="Đã chốt"><div class="done">' + esc(DRULE[r.n]) + '</div><div class="scrtx" style="margin-top:4px">Chốt ' + DEC_DATE + ' · theo đề xuất của BA</div></div>';
+      h += '<div class="qn qrow-start"' + a + ' id="dec-q' + r.n + '">' + r.n + '</div><div class="qq"' + a + ' data-lb="Câu cần chốt">' + esc(r.q) + '</div><div' + a + ' data-lb="Màn liên quan">' + scrChips(r) + '</div><div' + a + ' data-lb="Lựa chọn và đề xuất của BA">' + optsHtml(r.opts) + '</div><div' + a + ' data-lb="Người được hỏi">' + esc(r.who) + '</div><div' + a + ' data-lb="Đã chốt">' + (DRULE[r.n] ? '<div class="done">' + esc(DRULE[r.n]) + '</div><div class="scrtx" style="margin-top:4px">Chốt ' + DEC_DATE + ' · theo đề xuất của BA</div>' : '<div class="open">Chưa chốt</div><div class="scrtx" style="margin-top:4px">Thêm ' + NEW_DATE + '. Bản xem thử vẽ theo đề xuất của BA; anh/chị ghi lựa chọn vào cột chốt trên Figma.</div>') + '</div>';
     });
   });
   $('#dec-body').innerHTML = n ? h + '</div>' : '<p style="padding:16px 0">Không tìm thấy câu nào.</p>';
