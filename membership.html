@@ -462,12 +462,56 @@ textarea.p-inp{height:64px;padding:8px 12px;resize:none;font:inherit}
 .script{background:#F7F5FA;border:1px solid var(--m-border);border-radius:14px;padding:14px 16px;margin-top:18px;font-size:13.5px;line-height:1.45}
 .script h4{margin:0 0 8px;color:var(--m-brand);font-size:15px}
 .script p{margin:6px 0}
-/* Kho ứng dụng (minh hoạ) */
-.store-ic{width:96px;height:96px;border-radius:22px;background:linear-gradient(140deg,#5B1F8A,#7B3BA8);color:#fff;font-weight:700;font-size:24px;display:flex;align-items:center;justify-content:center;position:relative;flex:none}
-.store-ic .icon{position:absolute;right:10px;top:10px;color:#F6E3A8}
-.pill-btn{display:inline-flex;align-items:center;height:38px;padding:0 22px;border-radius:19px;background:var(--m-action);color:#fff;font-weight:600}
-.prev{border-radius:16px;padding:12px;height:236px;display:flex;flex-direction:column;justify-content:space-between;font-weight:600;font-size:16px;line-height:1.4}
-.prev .ci{width:56px;height:56px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center}
+/* Kho ứng dụng: dựng theo trang ứng dụng App Store trên iPhone (iOS 26), chữ hệ thống của máy; nhãn tiếng Việt theo apps.apple.com/vn */
+.aps{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;color:#000;font-size:15px;line-height:1.35;letter-spacing:-.01em;padding-bottom:96px}
+.aps-nav{display:flex;align-items:center;padding:2px 16px 0}
+.aps-glass{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(242,242,247,.9);border:.5px solid rgba(0,0,0,.06);box-shadow:0 2px 10px rgba(0,0,0,.08);color:#000}
+.aps-head{display:flex;gap:16px;padding:12px 20px 0}
+.aps-ic{width:112px;height:112px;border-radius:25px;flex:none;position:relative;background:linear-gradient(145deg,#6A2A9C,#4A1675);color:#fff;font-weight:800;font-size:28px;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 .5px rgba(0,0,0,.14)}
+.aps-ic .icon{position:absolute;right:13px;top:13px;color:#F6E3A8}
+.aps-meta{flex:1;display:flex;flex-direction:column;min-width:0}
+.aps-name{font-size:22px;font-weight:700;line-height:1.2;letter-spacing:-.02em}
+.aps-sub{font-size:15px;color:#8A8A8E;margin-top:2px}
+.aps-row{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
+.aps-get{height:30px;padding:0 20px;border-radius:15px;background:#0A84FF;color:#fff;font-size:15px;font-weight:700;font-family:inherit}
+.aps-blue{color:#0A84FF}
+.aps-share{color:#0A84FF;display:flex}
+.aps-topfade{position:absolute;left:0;right:0;top:0;height:54px;background:rgba(255,255,255,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:5;pointer-events:none}
+.aps-gray{color:#8A8A8E}
+.aps-hr{height:.5px;background:#C6C6C8;margin:0 20px}
+.aps-strip{display:flex;overflow-x:auto;scrollbar-width:none;margin-top:18px;padding:0 4px}
+.aps-strip>div{flex:none;width:104px;text-align:center;padding:12px 4px 10px;position:relative}
+.aps-strip>div+div::before{content:"";position:absolute;left:0;top:16px;bottom:16px;width:.5px;background:#C6C6C8}
+.aps-strip .k{font-size:11px;font-weight:600;color:#8A8A8E;letter-spacing:.02em;white-space:nowrap}
+.aps-strip .v{font-size:20px;font-weight:700;color:#6D6D72;margin-top:5px;height:24px;display:flex;align-items:center;justify-content:center}
+.aps-strip .s{font-size:12px;color:#8A8A8E;margin-top:3px;white-space:nowrap}
+.aps-stars{display:inline-flex;gap:1px;color:#8A8A8E}
+.aps-h{display:flex;align-items:center;gap:2px;font-size:22px;font-weight:700;letter-spacing:-.02em;padding:18px 20px 12px}
+.aps-shots{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:0 20px;scroll-snap-type:x mandatory}
+.aps-shot{flex:none;width:200px;height:432px;border-radius:22px;overflow:hidden;position:relative;scroll-snap-align:start;box-shadow:inset 0 0 0 .5px rgba(0,0,0,.1)}
+.aps-shot h5{margin:0;padding:24px 18px 0;font-size:19px;font-weight:700;line-height:1.25;letter-spacing:-.02em}
+.aps-shot .mph{position:absolute;left:24px;right:24px;top:134px;height:330px;border-radius:28px;background:#fff;border:5px solid #1C1C1E;padding:26px 12px 12px;font-family:var(--font);color:var(--m-ink);letter-spacing:0}
+.aps-shot .mph::before{content:"";position:absolute;left:50%;top:7px;width:44px;height:12px;margin-left:-22px;border-radius:6px;background:#1C1C1E}
+.aps-devline{display:flex;gap:6px;align-items:center;color:#8A8A8E;font-size:13px;font-weight:500;padding:12px 20px 0}
+.aps-desc{position:relative;margin:16px 20px 0}
+.aps-desc p{margin:0;white-space:pre-line}
+.aps-desc.clamp p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.aps-more{position:absolute;right:0;bottom:0;padding-left:30px;background:linear-gradient(90deg,rgba(255,255,255,0),#fff 26px);color:#0A84FF;font-family:inherit;font-size:15px}
+.aps-dev{display:flex;justify-content:space-between;align-items:center;padding:16px 20px 0}
+.aps-rate{display:flex;justify-content:space-between;align-items:flex-end;padding:0 20px}
+.aps-rate .big{font-size:58px;font-weight:700;line-height:1;letter-spacing:-.03em;color:#3A3A3C}
+.aps-bars{display:flex;flex-direction:column;gap:2px;width:190px}
+.aps-bars div{display:flex;align-items:center;gap:6px}
+.aps-bars i{display:flex;justify-content:flex-end;width:46px;color:#8A8A8E;line-height:0}
+.aps-bars b{flex:1;height:3px;border-radius:2px;background:#E5E5EA;position:relative;overflow:hidden}
+.aps-bars b span{position:absolute;inset:0 auto 0 0;background:#8A8A8E;border-radius:2px}
+.aps-rev{margin:14px 20px 0;padding:14px 16px;border-radius:14px;background:#F2F2F7}
+.aps-tab{position:absolute;left:14px;right:14px;bottom:22px;display:flex;gap:10px;align-items:center;z-index:20;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif}
+.aps-tab .cap,.aps-tab .srch{height:62px;background:rgba(250,250,252,.84);backdrop-filter:blur(18px) saturate(180%);-webkit-backdrop-filter:blur(18px) saturate(180%);border:.5px solid rgba(0,0,0,.08);box-shadow:0 8px 28px rgba(0,0,0,.12)}
+.aps-tab .cap{flex:1;border-radius:31px;display:flex;justify-content:space-between;align-items:center;padding:0 5px}
+.aps-tab .cap span{flex:1;height:52px;border-radius:26px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10px;font-weight:600;color:#1C1C1E}
+.aps-tab .cap span.on{color:#0A84FF;background:rgba(0,0,0,.06)}
+.aps-tab .srch{width:62px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#1C1C1E}
 /* Đăng ký: thẻ mời, nút mạng xã hội, thanh bước, OTP */
 .storechip{display:inline-flex;gap:6px;align-items:center;height:32px;padding:0 12px;border:1px solid var(--m-border);border-radius:16px;background:#fff;font-size:13px;font-weight:600}
 .hero{position:relative;background:linear-gradient(135deg,#4A1673,#5B1F8A 45%,#7B3BA8);color:#fff;border-radius:20px;padding:18px 20px 20px;overflow:hidden}
@@ -1597,22 +1641,64 @@ def('BANG', {
 
 /* W0 · kho ứng dụng (minh hoạ) */
 A['w0-get'] = () => { st.stack.kh = []; go('W1', { noStack: true }); };
+A['w0-more'] = () => { st.w0more = true; rr('kh'); };
 def('W0', {
   dev: 'kh', flow: 'reg', fig: '256:10408', name: 'Tải app từ kho ứng dụng (mở từ mã QR trên bảng)', parent: 'BANG', bg: '#fff',
   render: () => {
-    const prev = (bg, fg, t, icn, icc) => '<div class="prev" style="background:' + bg + ';color:' + fg + '"><span>' + t + '</span><span class="ci" style="color:' + icc + '">' + ic(icn, 24) + '</span></div>';
-    return '<div class="pad" style="display:flex;justify-content:space-between;align-items:center;padding-top:6px"><button class="lnk-a" style="display:inline-flex;gap:6px;align-items:center;font-size:16px;font-weight:500" data-back>' + ic('back', 18) + 'Quay lại</button><span class="xs mut">Kho ứng dụng · minh hoạ</span></div>' +
-      '<div class="pad" style="display:flex;gap:16px;align-items:center;margin-top:18px"><div class="store-ic">VNG' + ic('spark', 20) + '</div><div><div class="b" style="font-size:20px">VNG Membership</div><div class="sm mut">Tích điểm Kite, Tiktak, Resort</div><button class="pill-btn" style="margin-top:10px" data-act="w0-get">Nhận</button></div></div>' +
-      '<div class="pad" style="margin-top:18px"><div class="card" style="display:grid;grid-template-columns:repeat(3,1fr);text-align:center;padding:12px 6px">' + [['Giá', 'Miễn phí'], ['Ngôn ngữ', 'Tiếng Việt'], ['Nhà phát hành', 'VNGroup']].map(([k, v]) => '<div><div class="xs mut">' + k + '</div><div class="b" style="font-size:16px;margin-top:2px">' + v + '</div></div>').join('') + '</div></div>' +
-      '<div class="pad"><div class="h3" style="margin:20px 0 12px">Xem trước</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">' +
-      prev('var(--m-brand)', '#fff', 'Giảm 10% ngay khi đăng ký', 'ticket', 'var(--m-brand)') + prev('var(--m-action)', '#fff', 'Một mã tích điểm ở Kite, Tiktak, Resort', 'qr', 'var(--m-action)') + prev('#F3E2A9', 'var(--t-gold-ink)', 'Đổi điểm lấy ly cà phê, đêm nghỉ', 'gift', 'var(--t-gold-ink)') +
-      '</div><p style="margin:16px 0 0;font-size:16px;line-height:1.55">Một tài khoản thành viên cho Kite Coffee, Tiktak và Resort. Tích điểm khi thanh toán, đổi điểm lấy ưu đãi, nhận voucher dùng ngay tại quầy.</p></div>';
+    const sf = (d, s, w, fill) => '<svg width="' + s + '" height="' + s + '" viewBox="0 0 24 24" fill="' + (fill ? 'currentColor' : 'none') + '" stroke="' + (fill ? 'none' : 'currentColor') + '" stroke-width="' + (w || 1.8) + '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
+    const STAR = '<path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/>';
+    const stars = (n, s) => '<span class="aps-stars">' + Array.from({ length: n }, () => sf(STAR, s, 0, true)).join('') + '</span>';
+    const strip = [
+      ['1,2 N XẾP HẠNG', '4,8', stars(5, 11)],
+      ['ĐỘ TUỔI', '4+', 'tuổi'],
+      ['NHÀ PHÁT TRIỂN', sf('<circle cx="12" cy="8.5" r="3.6"/><path d="M5 20.5c1.2-3.7 3.8-5.6 7-5.6s5.8 1.9 7 5.6"/>', 24, 1.9), 'VNGroup'],
+      ['NGÔN NGỮ', 'VI', 'Tiếng Việt'],
+      ['KÍCH CỠ', '52,4', 'MB']
+    ].map(([k, v, x]) => '<div><div class="k">' + k + '</div><div class="v">' + v + '</div><div class="s">' + x + '</div></div>').join('');
+    const shot = (bg, fg, t, inner) => '<div class="aps-shot" style="background:' + bg + ';color:' + fg + '"><h5>' + t + '</h5><div class="mph">' + inner + '</div></div>';
+    const row = (icn, t, p) => '<div style="display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--m-border)"><span style="width:34px;height:34px;border-radius:10px;background:#F3ECFA;color:var(--m-brand);display:flex;align-items:center;justify-content:center;flex:none">' + ic(icn, 18) + '</span><span style="flex:1;min-width:0"><b style="display:block;font-size:12px;line-height:1.3">' + t + '</b><span style="font-size:11px;color:var(--m-muted)">' + p + '</span></span></div>';
+    const shots =
+      shot('linear-gradient(165deg,#6A2A9C,#3E1166)', '#fff', 'Giảm 10% ngay khi đăng ký',
+        '<div style="font-size:10px;font-weight:700;color:var(--m-brand)">CHÀO BẠN MỚI</div><div style="font-size:15px;font-weight:700;line-height:1.3;margin-top:4px">Voucher đã vào Ví của bạn</div>' +
+        '<div style="margin-top:14px;border-radius:14px;background:#FDF1EA;padding:14px 12px"><div style="font-size:10px;font-weight:700;color:var(--m-brand)">GIẢM NGAY</div><div style="font-size:36px;font-weight:700;color:var(--m-urgent-text);line-height:1.1">10%</div><div style="font-size:11px;color:var(--m-muted)">cho hoá đơn bạn đang trả</div></div>' +
+        '<div style="margin-top:14px;height:36px;border-radius:18px;background:var(--m-action);color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center">Dùng tại quầy</div>') +
+      shot('linear-gradient(165deg,#13897F,#0B5A54)', '#fff', 'Một mã tích điểm ở Kite, Tiktak, Resort',
+        '<div style="text-align:center;font-size:13px;font-weight:700">Mã thành viên</div><div style="display:flex;justify-content:center;margin-top:12px">' + qrSvg(strHash('VNG-MEMBER-PREVIEW'), 104) + '</div>' +
+        '<div style="text-align:center;font-size:11px;color:var(--m-muted);margin-top:10px">Gold · 245.000 điểm</div><div style="display:flex;gap:5px;justify-content:center;margin-top:12px">' + ['Kite', 'Tiktak', 'Resort'].map(x => '<span style="font-size:10px;font-weight:600;padding:3px 8px;border-radius:10px;background:var(--m-action-soft);color:var(--m-action)">' + x + '</span>').join('') + '</div>') +
+      shot('linear-gradient(165deg,#F6E3A8,#E2C163)', 'var(--t-gold-ink)', 'Đổi điểm lấy ly cà phê, đêm nghỉ',
+        '<div style="font-size:13px;font-weight:700;margin-bottom:4px">Đổi được ngay</div>' + row('coffee', 'Cà phê miễn phí', '50.000 điểm') + row('laptop', 'Tiktak · vé 1 ngày', '200.000 điểm') + row('palm', 'Voucher Resort 250.000đ', '250.000 điểm'));
+    const desc = 'Một tài khoản thành viên cho Kite Coffee, Tiktak và Resort. Tích điểm khi thanh toán, đổi điểm lấy ưu đãi, nhận voucher dùng ngay tại quầy.\n• Đăng ký 1 chạm bằng Zalo, Google hoặc Facebook.\n• Điểm tích ở đơn vị nào cũng dùng được ở đơn vị khác.\n• Mã thành viên đổi mỗi 30 giây, đưa nhân viên quầy quét khi thanh toán.';
+    const bars = [82, 11, 4, 1, 2].map((pc, i) => '<div><i>' + stars(5 - i, 7) + '</i><b><span style="width:' + pc + '%"></span></b></div>').join('');
+    const body = '<div class="aps">' +
+      '<div class="aps-nav"><button class="aps-glass" data-back aria-label="Quay lại">' + sf('<path d="M14.5 5l-7 7 7 7"/>', 20, 2.4) + '</button></div>' +
+      '<div class="aps-head"><div class="aps-ic">VNG' + ic('spark', 20) + '</div><div class="aps-meta"><div class="aps-name">VNG Membership</div><div class="aps-sub">Tích điểm Kite, Tiktak, Resort</div>' +
+      '<div class="aps-row"><button class="aps-get" data-act="w0-get">Nhận</button><span class="aps-share" aria-label="Chia sẻ">' + sf('<path d="M12 3.5v11M8 7.5l4-4 4 4"/><path d="M8 10.5H6.5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H16"/>', 24, 1.9) + '</span></div></div></div>' +
+      '<div class="aps-strip">' + strip + '</div><div class="aps-hr"></div>' +
+      '<div class="aps-h">Xem trước</div><div class="aps-shots">' + shots + '</div>' +
+      '<div class="aps-devline">' + sf('<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>', 16, 1.8) + 'iPhone</div>' +
+      '<div class="aps-desc' + (st.w0more ? '' : ' clamp') + '"><p>' + desc + '</p>' + (st.w0more ? '' : '<button class="aps-more" data-act="w0-more">thêm</button>') + '</div>' +
+      '<div class="aps-dev"><div><div class="aps-blue">VNGroup</div><div class="aps-gray" style="font-size:13px">Nhà phát triển</div></div><span class="aps-gray">' + sf('<path d="M9 5l7 7-7 7"/>', 18, 2.2) + '</span></div>' +
+      '<div class="aps-hr" style="margin-top:18px"></div>' +
+      '<div class="aps-h">Xếp hạng &amp; nhận xét<span class="aps-gray">' + sf('<path d="M9 5l7 7-7 7"/>', 20, 2.4) + '</span></div>' +
+      '<div class="aps-rate"><div><div class="big">4,8</div><div class="aps-gray" style="font-size:15px;font-weight:600;text-align:center;margin-top:2px">trên 5</div></div><div><div class="aps-bars">' + bars + '</div><div class="aps-gray" style="font-size:13px;text-align:right;margin-top:6px">1.248 xếp hạng</div></div></div>' +
+      '<div class="aps-rev"><div style="display:flex;justify-content:space-between"><b style="font-size:15px">Tích điểm ngay tại quầy</b><span class="aps-gray" style="font-size:13px">2 ngày trước</span></div>' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px"><span style="color:#FF9500">' + stars(5, 12).replace('aps-stars', 'aps-stars" style="color:#FF9500') + '</span><span class="aps-gray" style="font-size:13px">Lan Anh</span></div>' +
+      '<div style="margin-top:8px;font-size:15px">Quét mã ở quán Kite là được giảm ly đầu tiên, điểm dùng được cả ở Tiktak. Đăng ký bằng Zalo nhanh.</div></div>' +
+      '</div>';
+    const tab = (d, t, on) => '<span' + (on ? ' class="on"' : '') + '>' + sf(d, 24, 1.8) + t + '</span>';
+    const top = '<div class="aps-topfade"></div><div class="aps-tab" aria-hidden="true"><div class="cap">' +
+      tab('<rect x="4.5" y="3" width="15" height="18" rx="3"/><path d="M8 8h8M8 12h8M8 16h5"/>', 'Hôm nay', true) +
+      tab('<path d="M12 3c3 2 4.5 5 4.5 9l-2 3h-5l-2-3c0-4 1.5-7 4.5-9z"/><circle cx="12" cy="10" r="1.6"/><path d="M9.5 15l-2 4.5 3-1.2M14.5 15l2 4.5-3-1.2"/>', 'Trò chơi') +
+      tab('<path d="M12 3.5l8 4-8 4-8-4z"/><path d="M4 12l8 4 8-4M4 16.5l8 4 8-4"/>', 'Ứng dụng') +
+      tab('<circle cx="12" cy="6.5" r="2.6"/><path d="M12 9v5"/><path d="M3.5 15.5l8.5 4.5 8.5-4.5-8.5-3.5z"/>', 'Arcade') +
+      '</div><div class="srch">' + sf('<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>', 24, 2) + '</div></div>';
+    return { body, top };
   },
   notes: {
-    rules: ['Mã QR trên bảng là một đường dẫn: máy chưa có app thì mở kho ứng dụng (màn này); máy đã có app thì mở thẳng W1.', 'Cài xong, lần mở đầu tiên vào thẳng W1 và vẫn nhớ quầy đã quét (Kite Coffee · Tràng Tiền) để voucher áp đúng Biz Line.', 'Trang kho ứng dụng do App Store và Google Play hiển thị; phía mình chỉ quyết định tên app, biểu tượng, ảnh xem trước và mô tả. Màn này là minh hoạ.', dr(8)],
+    rules: ['Mã QR trên bảng là một đường dẫn: máy chưa có app thì mở kho ứng dụng (màn này); máy đã có app thì mở thẳng W1.', 'Cài xong, lần mở đầu tiên vào thẳng W1 và vẫn nhớ quầy đã quét (Kite Coffee · Tràng Tiền) để voucher áp đúng Biz Line.', 'Trang kho ứng dụng do App Store và Google Play hiển thị; phía mình chỉ quyết định tên app, biểu tượng, phụ đề, ảnh xem trước và mô tả. Màn này là minh hoạ.', dr(8)],
     motion: [],
-    demo: ['Bấm "Nhận" để giả lập cài xong và mở app lần đầu: vào thẳng W1.'],
-    diff: []
+    demo: ['Bấm "Nhận" để giả lập cài xong và mở app lần đầu: vào thẳng W1.', 'Bấm "thêm" để xem hết mô tả; vuốt ngang để xem 3 ảnh xem trước.'],
+    diff: ['Bản HTML vẽ lại theo trang ứng dụng App Store trên iPhone, iOS 26 (góp ý 28/10/2026): nút Nhận màu xanh, dải thông tin xếp hạng, độ tuổi, nhà phát triển, ngôn ngữ, kích cỡ; ảnh xem trước dọc; thanh tab nổi. Nhãn tiếng Việt lấy theo trang App Store Việt Nam. Số xếp hạng, nhận xét, kích cỡ là số mẫu.', 'Máy Android mở Google Play (CH Play): bố cục khác, nút Cài đặt màu xanh lá rộng hết hàng, chưa vẽ.']
   }
 });
 
